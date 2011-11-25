@@ -1,0 +1,65 @@
+<!--
+__    _          _       _   _       _
+| | / /         | |   (_) \ | |     | |
+| |/ /  ___  ___| |__  _|  \| |_   _| | __ ___
+|    \ / _ \/ __| '_ \| | . ` | | | | |/ // _ \
+| |\  \ (_) \__ \ | | | | |\  | |_| |   <|  __/
+\_| \_/\___/|___/_| |_|_\_| \_/\__,_|_|\_\\___|
+-->
+<html>
+	<head>
+		<title>KoshiNuke</title>
+		<meta charset="utf-8">
+		<link href="css/codemirror.css" rel="stylesheet">
+		<link href="css/default.css" rel="stylesheet">
+		<link href="css/markdown.css" rel="stylesheet">
+		<link href="css/rst.css" rel="stylesheet">
+		<script type="application/javascript" src="closure-library/closure/goog/base.js"></script>
+		<script type="application/javascript" src="closure-library/third_party/closure/goog/deps.js"></script>
+		<script>
+			// name resolving hack
+			goog.require('goog.string.StringBuffer');
+			goog.require('goog.soy');
+
+		</script>
+		<script type="application/javascript" src="js/soyutils_usegoog.js"></script>
+		<script type="application/javascript" src="js/closure.ZeroClipboard.js"></script>
+		<script type="application/javascript" src="js/codemirror.js"></script>
+		<script type="application/javascript" src="js/codemirror.modes.js"></script>
+		<script type="application/javascript" src="js/org/koshinuke/deps.js"></script>
+		<script type="application/javascript" src="js/app.js"></script>
+		<!--
+		<script type="application/javascript" src="js/koshinuke-compiled.js"></script>
+		-->
+		<link rel="stylesheet/less" type="text/css" href="build/less/repos.less">
+		<script type="application/javascript" src="js/less-1.1.5.min.js"></script>
+	</head>
+	<body>
+		<footer>
+			KoshiNuke is licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>
+			- Site content is <a href="http://creativecommons.org/licenses/by/3.0/">CC-by</a>
+		</footer>
+		<script>
+			/*@cc_on @*/
+			/*@if (@_win32)
+			 document.write("<script id=__ie_onload defer src=javascript:void(0)><\/script>");
+			 var script = document.getElementById("__ie_onload");
+			 script.onreadystatechange = function() {
+			 if (this.readyState == "complete") {
+			 org.koshinuke.main();
+			 }
+			 };
+			 /*@end @*/
+			if(/WebKit/i.test(navigator.userAgent)) {
+				var _timer = setInterval(function() {
+					if(/loaded|complete/.test(document.readyState)) {
+						clearInterval(_timer);
+						org.koshinuke.main();
+					}
+				}, 10);
+			} else if(document.addEventListener) {
+				document.addEventListener("DOMContentLoaded", org.koshinuke.main, false);
+			}
+		</script>
+	</body>
+</html>
