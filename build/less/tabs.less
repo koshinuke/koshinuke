@@ -1,0 +1,30 @@
+.goog-tabs {
+	width: 99%;
+	border-bottom: 1px solid #ddd;
+	.clearfix();
+	margin-bottom: 0.5em;
+	
+	.goog-tab {
+		float: left;
+		padding: 0;
+		position: relative;
+		top: 1px;
+	}
+	a {
+		display: block;
+		padding: 0 1em;
+		line-height: 2.5em;
+		#radius > .top();
+
+		&:hover {
+			background-color: @grayLighter;
+		}
+	}
+	.goog-tab-selected a {
+		background-color: white;
+		border: 1px solid #ddd;
+		border-bottom: 0;
+		color: @gray;
+		cursor: default;
+	}
+}
