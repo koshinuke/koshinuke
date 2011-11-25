@@ -19,10 +19,11 @@
 		-moz-user-select: @select;
 }
 
-.center-block() {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
+.visible() {
+	display: none;
+	&.show {
+		display: block;
+	}
 }
 
 #gradient {
