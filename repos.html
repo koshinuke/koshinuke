@@ -35,6 +35,123 @@ __    _          _       _   _       _
 		<script type="application/javascript" src="js/less-1.1.5.min.js"></script>
 	</head>
 	<body>
+		<div class="topbar">
+			<div class="brand">
+				<a href="#">KoshiNuke</a>
+			</div>
+			<div id="toptab" class="nav">
+				<div class="goog-tab">
+					<a href="#home" title="ダッシュボード">Home</a>
+				</div>
+				<div class="goog-tab">
+					<a href="#status" title="Twitterモドキ">Status</a>
+				</div>
+				<div class="goog-tab">
+					<a href="#sandbox" title="Gistモドキ ">Sandbox</a>
+				</div>
+				<div class="goog-tab">
+					<a href="#admin" title="鍵管理とか、そういうの。">Administrations</a>
+				</div>
+			</div>
+		</div>
+		<div class="outer">
+			<div class="sidebar">
+				<ul>
+					<li>
+						Owner Repos
+						<ul>
+							<li>
+								<a href="#">koshinuke</a>
+							</li>
+							<li>
+								<a href="#">koshinuke.java</a>
+							</li>
+						</ul>
+					</li>
+					<li>
+						Member Repos
+						<ul>
+							<li>
+								<a href="#">koshinuke.py</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<div class="contents">
+				<div class="topic">
+					<div class="repo-urls">
+						<div class="protocols">
+							<div class="goog-tab begin" >
+								<a href="username@koshinuke.org:koshinuke/org.koshinuke.git" desc="Read+Write" descat="url-desc" for="url-box">SSH</a>
+							</div>
+							<div class="goog-tab middle goog-tab-selected">
+								<a href="https://username@koshinuke.org/koshinuke/org.koshinuke.git" desc="Read+Write" descat="url-desc" for="url-box">HTTPS</a>
+							</div>
+							<div class="goog-tab middle">
+								<a href="git://koshinuke.org/koshinuke/org.koshinuke.git" desc="Read-Only" descat="url-desc" for="url-box">Git</a>
+							</div>
+						</div>
+						<input type="text" id="url-box" class="url-box end" value="username@koshinuke.org:koshinuke/org.koshinuke.git" readonly="readonly"/>
+						<span class="clip-container"><img id="clip-btn" src="images/copy_button_up.png" alt="copy" from="url-box"/></span>
+						<div class="desc-container">
+							<b id="url-desc">Read+Write</b>&nbsp;access
+						</div>
+					</div>
+				</div>
+				<div class="topic">
+					<ul id="locationpath" class="breadcrumbs">
+						<li>
+							<a href="#">Branches</a>
+						</li>
+						<li>
+							<a href="#">master</a>
+						</li>
+						<li>
+							<a href="#">src</a>
+						</li>
+						<li>
+							<a href="#">org</a>
+						</li>
+						<li>
+							<a href="#">koshinuke</a>
+						</li>
+					</ul>
+				</div>
+				<div class="topic">
+					<div class="tab-container">
+						<div id="project_main_tab" class="goog-tab-bar goog-tabs">
+							<div class="goog-tab goog-tab-selected" for="branch-pane">
+								<a href="#Branches">Branches</a>
+							</div>
+							<div class="goog-tab" for="tags-pane">
+								<a href="#tags">Tags</a>
+							</div>
+							<div class="goog-tab" for="commitlog-pane">
+								<a href="#logs">Commit Logs</a>
+							</div>
+							<div class="goog-tab" for="branchgraph-pane">
+								<a href="#graph">Branch Graph</a>
+							</div>
+						</div>
+					</div><!-- <div class="tab-container"> -->
+					<div class="panes">
+						<div id="branch-pane">
+							ブランチ
+						</div>
+						<div id="tags-pane">
+							タグ
+						</div>
+						<div id="commitlog-pane">
+							コミットログ
+						</div>
+						<div id="branchgraph-pane">
+							ブランチグラフ
+						</div>
+					</div><!--div class="panes"-->
+				</div>
+			</div>
+		</div>
 		<footer>
 			KoshiNuke is licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>
 			- Site content is <a href="http://creativecommons.org/licenses/by/3.0/">CC-by</a>
@@ -60,6 +177,7 @@ __    _          _       _   _       _
 			} else if(document.addEventListener) {
 				document.addEventListener("DOMContentLoaded", org.koshinuke.main, false);
 			}
+
 		</script>
 	</body>
 </html>

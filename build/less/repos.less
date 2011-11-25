@@ -1,2 +1,81 @@
-@import "radius.less"
 
+@import "reset.less";
+@import "mixin.less";
+@import "radius.less";
+
+@import "vars.less";
+
+@import "repo-urls.less";
+
+
+@top-height: 2.5em;
+
+.topbar {
+	height: @top-height;
+	min-width: 800px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 10000;
+	overflow: visible;
+	
+	.brand {
+		float: left;
+		display: block;
+		font-size: 1.25em;
+		padding: 0.5em 1.25em;
+	}
+	
+	a, a:hover {
+		text-decoration: none;
+	}
+}
+.nav {
+	display: block;
+	float: left;
+	margin-right: 0.6em;
+	outline: none;
+	.goog-tab {
+		display: block;
+		float: left;
+	}
+	
+	a {
+		display: block;
+		float: none;
+		padding: 0.6em 0.6em;
+		line-height: 1.4em;
+	}
+}
+
+.outer {
+	margin-top: @top-height;
+}
+
+.sidebar {
+	float: left;
+	height: 100%;
+	margin: 0 0.75em;
+	
+}
+
+.contents {
+	display: block;
+}
+
+.topic {
+	margin-bottom: 0.5em;
+	min-width: 600px;
+}
+
+footer {
+	display: block;
+	
+	margin-top: 1em;
+	padding-top: 1em;
+	border-top: 1px solid whitesmoke;
+	
+	font-size: x-small;
+	text-align: center;
+}
