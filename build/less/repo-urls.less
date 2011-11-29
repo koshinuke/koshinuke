@@ -1,24 +1,25 @@
 
 .repo-urls {
 	min-width: 750px;
-	font-size: 0.75em;
 	
 	.protocols {
 		outline: none;
 		float: left;
 		span {
 			float: left;
-			display: block;
-			padding: 0.25em 0.5em;
-			color: black;
-			background-color: @grayLighter;
-			text-shadow: 1px 1px 0 @white;
-			text-decoration: none;
-			font-weight: bold;
-			&:hover {
-				color: white;
-				text-shadow: -1px -1px 0 @grayLight;
-				#gradient > .vertical(@blue, @blueDark);
+			a {
+				display: block;
+				padding: 0.25em 0.5em;
+				color: black;
+				background-color: @grayLighter;
+				text-shadow: 1px 1px 0 white;
+				text-decoration: none;
+				font-weight: bold;
+				&:hover {
+					color: white;
+					text-shadow: -1px -1px 0 @grayLight;
+					#gradient > .vertical(@blue, @blueDark);
+				}
 			}
 			&.active {
 				#gradient > .vertical(@grayLighter, @grayLight);
@@ -30,18 +31,18 @@
 			}
 		}
 	}
-	.begin {
+	
+	.begin, .middle, .end {
 		border: 1px solid #ccc;
-		#radius > .left(3px);
 	}
-	.middle {
-		border: 1px solid #ccc;
+	.begin {
+		#radius > .left;
+	}
+	.middle, .end {
 		border-left: 0;
 	}
 	.end {
-		border: 1px solid #ccc;
-		border-left: 0;
-		#radius > .right(3px);
+		#radius > .right;
 	}
 
 	.url-box {
@@ -57,9 +58,8 @@
 	
 	.clip-container {
 		float: left;
-
 		img {
-			margin: 0.2em 0.4em;
+			margin: 0.4em 0.4em;
 		}
 	}
 	

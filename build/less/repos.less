@@ -7,9 +7,22 @@
 
 @import "popup.less";
 @import "repo-urls.less";
-
+@import "breadcrumbs.less";
+@import "tabs.less";
 
 @top-height: 2.5em;
+
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+div {
+	outline: none;
+}
+
+a {
+	text-decoration: none;
+}
 
 .topbar {
 	height: @top-height;
@@ -26,10 +39,10 @@
 		display: block;
 		font-size: 1.25em;
 		padding: 0.5em 1.25em;
-	}
-	
-	a, a:hover {
-		text-decoration: none;
+		
+		a {
+			font-weight: bold;
+		}
 	}
 }
 .nav {
@@ -51,31 +64,36 @@
 }
 
 .outer {
+	width: 100%;
+	min-width: 800px;
 	margin-top: @top-height;
 }
 
-.sidebar {
+.sidebar, .contents {
 	float: left;
-	height: 100%;
-	margin: 0 0.75em;
-	
+	margin-left: 1%;
+}
+
+.sidebar {
+	width: 10%;
 }
 
 .contents {
-	display: block;
+	width: 88%;
 }
 
 .topic {
+	.clearfix;
 	margin-bottom: 0.5em;
-	min-width: 600px;
+	width: 100%;
 }
 
 footer {
-	display: block;
-	
+	clear: both;
+
 	margin-top: 1em;
 	padding-top: 1em;
-	border-top: 1px solid whitesmoke;
+	border-top: 1px solid @grayLight;
 	
 	font-size: x-small;
 	text-align: center;
