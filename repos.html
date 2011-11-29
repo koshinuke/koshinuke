@@ -15,7 +15,7 @@ __    _          _       _   _       _
 		<link href="css/markdown.css" rel="stylesheet">
 		<link href="css/rst.css" rel="stylesheet">
 		<script type="application/javascript" src="closure-library/closure/goog/base.js"></script>
-		<script type="application/javascript" src="closure-library/third_party/closure/goog/deps.js"></script>
+		<script type="application/javascript" src="closure-library/third_party/closure/goog/base.js"></script>
 		<script>
 			// name resolving hack
 			goog.require('goog.string.StringBuffer');
@@ -82,20 +82,14 @@ __    _          _       _   _       _
 				<div class="topic">
 					<div class="repo-urls">
 						<div class="protocols">
-							<div class="goog-tab begin" >
-								<a href="username@koshinuke.org:koshinuke/org.koshinuke.git" desc="Read+Write" descat="url-desc" for="url-box">SSH</a>
-							</div>
-							<div class="goog-tab middle goog-tab-selected">
-								<a href="https://username@koshinuke.org/koshinuke/org.koshinuke.git" desc="Read+Write" descat="url-desc" for="url-box">HTTPS</a>
-							</div>
-							<div class="goog-tab middle">
-								<a href="git://koshinuke.org/koshinuke/org.koshinuke.git" desc="Read-Only" descat="url-desc" for="url-box">Git</a>
-							</div>
+							<span class="begin" href="username@koshinuke.org:koshinuke/org.koshinuke.git" desc="Read+Write">SSH</span>
+							<span class="middle active" href="https://username@koshinuke.org/koshinuke/org.koshinuke.git" desc="Read+Write">HTTPS</span>
+							<span class="middle" href="git://koshinuke.org/koshinuke/org.koshinuke.git" desc="Read-Only">Git</span>
 						</div>
-						<input type="text" id="url-box" class="url-box end" value="username@koshinuke.org:koshinuke/org.koshinuke.git" readonly="readonly"/>
-						<span class="clip-container"><img id="clip-btn" src="images/copy_button_up.png" alt="copy" from="url-box"/></span>
+						<input type="text" class="url-box end" value="username@koshinuke.org:koshinuke/org.koshinuke.git" readonly="readonly"/>
+						<span class="clip-container"><img src="images/copy_button_up.png" alt="copy"/></span>
 						<div class="desc-container">
-							<b id="url-desc">Read+Write</b>&nbsp;access
+							<span>Read+Write</span>&nbsp;access
 						</div>
 					</div>
 				</div>
@@ -171,7 +165,7 @@ __    _          _       _   _       _
 				var _timer = setInterval(function() {
 					if(/loaded|complete/.test(document.readyState)) {
 						clearInterval(_timer);
-						org.koshinuke.main();
+						main();
 					}
 				}, 10);
 			} else if(document.addEventListener) {

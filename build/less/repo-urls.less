@@ -6,30 +6,26 @@
 	.protocols {
 		outline: none;
 		float: left;
-		div {
+		span {
 			float: left;
-			a {
-				display: block;
-				padding: 0.25em 0.5em;
-				color: black;
-				background-color: @grayLighter;
-				text-shadow: 1px 1px 0 @white;
-				text-decoration: none;
-				font-weight: bold;
-				&:hover {
-					color: white;
-					text-shadow: -1px -1px 0 @grayLight;
-					#gradient > .vertical(@blue, @blueDark);
-				}
+			display: block;
+			padding: 0.25em 0.5em;
+			color: black;
+			background-color: @grayLighter;
+			text-shadow: 1px 1px 0 @white;
+			text-decoration: none;
+			font-weight: bold;
+			&:hover {
+				color: white;
+				text-shadow: -1px -1px 0 @grayLight;
+				#gradient > .vertical(@blue, @blueDark);
 			}
-			&.goog-tab-selected {
-				a {
+			&.active {
+				#gradient > .vertical(@grayLighter, @grayLight);
+				text-shadow: 1px 1px 0 @grayLighter;
+				&:hover {
+					color: @black;
 					#gradient > .vertical(@grayLighter, @grayLight);
-					text-shadow: 1px 1px 0 @grayLighter;
-					&:hover {
-						color: @black;
-						#gradient > .vertical(@grayLighter, @grayLight);
-					}
 				}
 			}
 		}
@@ -69,5 +65,9 @@
 	
 	.desc-container {
 		padding: 0.25em;
+		span {
+			margin-left: 0.3em;
+			font-weight: bold;
+		}
 	}
 }

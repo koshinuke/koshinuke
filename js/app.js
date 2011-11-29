@@ -1,4 +1,4 @@
-goog.provide('org.koshinuke');
+goog.provide('org.koshinuke.main');
 
 goog.require('goog.array');
 goog.require('goog.dom');
@@ -16,18 +16,21 @@ goog.require('goog.Uri');
 goog.require('goog.ui.Component.EventType');
 goog.require('goog.ui.IdGenerator');
 goog.require('goog.ui.PopupMenu');
+goog.require('goog.ui.SelectionModel');
 goog.require('goog.ui.TabBar');
 goog.require('goog.ui.TableSorter');
-goog.require('goog.ui.Tooltip');
 
-goog.require('ZeroClipboard');
 goog.require('CodeMirror');
 goog.require('CodeMirror.modes');
 
-
-goog.require('org.koshinuke.positioning.GravityPosition');
-goog.require('org.koshinuke.template.breadcrumb');
+goog.require('org.koshinuke');
 goog.require('org.koshinuke.ui.Breadcrumb');
+goog.require('org.koshinuke.ui.RepoUrls');
 
-goog.exportSymbol('org.koshinuke.main', function() {
+goog.exportSymbol('main', function() {
+	goog.array.forEach(goog.dom.query('.repo-urls'), function(root) {
+		var ru = new org.koshinuke.ui.RepoUrls();
+		ru.decorate(root);
+		ru.setSelectedIndex(0);
+	});
 });
