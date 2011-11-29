@@ -66,7 +66,7 @@ org.koshinuke.ui.RepoUrls.prototype.decorateInternal = function(element) {
 	var img = goog.dom.query('.clip-container img')[0];
 
 	var g = function() {
-		return new org.koshinuke.positioning.GravityPosition(img, 'w', 3);
+		return new org.koshinuke.positioning.GravityPosition(img, 'w', 1);
 	}
 	var copyTip = new goog.ui.Popup(self.tooltip_('copy to clipboard'), g());
 	var compTip = new goog.ui.Popup(self.tooltip_('copied !!'), g());
