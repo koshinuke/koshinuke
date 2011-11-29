@@ -106,7 +106,36 @@ org.koshinuke.ui.RepoUrls.prototype.tooltip_ = function(t) {
 	goog.dom.appendChild(document.body, el);
 	return el;
 }
+/**
+ * @private
+ */
+org.koshinuke.ui.RepoUrls.prototype.listenEvents_ = function() {
+	var h = this.getHandler();
+	h.listen(this, goog.ui.Component.EventType.SHOW, this.handleShow_);
+	h.listen(this, goog.ui.Component.EventType.HIDE, this.handleHide_);
+	h.listen(this, goog.events.EventType.RESIZE, this.handleShow_);
+	h.listen(this, goog.events.EventType.PAGESHOW, this.handleShow_);
+	h.listen(this, goog.events.EventType.PAGEHIDE, this.handleHide_);
+}
+/**
+ * @private
+ */
+org.koshinuke.ui.RepoUrls.prototype.handleShow_ = function() {
+	this.clip.show();
+}
+/**
+ * @private
+ */
+org.koshinuke.ui.RepoUrls.prototype.handleHide_ = function() {
+	this.clip.hide();
+}
 
 org.koshinuke.ui.RepoUrls.prototype.reposition = function() {
 	this.clip.reposition();
 }
+/** @override */
+org.koshinuke.ui.RepoUrls.prototype.disposeInternal = function() {
+	org.koshinuke.ui.RepoUrls.superClass_.disposeInternal.call(this);
+	this.clip.destroy();
+	this.clip = null;
+};
