@@ -39,7 +39,6 @@ org.koshinuke.ui.RepoUrls.prototype.canDecorate = function(element) {
 }
 /** @override */
 org.koshinuke.ui.RepoUrls.prototype.decorateInternal = function(element) {
-	var self = this;
 	var desc = goog.dom.query('.desc-container span', element)[0];
 	var urlbox = goog.dom.query('.url-box', element)[0];
 	goog.events.listen(element, goog.events.EventType.CLICK, function(e) {
@@ -49,17 +48,17 @@ org.koshinuke.ui.RepoUrls.prototype.decorateInternal = function(element) {
 			var newone = goog.dom.createTextNode(t.getAttribute('desc'));
 			var oldone = desc.firstChild;
 			desc.replaceChild(newone, oldone);
-			self.protocols.setSelectedItem(t);
+			this.protocols.setSelectedItem(t);
 		} else if(goog.dom.classes.has(t, "url-box")) {
 			t.select();
 		}
-	});
+	}, false, this);
 
 	goog.array.forEach(goog.dom.query('.protocols', element), function(el) {
 		goog.array.forEach(goog.dom.getChildren(el), function(a) {
-			self.protocols.addItem(a);
-		});
-	});
+			this.protocols.addItem(a);
+		}, this);
+	}, this);
 
 	ZeroClipboard.setMoviePath('flash/ZeroClipboard.swf');
 
@@ -68,10 +67,10 @@ org.koshinuke.ui.RepoUrls.prototype.decorateInternal = function(element) {
 	var g = function() {
 		return new org.koshinuke.positioning.GravityPosition(img, 'w', 1);
 	}
-	var copyTip = new goog.ui.Popup(self.tooltip_('copy to clipboard'), g());
-	var compTip = new goog.ui.Popup(self.tooltip_('copied !!'), g());
+	var copyTip = new goog.ui.Popup(this.tooltip_('copy to clipboard'), g());
+	var compTip = new goog.ui.Popup(this.tooltip_('copied !!'), g());
 
-	var clip = self.clip;
+	var clip = this.clip;
 	clip.addEventListener('onMouseOver', function(client) {
 		var el = client.domElement;
 		el.setAttribute("src", "images/copy_button_over.png");
