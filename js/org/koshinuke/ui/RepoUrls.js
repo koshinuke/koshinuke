@@ -39,6 +39,7 @@ org.koshinuke.ui.RepoUrls.prototype.canDecorate = function(element) {
 }
 /** @override */
 org.koshinuke.ui.RepoUrls.prototype.decorateInternal = function(element) {
+	org.koshinuke.ui.RepoUrls.superClass_.decorateInternal.call(this, element);
 	var desc = goog.dom.query('.desc-container span', element)[0];
 	var urlbox = goog.dom.query('.url-box', element)[0];
 	goog.events.listen(element, goog.events.EventType.CLICK, function(e) {

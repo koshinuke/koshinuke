@@ -1,5 +1,6 @@
 goog.provide('org.koshinuke');
 
+goog.require('goog.pubsub.PubSub');
 
 org.koshinuke.activationHandler = function(item, isSelect) {
 	var c = "active";
@@ -9,3 +10,6 @@ org.koshinuke.activationHandler = function(item, isSelect) {
 		goog.dom.classes.remove(item, c);
 	}
 }
+
+org.koshinuke.PubSub = new goog.pubsub.PubSub();
+org.koshinuke.PubSub.REPO_SELECTION = "r.s";

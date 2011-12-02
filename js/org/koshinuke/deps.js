@@ -2,6 +2,8 @@
 goog.addDependency("../../../js/org/koshinuke/base.js", ['org.koshinuke'], []);
 goog.addDependency("../../../js/org/koshinuke/positioning/gravityposition.js", ['org.koshinuke.positioning.GravityPosition'], ['goog.positioning.AbstractPosition']);
 goog.addDependency("../../../js/org/koshinuke/template/breadcrumb.js", ['org.koshinuke.template.breadcrumb'], ['soy', 'soy.StringBuilder']);
+goog.addDependency("../../../js/org/koshinuke/template/repolist.js", ['org.koshinuke.template.repolist'], ['soy', 'soy.StringBuilder']);
 goog.addDependency("../../../js/org/koshinuke/template/tooltip.js", ['org.koshinuke.template.tooltip'], ['soy', 'soy.StringBuilder']);
-goog.addDependency("../../../js/org/koshinuke/ui/Breadcrumb.js", ['org.koshinuke.ui.Breadcrumb'], ['goog.array', 'goog.dom', 'goog.soy']);
+goog.addDependency("../../../js/org/koshinuke/ui/Breadcrumb.js", ['org.koshinuke.ui.Breadcrumb'], ['goog.array', 'goog.dom', 'goog.soy', 'goog.ui.Component']);
+goog.addDependency("../../../js/org/koshinuke/ui/RepoList.js", ['org.koshinuke.ui.RepoList'], ['goog.array', 'goog.dom', 'goog.dom.classes', 'goog.dom.query', 'goog.ui.Component', 'goog.ui.SelectionModel', 'org.koshinuke.template.repolist']);
 goog.addDependency("../../../js/org/koshinuke/ui/RepoUrls.js", ['org.koshinuke.ui.RepoUrls'], ['goog.array', 'goog.dom', 'goog.dom.classes', 'goog.dom.query', 'goog.soy', 'goog.ui.Component', 'goog.ui.SelectionModel', 'goog.ui.Popup', 'ZeroClipboard', 'org.koshinuke.positioning.GravityPosition', 'org.koshinuke.template.tooltip']);

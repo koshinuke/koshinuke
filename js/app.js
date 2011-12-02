@@ -25,6 +25,7 @@ goog.require('CodeMirror.modes');
 
 goog.require('org.koshinuke');
 goog.require('org.koshinuke.ui.Breadcrumb');
+goog.require('org.koshinuke.ui.RepoList');
 goog.require('org.koshinuke.ui.RepoUrls');
 
 goog.exportSymbol('main', function() {
@@ -33,4 +34,19 @@ goog.exportSymbol('main', function() {
 		ru.decorate(root);
 		ru.setSelectedIndex(0);
 	});
+	var contextHandler = function(repo, li, is) {
+		if(is) {
+			org.koshinuke.PubSub.publish(org.koshinuke.PubSub.REPO_SELECTION, repo, li);
+		}
+	}
+	org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.REPO_SELECTION, function(repo, li) {
+		console.log(repo);
+		console.log(li);
+	});
+	goog.array.forEach(goog.dom.query('.repo-list'), function(root) {
+		var list = new org.koshinuke.ui.RepoList(contextHandler);
+		list.decorate(root);
+		list.setSelectedIndex(0, 0);
+	});
+
 });
