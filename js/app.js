@@ -53,10 +53,10 @@ goog.exportSymbol('main', function() {
 	});
 	function findTabIcon(key) {
 		return {
-		b : 'branches',
-		t : 'tags',
-		h : 'histories',
-		g : 'graph'
+		$$b : 'branches',
+		$$t : 'tags',
+		$$h : 'histories',
+		$$g : 'graph'
 		}[key] || 'txt';
 	}
 

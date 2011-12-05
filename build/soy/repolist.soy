@@ -8,10 +8,10 @@
 <div class="repository {if isFirst($e)}top{elseif isLast($e)}bottom{/if}" host="{$e.host}" path="{$e.path}">
 	<div class="repo-name">{$e.name}</div>
 	<ul class="repo-context">
-		<li context="b" class="branches">Branch</li>
-		<li context="t" class="tags">Tags</li>
-		<li context="h" class="histories">Histories</li>
-		<li context="g" class="graph">Graph</li>
+		<li context="$$b" class="branches">Branch</li>
+		<li context="$$t" class="tags">Tags</li>
+		<li context="$$h" class="histories">Histories</li>
+		<li context="$$g" class="graph">Graph</li>
 	</ul>
 </div>
 {/foreach}
