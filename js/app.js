@@ -28,17 +28,17 @@ goog.require('org.koshinuke');
 goog.require('org.koshinuke.ui.Breadcrumb');
 goog.require('org.koshinuke.ui.RepoList');
 goog.require('org.koshinuke.ui.RepoUrls');
+goog.require('org.koshinuke.ui.RepoTabBar');
 
 goog.exportSymbol('main', function() {
+	var PubSub = org.koshinuke.PubSub;
+
 	goog.array.forEach(goog.dom.query('.repo-urls'), function(root) {
 		var ru = new org.koshinuke.ui.RepoUrls();
 		ru.decorate(root);
 		ru.setSelectedIndex(0);
-		var f = function(repomodel) {
-			ru.setModel(repomodel);
-		};
-		org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.REPO_SELECTION, f);
-		org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.TAB_SELECTION, f);
+		PubSub.subscribe(PubSub.REPO_SELECTION, ru.setModel, ru);
+		PubSub.subscribe(PubSub.TAB_SELECTION, ru.setModel, ru);
 	});
 
 	goog.array.forEach(goog.dom.query('.breadcrumbs'), function(root) {
@@ -46,61 +46,25 @@ goog.exportSymbol('main', function() {
 			console.log(ary);
 		});
 		b.decorate(root);
-		org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.TAB_SELECTION, function(repomodel) {
-			var ary = [repomodel.label];
+		PubSub.subscribe(PubSub.TAB_SELECTION, function(rm) {
+			var ary = goog.array.flatten(rm.label);
 			b.setModel(ary);
 		});
 	});
-	function findTabIcon(key) {
-		return {
-		$$b : 'branches',
-		$$t : 'tags',
-		$$h : 'histories',
-		$$g : 'graph'
-		}[key] || 'txt';
-	}
-
 
 	goog.array.forEach(goog.dom.query('.goog-tab-bar'), function(root) {
-		var tabbar = new goog.ui.TabBar();
+		var tabbar = new org.koshinuke.ui.RepoTabBar();
 		tabbar.decorate(root);
-		tabbar.tabmap = {};
-		org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.REPO_SELECTION, function(repomodel) {
-			var rm = repomodel;
-			var label = " " + rm.name;
-			var hash = org.koshinuke.hash(rm.host, rm.path, rm.name, rm.context);
-			var tab = tabbar.tabmap[hash];
-			if(!tab) {
-				tab = new goog.ui.Tab(label);
-				tab.rm = rm;
-				tabbar.addChild(tab, true);
-				tabbar.tabmap[hash] = tab;
-				var el = tab.getElement();
-				goog.dom.classes.add(el, findTabIcon(rm.context));
-			}
-			tabbar.setSelectedTab(tab);
-		});
+		PubSub.subscribe(PubSub.REPO_SELECTION, tabbar.addTab, tabbar);
 		goog.events.listen(tabbar, goog.ui.Component.EventType.SELECT, function(e) {
-			var el = e.target.getElement();
-			var next = el.getAttribute('for');
-			org.koshinuke.PubSub.publish(org.koshinuke.PubSub.TAB_SELECTION, e.target.rm);
+			PubSub.publish(PubSub.TAB_SELECTION, e.target.getModel());
 		});
 	});
 
 	goog.array.forEach(goog.dom.query('.repo-list'), function(root) {
 		var list = new org.koshinuke.ui.RepoList(function(repo, li, is) {
 			if(is) {
-				org.koshinuke.PubSub.publish(org.koshinuke.PubSub.REPO_SELECTION, (function() {
-					var name = goog.dom.query('.repo-name', repo)[0];
-					return {
-						user : 'taichi', // from cookie ?
-						host : repo.getAttribute('host'),
-						path : repo.getAttribute('path'),
-						name : goog.dom.getTextContent(name).trim(),
-						context : li.getAttribute('context'),
-						label : goog.dom.getTextContent(li)
-					};
-				})());
+				PubSub.publish(PubSub.REPO_SELECTION, list.makeModel(repo, li));
 			}
 		});
 		list.decorate(root);

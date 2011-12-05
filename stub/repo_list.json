@@ -1,0 +1,17 @@
+[
+	{
+		"host":"koshinuke.jp",
+		"path":"web/",
+		"name":"koshinuke"
+	},
+	{
+		"host":"koshinuke.com",
+		"path":"servers/java/",
+		"name":"koshinuke.java"
+	},
+	{
+		"host":"koshinuke.org",
+		"path":"servers/python/",
+		"name":"koshinuke.py"
+	}
+]

@@ -62,6 +62,17 @@ org.koshinuke.ui.RepoList.prototype.decorateInternal = function(element) {
 		}
 	}, false, this);
 }
+org.koshinuke.ui.RepoList.prototype.makeModel = function(repo, li) {
+	var name = goog.dom.query('.repo-name', repo)[0];
+	return {
+		user : 'taichi', // from cookie ?
+		host : repo.getAttribute('host'),
+		path : repo.getAttribute('path'),
+		name : goog.dom.getTextContent(name).trim(),
+		context : li.getAttribute('context'),
+		label : goog.dom.getTextContent(li)
+	};
+}
 /** @override */
 org.koshinuke.ui.RepoList.prototype.setModel = function(model) {
 	org.koshinuke.ui.RepoList.superClass_.setModel.call(this, model);

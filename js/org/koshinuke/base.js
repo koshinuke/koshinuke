@@ -18,6 +18,15 @@ org.koshinuke.PubSub = new goog.pubsub.PubSub();
 org.koshinuke.PubSub.REPO_SELECTION = "r.s";
 org.koshinuke.PubSub.TAB_SELECTION = "t.s";
 
+org.koshinuke.findIcon = function(key) {
+	return {
+	$$b : 'branches',
+	$$t : 'tags',
+	$$h : 'histories',
+	$$g : 'graph'
+	}[key] || 'txt';
+}
+
 org.koshinuke.hash = function(var_args) {
 	var md5 = new goog.crypt.Md5();
 	goog.array.forEach(arguments, function(a) {
