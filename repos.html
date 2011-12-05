@@ -62,16 +62,16 @@ __    _          _       _   _       _
 							koshinuke
 						</div>
 						<ul class="repo-context">
-							<li context="b">
+							<li context="b" class="branches">
 								Branches
 							</li>
-							<li context="t" class="active">
+							<li context="t" class="tags active">
 								Tags
 							</li>
-							<li context="h">
+							<li context="h" class="histories">
 								Histories
 							</li>
-							<li context="g">
+							<li context="g" class="graph">
 								Graph
 							</li>
 						</ul>
@@ -81,16 +81,16 @@ __    _          _       _   _       _
 							koshinuke.java
 						</div>
 						<ul class="repo-context">
-							<li context="b" class="active">
+							<li context="b" class="branches active">
 								Branches
 							</li>
-							<li context="t">
+							<li context="t" class="tags">
 								Tags
 							</li>
-							<li context="h">
+							<li context="h" class="histories">
 								Histories
 							</li>
-							<li context="g">
+							<li context="g" class="graph">
 								Graph
 							</li>
 						</ul>
@@ -100,16 +100,16 @@ __    _          _       _   _       _
 							koshinuke.py
 						</div>
 						<ul class="repo-context">
-							<li context="b">
+							<li context="b" class="branches">
 								Branches
 							</li>
-							<li context="t">
+							<li context="t" class="tags">
 								Tags
 							</li>
-							<li context="h" class="active">
+							<li context="h" class="histories active">
 								Histories
 							</li>
-							<li context="g">
+							<li context="g" class="graph">
 								Graph
 							</li>
 						</ul>
@@ -150,23 +150,11 @@ __    _          _       _   _       _
 				</div>
 				<div class="topic">
 					<div class="tab-container">
-						<div id="project_main_tab" class="goog-tab-bar goog-tabs">
-							<div class="goog-tab goog-tab-selected" for="branch-pane">
-								Branches
-							</div>
-							<div class="goog-tab" for="tags-pane">
-								Tags
-							</div>
-							<div class="goog-tab" for="commitlog-pane">
-								Histories
-							</div>
-							<div class="goog-tab" for="branchgraph-pane">
-								Graph
-							</div>
+						<div class="goog-tab-bar">
 						</div>
 					</div><!-- <div class="tab-container"> -->
 					<div class="panes">
-						<div id="branch-pane" class="pane show">
+						<div id="branch-pane" class="pane">
 							ブランチ
 						</div>
 						<div id="tags-pane" class="pane">
