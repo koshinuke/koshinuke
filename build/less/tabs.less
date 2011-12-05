@@ -5,27 +5,25 @@
 	.user-select;
 	
 	.goog-tab {
+		border: 1px solid white;
+		border-color: white white #ddd white;
 		float: left;
-		padding: 0;
-		position: relative;
-		top: 1px;
-	}
-	a {
-		display: block;
 		padding: 0 1em;
+		margin-bottom: -1px;
+		color: @gray;
+
 		line-height: 2.5em;
 		#radius > .top;
 
 		&:hover {
 			background-color: @grayLighter;
+			cursor: pointer;
 		}
-	}
-	.goog-tab-selected a {
-		background-color: white;
-		border: 1px solid #ddd;
-		border-bottom: 0;
-		color: @gray;
-		cursor: default;
+		&.goog-tab-selected {
+			border-color: #ddd #ddd white #ddd;
+			color: black;
+			cursor: default;
+		}
 	}
 }
 

@@ -64,4 +64,9 @@ goog.exportSymbol('main', function() {
 			b.setModel(ary);
 		});
 	});
+
+	goog.array.forEach(goog.dom.query('.goog-tab-bar'), function(root) {
+		var tabbar = new goog.ui.TabBar();
+		tabbar.decorate(root);
+	});
 });
