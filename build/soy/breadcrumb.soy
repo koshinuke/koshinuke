@@ -1,10 +1,10 @@
 {namespace org.koshinuke.template.breadcrumb}
 
 /**
- * make li for breadcrumb
- * @param href is anchr href attribute
- * @param view is representation
+ * @param list
  */
 {template .tmpl}
-<li><a href="{$href}">{$view}</a></li>
+{foreach $e in $list}
+<li>{$e}</li>
+{/foreach}
 {/template}

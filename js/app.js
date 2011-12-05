@@ -53,4 +53,15 @@ goog.exportSymbol('main', function() {
 		list.decorate(root);
 		list.setSelectedIndex(0, 0);
 	});
+
+	goog.array.forEach(goog.dom.query('.breadcrumbs'), function(root) {
+		var b = new org.koshinuke.ui.Breadcrumb(function(ary) {
+			console.log(ary);
+		});
+		b.decorate(root);
+		org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.REPO_SELECTION, function(repo, li) {
+			var ary = [goog.dom.getTextContent(li)];
+			b.setModel(ary);
+		});
+	});
 });
