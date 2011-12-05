@@ -33,20 +33,24 @@ goog.exportSymbol('main', function() {
 		var ru = new org.koshinuke.ui.RepoUrls();
 		ru.decorate(root);
 		ru.setSelectedIndex(0);
+		org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.REPO_SELECTION, function(repo, li) {
+			var name = goog.dom.query('.repo-name', repo)[0];
+			ru.setModel({
+				user : 'taichi', // from cookie ?
+				host : repo.getAttribute('host'),
+				path : repo.getAttribute('path'),
+				name : goog.dom.getTextContent(name).trim()
+			});
+		});
 	});
 	var contextHandler = function(repo, li, is) {
 		if(is) {
 			org.koshinuke.PubSub.publish(org.koshinuke.PubSub.REPO_SELECTION, repo, li);
 		}
 	}
-	org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.REPO_SELECTION, function(repo, li) {
-		console.log(repo);
-		console.log(li);
-	});
 	goog.array.forEach(goog.dom.query('.repo-list'), function(root) {
 		var list = new org.koshinuke.ui.RepoList(contextHandler);
 		list.decorate(root);
 		list.setSelectedIndex(0, 0);
 	});
-
 });

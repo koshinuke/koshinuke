@@ -5,6 +5,7 @@ goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.query');
 goog.require('goog.soy');
+goog.require('goog.string.format');
 
 goog.require('goog.ui.Component');
 goog.require('goog.ui.SelectionModel');
@@ -21,10 +22,27 @@ goog.require('org.koshinuke.template.tooltip');
 org.koshinuke.ui.RepoUrls = function(opt_domHelper) {
 	goog.ui.Component.call(this, opt_domHelper);
 	this.protocols = new goog.ui.SelectionModel();
-	this.protocols.setSelectionHandler(org.koshinuke.activationHandler);
+	var self = this;
+	this.protocols.setSelectionHandler(function(item, isSelect) {
+		org.koshinuke.activationHandler(item, isSelect);
+		if(isSelect) {
+			self.internalSelect_(item);
+		}
+	});
 	this.clip = new ZeroClipboard.Client();
 }
 goog.inherits(org.koshinuke.ui.RepoUrls, goog.ui.Component);
+
+/** @private */
+org.koshinuke.ui.RepoUrls.prototype.internalSelect_ = function(item) {
+	var element = this.getElement();
+	var desc = goog.dom.query('.desc-container span', element)[0];
+	var urlbox = goog.dom.query('.url-box', element)[0];
+	urlbox.setAttribute('value', item.getAttribute('href'));
+	var newone = goog.dom.createTextNode(item.getAttribute('desc'));
+	var oldone = desc.firstChild;
+	desc.replaceChild(newone, oldone);
+}
 
 org.koshinuke.ui.RepoUrls.prototype.setSelectedIndex = function(i) {
 	this.protocols.setSelectedIndex(i);
@@ -40,15 +58,9 @@ org.koshinuke.ui.RepoUrls.prototype.canDecorate = function(element) {
 /** @override */
 org.koshinuke.ui.RepoUrls.prototype.decorateInternal = function(element) {
 	org.koshinuke.ui.RepoUrls.superClass_.decorateInternal.call(this, element);
-	var desc = goog.dom.query('.desc-container span', element)[0];
-	var urlbox = goog.dom.query('.url-box', element)[0];
 	goog.events.listen(element, goog.events.EventType.CLICK, function(e) {
 		var t = e.target;
 		if(t.hasAttribute('href')) {
-			urlbox.value = t.getAttribute('href');
-			var newone = goog.dom.createTextNode(t.getAttribute('desc'));
-			var oldone = desc.firstChild;
-			desc.replaceChild(newone, oldone);
 			this.protocols.setSelectedItem(t);
 		} else if(goog.dom.classes.has(t, "url-box")) {
 			t.select();
@@ -139,3 +151,32 @@ org.koshinuke.ui.RepoUrls.prototype.disposeInternal = function() {
 	this.clip.destroy();
 	this.clip = null;
 };
+/** @override */
+org.koshinuke.ui.RepoUrls.prototype.setModel = function(model) {
+	org.koshinuke.ui.RepoUrls.superClass_.setModel.call(this, model);
+	var el = this.getElement();
+
+	function f(fn, protocol) {
+		var href = fn(model.user, model.host, model.path, model.name);
+		goog.array.forEach(goog.dom.query('.protocols .' + protocol, el), function(a) {
+			a.setAttribute('href', href);
+		});
+	}
+
+	f(this.ssh_, 'ssh');
+	f(this.https_, 'https');
+	f(this.git_, 'git');
+	this.internalSelect_(this.protocols.getSelectedItem());
+}
+/** @private */
+org.koshinuke.ui.RepoUrls.prototype.ssh_ = function(user, host, path, name) {
+	return goog.string.format('%s@%s:%s%s.git', user, host, path, name);
+}
+/** @private */
+org.koshinuke.ui.RepoUrls.prototype.https_ = function(user, host, path, name) {
+	return goog.string.format('https://%s@%s/%s%s.git', user, host, path, name);
+}
+/** @private */
+org.koshinuke.ui.RepoUrls.prototype.git_ = function(user, host, path, name) {
+	return goog.string.format('git://%s/%s%s.git', host, path, name);
+}
