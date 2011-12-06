@@ -21,11 +21,11 @@ org.koshinuke.PubSub.TAB_UNSELECT = "t.u";
 
 org.koshinuke.findIcon = function(key) {
 	return {
-	$$b : 'branches',
-	$$t : 'tags',
-	$$h : 'histories',
-	$$g : 'graph'
-	}[key] || 'txt';
+	"$$b" : "branches",
+	"$$t" : "tags",
+	"$$h" : "histories",
+	"$$g" : "graph"
+	}[key] || "txt";
 };
 
 org.koshinuke.hash = function(var_args) {
