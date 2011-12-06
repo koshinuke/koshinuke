@@ -17,18 +17,23 @@
 @pink:              #c3325f;
 @purple:            #7a43b6;
 
+.icon(@path) {
+	margin-right: 0.2em;
+	content : url(@path);
+}
+
 .branches:before {
-	content : url("images/arrow_branch.png");
+	.icon("images/arrow_branch.png");
 }
 .tags:before {
-	content : url("images/tag_blue.png");
+	.icon("images/tag_blue.png");
 }
 .histories:before {
-	content : url("images/film.png");
+	.icon("images/film.png");
 }
 .graph:before {
-	content : url("images/chart_organisation.png");
+	.icon("images/chart_organisation.png");
 }
 .txt:before {
-	content : url("images/txt.png");
+	.icon("images/txt.png");
 }

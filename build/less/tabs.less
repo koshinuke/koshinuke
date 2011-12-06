@@ -8,9 +8,8 @@
 		border: 1px solid white;
 		border-color: white white #ddd white;
 		float: left;
-		padding: 0 1em 0 0.5em;
-		margin-top: 2px;
-		margin-bottom: -1px;
+		padding: 0 0.5em 0 0.5em;
+		margin: 2px 0 -1px 0;
 		color: @gray;
 
 		line-height: 2.5em;
@@ -24,6 +23,19 @@
 			border-color: #ddd #ddd white #ddd;
 			color: black;
 			cursor: default;
+		}
+		.close {
+			font-weight: bold;
+			font-size: 0.3em;
+			vertical-align: top;
+			#radius > .around;
+			color: @gray;
+			padding: 0 0.3em 0.3em 0.3em;
+			margin-left: 0.5em;
+			&:hover {
+				background: @gray;
+				color: pink;
+			}
 		}
 	}
 }

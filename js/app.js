@@ -37,8 +37,8 @@ goog.exportSymbol('main', function() {
 		var ru = new org.koshinuke.ui.RepoUrls();
 		ru.decorate(root);
 		ru.setSelectedIndex(0);
-		PubSub.subscribe(PubSub.REPO_SELECTION, ru.setModel, ru);
-		PubSub.subscribe(PubSub.TAB_SELECTION, ru.setModel, ru);
+		PubSub.subscribe(PubSub.REPO_SELECT, ru.setModel, ru);
+		PubSub.subscribe(PubSub.TAB_SELECT, ru.setModel, ru);
 	});
 
 	goog.array.forEach(goog.dom.query('.breadcrumbs'), function(root) {
@@ -46,25 +46,31 @@ goog.exportSymbol('main', function() {
 			console.log(ary);
 		});
 		b.decorate(root);
-		PubSub.subscribe(PubSub.TAB_SELECTION, function(rm) {
+		PubSub.subscribe(PubSub.TAB_SELECT, function(rm) {
 			var ary = goog.array.flatten(rm.label);
 			b.setModel(ary);
+		});
+		PubSub.subscribe(PubSub.TAB_UNSELECT, function(rm) {
+			b.setModel([]);
 		});
 	});
 
 	goog.array.forEach(goog.dom.query('.goog-tab-bar'), function(root) {
 		var tabbar = new org.koshinuke.ui.RepoTabBar();
 		tabbar.decorate(root);
-		PubSub.subscribe(PubSub.REPO_SELECTION, tabbar.addTab, tabbar);
+		PubSub.subscribe(PubSub.REPO_SELECT, tabbar.addTab, tabbar);
 		goog.events.listen(tabbar, goog.ui.Component.EventType.SELECT, function(e) {
-			PubSub.publish(PubSub.TAB_SELECTION, e.target.getModel());
+			PubSub.publish(PubSub.TAB_SELECT, e.target.getModel());
+		});
+		goog.events.listen(tabbar, goog.ui.Component.EventType.UNSELECT, function(e) {
+			PubSub.publish(PubSub.TAB_UNSELECT, e.target.getModel());
 		});
 	});
 
 	goog.array.forEach(goog.dom.query('.repo-list'), function(root) {
 		var list = new org.koshinuke.ui.RepoList(function(repo, li, is) {
 			if(is) {
-				PubSub.publish(PubSub.REPO_SELECTION, list.makeModel(repo, li));
+				PubSub.publish(PubSub.REPO_SELECT, list.makeModel(repo, li));
 			}
 		});
 		list.decorate(root);

@@ -15,8 +15,9 @@ org.koshinuke.activationHandler = function(item, isSelect) {
 }
 
 org.koshinuke.PubSub = new goog.pubsub.PubSub();
-org.koshinuke.PubSub.REPO_SELECTION = "r.s";
-org.koshinuke.PubSub.TAB_SELECTION = "t.s";
+org.koshinuke.PubSub.REPO_SELECT = "r.s";
+org.koshinuke.PubSub.TAB_SELECT = "t.s";
+org.koshinuke.PubSub.TAB_UNSELECT = "t.u";
 
 org.koshinuke.findIcon = function(key) {
 	return {

@@ -118,9 +118,7 @@ org.koshinuke.ui.RepoUrls.prototype.tooltip_ = function(t) {
 	goog.dom.appendChild(document.body, el);
 	return el;
 }
-/**
- * @private
- */
+/** @private */
 org.koshinuke.ui.RepoUrls.prototype.listenEvents_ = function() {
 	var h = this.getHandler();
 	h.listen(this, goog.ui.Component.EventType.SHOW, this.handleShow_);
