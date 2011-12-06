@@ -150,12 +150,58 @@ __    _          _       _   _       _
 				</div>
 				<div class="topic">
 					<div class="tab-container">
-						<div class="goog-tab-bar">
-						</div>
+						<div class="goog-tab-bar"></div>
 					</div><!-- <div class="tab-container"> -->
 					<div class="panes">
-						<div id="branch-pane" class="pane">
-							ブランチ
+						<div id="branch-pane" class="pane show">
+							<table class="gradient" summary="branch viewing">
+								<thead>
+									<tr>
+										<th class="icon"></th>
+										<th class="name">name</th>
+										<th class="timestamp">timestamp</th>
+										<th class="commitmessage">message</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="shared">
+										<td><img src="images/arrow_branch.png" alt="branch" /></td>
+										<td><a href="#" for="resource_pane">master</a></td>
+										<td>2011-08-31 12:31:24</td>
+										<td>first commit.</td>
+									</tr>
+									<tr class="shared">
+										<td><img src="images/arrow_branch.png" alt="branch" /></td>
+										<td><a href="#" for="resource_pane">develop</a></td>
+										<td>2011-09-12 12:31:24</td>
+										<td>at the begining of test</td>
+									</tr>
+									<tr class="milestone">
+										<td><img src="images/arrow_branch.png" alt="branch" /></td>
+										<td><a href="#" for="resource_pane">milestone#2011autumn</a></td>
+										<td>2011-09-01 12:31:24</td>
+										<td>Let's go!!</td>
+									</tr>
+									<tr class="task">
+										<td><img src="images/arrow_branch.png" alt="branch" /></td>
+										<td><a href="#" for="resource_pane">task#0001_add_new_feature</a></td>
+										<td>2011-09-31 12:31:24</td>
+										<td>defined.</td>
+									</tr>
+									<tr class="ticket you">
+										<td><img src="images/arrow_branch.png" alt="branch" /></td>
+										<td><a href="#" for="resource_pane">ticket#ac03x2</a></td>
+										<td>2011-10-10 12:31:24</td>
+										<td>assign to taichi</td>
+									</tr>
+									<tr class="closed">
+										<td><img src="images/arrow_branch.png" alt="branch" /></td>
+										<td><a href="#" for="resource_pane">ticket#0c03x2</a></td>
+										<td>2011-9-10 12:31:24</td>
+										<td>finished work.</td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
 						<div id="tags-pane" class="pane">
 							タグ
