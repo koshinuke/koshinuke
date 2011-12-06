@@ -10,11 +10,13 @@ table {
 			height: 16px;
 			padding: 0.1em;
 		}
-		
 	}
 	th {
 		font-weight: bold;
 		border-bottom: 2px solid #DDD;
+		&.timestamp, &.message {
+			min-width: 10em;
+		}
 	}
 	
 	&.gradient {
