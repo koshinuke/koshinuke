@@ -12,7 +12,7 @@ org.koshinuke.activationHandler = function(item, isSelect) {
 	} else {
 		goog.dom.classes.remove(item, c);
 	}
-}
+};
 
 org.koshinuke.PubSub = new goog.pubsub.PubSub();
 org.koshinuke.PubSub.REPO_SELECT = "r.s";
@@ -26,7 +26,7 @@ org.koshinuke.findIcon = function(key) {
 	$$h : 'histories',
 	$$g : 'graph'
 	}[key] || 'txt';
-}
+};
 
 org.koshinuke.hash = function(var_args) {
 	var md5 = new goog.crypt.Md5();
@@ -34,4 +34,4 @@ org.koshinuke.hash = function(var_args) {
 		md5.update(a);
 	});
 	return goog.crypt.byteArrayToHex(md5.digest());
-}
+};

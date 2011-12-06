@@ -18,6 +18,7 @@ org.koshinuke.ui.RepoTabBar = function(opt_location, opt_renderer, opt_domHelper
 	goog.ui.TabBar.call(this, opt_location, opt_renderer, opt_domHelper);
 	this.tabmap = {};
 	this.listenEvents_();
+	this.lastSelected = null;
 };
 goog.inherits(org.koshinuke.ui.RepoTabBar, goog.ui.TabBar);
 
@@ -57,7 +58,7 @@ org.koshinuke.ui.RepoTabBar.prototype.decorateInternal = function(element) {
 					delete this.tabmap[hash];
 				}
 			}, this);
-			var reSelect = this.lastSelected != rmTab ? this.lastSelected : null;
+			var reSelect = this.lastSelected && this.lastSelected != rmTab ? this.lastSelected : null;
 			if(-1 < rmIndex) {
 				this.removeChildAt(rmIndex, true);
 			}
@@ -75,4 +76,11 @@ org.koshinuke.ui.RepoTabBar.prototype.listenEvents_ = function() {
 /** @private */
 org.koshinuke.ui.RepoTabBar.prototype.handleUnSelect_ = function(e) {
 	this.lastSelected = e.target;
+};
+
+/** @override */
+org.koshinuke.ui.RepoTabBar.prototype.disposeInternal = function() {
+	org.koshinuke.ui.RepoTabBar.superClass_.disposeInternal.call(this);
+	this.lastSelected = null;
+	this.tabmap = null;
 };

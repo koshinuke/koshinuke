@@ -18,7 +18,7 @@ org.koshinuke.ui.RepoList = function(fn, opt_domHelper) {
 	this.contextHandler = fn;
 	this.repositories = new goog.ui.SelectionModel();
 	this.repositories.setSelectionHandler(org.koshinuke.activationHandler);
-}
+};
 goog.inherits(org.koshinuke.ui.RepoList, goog.ui.Component);
 
 org.koshinuke.ui.RepoList.prototype.setSelectedIndex = function(i, c) {
@@ -27,15 +27,15 @@ org.koshinuke.ui.RepoList.prototype.setSelectedIndex = function(i, c) {
 		var s = this.repositories.getSelectedItem();
 		s.child.setSelectedIndex(c);
 	}
-}
+};
 
 org.koshinuke.ui.RepoList.prototype.getSelectedIndex = function() {
 	return this.repositories.getSelectedIndex();
-}
+};
 /** @override */
 org.koshinuke.ui.RepoList.prototype.canDecorate = function(element) {
 	return element.tagName == 'DIV';
-}
+};
 /** @override */
 org.koshinuke.ui.RepoList.prototype.decorateInternal = function(element) {
 	org.koshinuke.ui.RepoList.superClass_.decorateInternal.call(this, element);
@@ -61,7 +61,7 @@ org.koshinuke.ui.RepoList.prototype.decorateInternal = function(element) {
 			t.ctx_sm.setSelectedItem(t);
 		}
 	}, false, this);
-}
+};
 org.koshinuke.ui.RepoList.prototype.makeModel = function(repo, li) {
 	var name = goog.dom.query('.repo-name', repo)[0];
 	return {
@@ -72,7 +72,7 @@ org.koshinuke.ui.RepoList.prototype.makeModel = function(repo, li) {
 		context : li.getAttribute('context'),
 		label : goog.dom.getTextContent(li)
 	};
-}
+};
 /** @override */
 org.koshinuke.ui.RepoList.prototype.setModel = function(model) {
 	org.koshinuke.ui.RepoList.superClass_.setModel.call(this, model);
@@ -83,4 +83,10 @@ org.koshinuke.ui.RepoList.prototype.setModel = function(model) {
 		list : model
 	});
 	this.decorateInternal(root);
-}
+};
+/** @override */
+org.koshinuke.ui.RepoList.prototype.disposeInternal = function() {
+	org.koshinuke.ui.RepoList.superClass_.disposeInternal.call(this);
+	this.contextHandler = null;
+	this.repositories = null;
+};

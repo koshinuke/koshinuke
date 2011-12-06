@@ -16,9 +16,7 @@ goog.require('ZeroClipboard');
 goog.require('org.koshinuke.positioning.GravityPosition');
 goog.require('org.koshinuke.template.tooltip');
 
-/**
- * @constructor
- */
+/** @constructor */
 org.koshinuke.ui.RepoUrls = function(opt_domHelper) {
 	goog.ui.Component.call(this, opt_domHelper);
 	this.protocols = new goog.ui.SelectionModel();
@@ -30,7 +28,7 @@ org.koshinuke.ui.RepoUrls = function(opt_domHelper) {
 		}
 	});
 	this.clip = new ZeroClipboard.Client();
-}
+};
 goog.inherits(org.koshinuke.ui.RepoUrls, goog.ui.Component);
 
 /** @private */
@@ -42,19 +40,19 @@ org.koshinuke.ui.RepoUrls.prototype.internalSelect_ = function(item) {
 	var newone = goog.dom.createTextNode(item.getAttribute('desc'));
 	var oldone = desc.firstChild;
 	desc.replaceChild(newone, oldone);
-}
+};
 
 org.koshinuke.ui.RepoUrls.prototype.setSelectedIndex = function(i) {
 	this.protocols.setSelectedIndex(i);
-}
+};
 
 org.koshinuke.ui.RepoUrls.prototype.getSelectedIndex = function() {
 	return this.protocols.getSelectedIndex();
-}
+};
 /** @override */
 org.koshinuke.ui.RepoUrls.prototype.canDecorate = function(element) {
 	return element.tagName == 'DIV';
-}
+};
 /** @override */
 org.koshinuke.ui.RepoUrls.prototype.decorateInternal = function(element) {
 	org.koshinuke.ui.RepoUrls.superClass_.decorateInternal.call(this, element);
@@ -106,10 +104,8 @@ org.koshinuke.ui.RepoUrls.prototype.decorateInternal = function(element) {
 		compTip.setVisible(true);
 	});
 	clip.glue(img, img.parentNode);
-}
-/**
- * @private
- */
+};
+/** @private */
 org.koshinuke.ui.RepoUrls.prototype.tooltip_ = function(t) {
 	var el = goog.soy.renderAsElement(org.koshinuke.template.tooltip.tmpl, {
 		dir : 'right',
@@ -117,7 +113,7 @@ org.koshinuke.ui.RepoUrls.prototype.tooltip_ = function(t) {
 	});
 	goog.dom.appendChild(document.body, el);
 	return el;
-}
+};
 /** @private */
 org.koshinuke.ui.RepoUrls.prototype.listenEvents_ = function() {
 	var h = this.getHandler();
@@ -126,28 +122,25 @@ org.koshinuke.ui.RepoUrls.prototype.listenEvents_ = function() {
 	h.listen(this, goog.events.EventType.RESIZE, this.handleShow_);
 	h.listen(this, goog.events.EventType.PAGESHOW, this.handleShow_);
 	h.listen(this, goog.events.EventType.PAGEHIDE, this.handleHide_);
-}
-/**
- * @private
- */
+};
+/** @private */
 org.koshinuke.ui.RepoUrls.prototype.handleShow_ = function() {
 	this.clip.show();
-}
-/**
- * @private
- */
+};
+/** @private */
 org.koshinuke.ui.RepoUrls.prototype.handleHide_ = function() {
 	this.clip.hide();
-}
+};
 
 org.koshinuke.ui.RepoUrls.prototype.reposition = function() {
 	this.clip.reposition();
-}
+};
 /** @override */
 org.koshinuke.ui.RepoUrls.prototype.disposeInternal = function() {
 	org.koshinuke.ui.RepoUrls.superClass_.disposeInternal.call(this);
 	this.clip.destroy();
 	this.clip = null;
+	this.protocols = null;
 };
 /** @override */
 org.koshinuke.ui.RepoUrls.prototype.setModel = function(model) {
@@ -165,16 +158,16 @@ org.koshinuke.ui.RepoUrls.prototype.setModel = function(model) {
 	f(this.https_, 'https');
 	f(this.git_, 'git');
 	this.internalSelect_(this.protocols.getSelectedItem());
-}
+};
 /** @private */
 org.koshinuke.ui.RepoUrls.prototype.ssh_ = function(user, host, path, name) {
 	return goog.string.format('%s@%s:%s%s.git', user, host, path, name);
-}
+};
 /** @private */
 org.koshinuke.ui.RepoUrls.prototype.https_ = function(user, host, path, name) {
 	return goog.string.format('https://%s@%s/%s%s.git', user, host, path, name);
-}
+};
 /** @private */
 org.koshinuke.ui.RepoUrls.prototype.git_ = function(user, host, path, name) {
 	return goog.string.format('git://%s/%s%s.git', host, path, name);
-}
+};

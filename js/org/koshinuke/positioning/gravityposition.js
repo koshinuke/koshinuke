@@ -11,7 +11,7 @@ org.koshinuke.positioning.GravityPosition = function(el, g, margin) {
 	this.baseEl_ = el;
 	this.gravity_ = g ? g : 'n';
 	this.margin_ = margin ? margin : 0;
-}
+};
 
 goog.inherits(org.koshinuke.positioning.GravityPosition, goog.positioning.AbstractPosition);
 

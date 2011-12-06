@@ -12,13 +12,13 @@ goog.require('org.koshinuke.template.breadcrumb');
  */
 org.koshinuke.ui.Breadcrumb = function(fn) {
 	this.fn = fn;
-}
+};
 goog.inherits(org.koshinuke.ui.Breadcrumb, goog.ui.Component);
 
 /** @override */
 org.koshinuke.ui.Breadcrumb.prototype.canDecorate = function(element) {
 	return element.tagName == 'UL';
-}
+};
 /** @override */
 org.koshinuke.ui.Breadcrumb.prototype.decorateInternal = function(element) {
 	org.koshinuke.ui.Breadcrumb.superClass_.decorateInternal.call(this, element);
@@ -33,7 +33,7 @@ org.koshinuke.ui.Breadcrumb.prototype.decorateInternal = function(element) {
 			this.fn(ary);
 		}
 	}, false, this);
-}
+};
 /** @override */
 org.koshinuke.ui.Breadcrumb.prototype.setModel = function(model) {
 	org.koshinuke.ui.Breadcrumb.superClass_.setModel.call(this, model);
@@ -42,4 +42,9 @@ org.koshinuke.ui.Breadcrumb.prototype.setModel = function(model) {
 	goog.soy.renderElement(el, org.koshinuke.template.breadcrumb.tmpl, {
 		list : model
 	});
-}
+};
+/** @override */
+org.koshinuke.ui.Breadcrumb.prototype.disposeInternal = function() {
+	org.koshinuke.ui.Breadcrumb.superClass_.disposeInternal.call(this);
+	this.fn = null;
+};
