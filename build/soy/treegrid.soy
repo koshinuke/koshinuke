@@ -4,7 +4,7 @@
 /**
  * make row
  * @param indent 0 or more
- * @param rowState collapse or empty
+ * @param state collapse or empty
  * @param icon
  * @param name
  * @param timestamp
@@ -13,7 +13,7 @@
  */
 {template .row}
 <tr>
-	<td{if 0 < $indent} style="padding-left: {$indent * 18|noAutoescape}px;"{/if}><span class="{$rowState}"></span><span class="{$icon}">{$name}</span></td>
+	<td{if 0 < $indent} style="padding-left: {$indent|noAutoescape}px;"{/if}><span class="{$state}"></span><span class="{$icon}">{$name}</span></td>
 	<td>{$timestamp}</td>
 	<td><span>{$message}</span></td>
 	<td><span>{$auther}</span></td>

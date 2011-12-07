@@ -1,5 +1,6 @@
 goog.provide('org.koshinuke.ui.TreeGrid');
 
+goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.soy');
@@ -8,9 +9,10 @@ goog.require('goog.ui.Component');
 
 goog.require('org.koshinuke.template.treegrid');
 
-org.koshinuke.ui.TreeGrid = function(opt_domHelper) {
+/** @constructor */
+org.koshinuke.ui.TreeGrid = function(loaderfn, opt_domHelper) {
 	goog.ui.Component.call(this, opt_domHelper);
-	this.rows = [];
+	this.loaderfn = loaderfn;
 };
 goog.inherits(org.koshinuke.ui.TreeGrid, goog.ui.Component);
 
@@ -29,26 +31,30 @@ org.koshinuke.ui.TreeGrid.prototype.canDecorate = function(element) {
 /** @override */
 org.koshinuke.ui.TreeGrid.prototype.decorateInternal = function(element) {
 	org.koshinuke.ui.TreeGrid.superClass_.decorateInternal.call(this, element);
+	// TODO KeyEventとかTABキーのアレとかは、後で考える。Container辺りを継承した方が良いのかな？
+};
+/** @private */
+org.koshinuke.ui.TreeGrid.prototype.handleExpand_ = function() {
+
 };
 /** @override */
 org.koshinuke.ui.TreeGrid.prototype.setModel = function(model) {
 	org.koshinuke.ui.TreeGrid.superClass_.setModel.call(this, model);
 };
 /** @private */
-org.koshinuke.ui.TreeGrid.prototype.makeRow_ = function(rowmodel) {
-	/*
-	 indent : rowmodel.indent,
-	 rowState : rowmodel.rowState,
-	 icon : rowmodel.icon,
-	 name : rowmodel.name,
-	 timestamp : rowmodel.timestamp,
-	 message : rowmodel.message,
-	 auther : rowmodel.auther
-	 */
-	return goog.soy.renderAsElement(org.koshinuke.template.treegrid.row, rowmodel);
+org.koshinuke.ui.TreeGrid.prototype.sortModel_ = function(rows) {
+	return goog.array.sort(rows, function(left, right) {
+
+	});
+};
+/**
+ * @return {Array}
+ */
+org.koshinuke.ui.TreeGrid.prototype.loadRow = function(parent) {
+	return this.loaderfn(parent);
 };
 /** @override */
 org.koshinuke.ui.TreeGrid.prototype.disposeInternal = function() {
 	org.koshinuke.ui.TreeGrid.superClass_.disposeInternal.call(this);
-	this.rows = null;
+	this.loaderfn = null;
 };
