@@ -76,4 +76,10 @@ goog.exportSymbol('main', function() {
 		list.decorate(root);
 		list.setSelectedIndex(0, 0);
 	});
+
+	goog.array.forEach(goog.dom.query('table'), function(el) {
+		goog.events.listen(el, goog.events.EventType.CLICK, function(e) {
+			console.log(e.target);
+		});
+	});
 });

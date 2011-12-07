@@ -1,15 +1,12 @@
 table {
 	//width: 100%;
+	thead tr th {
+		.user-select;
+	}
 	th, td {
 		text-align: left;
 		vertical-align: middle;
 		padding: 0.2em;
-		
-		&.icon {
-			width: 16px;
-			height: 16px;
-			padding: 0.1em;
-		}
 	}
 	th {
 		font-weight: bold;
@@ -20,17 +17,45 @@ table {
 	}
 	
 	&.gradient {
-		thead {
-			tr th {
-				.user-select;
-			}
-		}
 		tbody {
 			tr td {
 				#gradient > .vertical(@white, #f9f9f9);
 			}
 			tr:hover td {
 				#gradient > .vertical(#f5f5f5, @white);
+			}
+		}
+	}
+	
+	&.treegrid {
+		tbody tr {
+			&:hover {
+				background-color: whitesmoke;
+			}
+		}
+		td {
+			.expand {
+				.icon("images/bullet_arrow_down.png");
+			}
+			.collapse {
+				.icon("images/bullet_arrow_right.png");
+			}
+			.empty {
+				float: left;
+				width: 18px;
+				height: 18px;
+			}
+			.branch:before {
+				.icon("images/arrow_right.png");
+			}
+			.folder:before {
+				.icon("images/dir.png");
+			}
+			.resource:before {
+				.icon("images/txt.png");
+			}
+			span {
+				.clickable;
 			}
 		}
 	}
