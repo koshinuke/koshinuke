@@ -29,6 +29,8 @@ goog.require('org.koshinuke.ui.Breadcrumb');
 goog.require('org.koshinuke.ui.RepoList');
 goog.require('org.koshinuke.ui.RepoUrls');
 goog.require('org.koshinuke.ui.RepoTabBar');
+goog.require('org.koshinuke.ui.TreeGrid');
+goog.require('org.koshinuke.ui.TreeGrid.Node');
 
 goog.exportSymbol('main', function() {
 	var PubSub = org.koshinuke.PubSub;
@@ -77,9 +79,11 @@ goog.exportSymbol('main', function() {
 		list.setSelectedIndex(0, 0);
 	});
 
-	goog.array.forEach(goog.dom.query('table'), function(el) {
-		goog.events.listen(el, goog.events.EventType.CLICK, function(e) {
-			console.log(e.target);
-		});
+	goog.array.forEach(goog.dom.query('.treegrid'), function(el) {
+		var loader = function(model){
+			console.log(model);
+		}
+		var tg = new org.koshinuke.ui.TreeGrid(loader);
+		tg.decorate(el);
 	});
 });

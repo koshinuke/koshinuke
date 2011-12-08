@@ -34,6 +34,9 @@ table {
 			}
 		}
 		td {
+			span {
+				.clickable;
+			}
 			.expand {
 				.icon("images/bullet_arrow_down.png");
 			}
@@ -44,6 +47,9 @@ table {
 				float: left;
 				width: 18px;
 				height: 18px;
+				&:hover {
+					cursor: default;
+				}
 			}
 			.branch:before {
 				.icon("images/arrow_right.png");
@@ -53,9 +59,6 @@ table {
 			}
 			.resource:before {
 				.icon("images/txt.png");
-			}
-			span {
-				.clickable;
 			}
 		}
 	}
