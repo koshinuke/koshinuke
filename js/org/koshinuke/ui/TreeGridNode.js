@@ -19,7 +19,6 @@ org.koshinuke.ui.TreeGrid.Node.prototype.setIndent = function(level) {
 	this.indent = level * 18;
 };
 org.koshinuke.ui.TreeGrid.Node.prototype.state = "";
-org.koshinuke.ui.TreeGrid.Node.prototype.stateEl_ = false;
 org.koshinuke.ui.TreeGrid.Node.prototype.icon = "xxx";
 org.koshinuke.ui.TreeGrid.Node.prototype.path = "aaa/bbb/ccc";
 org.koshinuke.ui.TreeGrid.Node.prototype.name = "nnn.nnn";
@@ -31,17 +30,5 @@ org.koshinuke.ui.TreeGrid.Node.prototype.auther = "aaa";
 /** @override */
 org.koshinuke.ui.TreeGrid.Node.prototype.createDom = function() {
 	var el = goog.soy.renderAsElement(org.koshinuke.template.treegrid.row, this);
-	this.setStateEl_(el);
 	return el;
-};
-/** @private */
-org.koshinuke.ui.TreeGrid.Node.prototype.setStateEl_ = function(element) {
-	this.stateEl_ = goog.dom.query('td span.' + this.state)[0];
-}
-
-org.koshinuke.ui.TreeGrid.Node.prototype.setState = function(state) {
-	if(this.stateEl_) {
-		goog.dom.classes.addRemove(this.stateEl_, this.state, state);
-	}
-	this.state = state;
 };

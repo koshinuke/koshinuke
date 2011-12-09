@@ -1,19 +1,29 @@
 {namespace org.koshinuke.template.treegrid}
 
+/**
+ * @param list
+ */
+{template .tmpl}
+{foreach $e in $list}
+	{call .row data="$e" /}
+{/foreach}
+{/template}
 
 /**
  * make row
+ * @param path
+ * @param type branch or blob or tree
+ * @param children
  * @param indent 0 or more
- * @param state collapse or empty
+ * @param state collapse or expand
  * @param icon
  * @param name
- * @param path
  * @param timestamp
  * @param message
  * @param auther
  */
 {template .row}
-<tr path="{$path|noAutoescape}">
+<tr path="{$path}" type="{$type}"{if $children} children="{$children}"{/if}>
 	<td{if 0 < $indent} style="padding-left: {$indent|noAutoescape}px;"{/if}><span class="{$state}"></span><span class="{$icon}">{$name}</span></td>
 	<td>{$timestamp}</td>
 	<td><span>{$message}</span></td>

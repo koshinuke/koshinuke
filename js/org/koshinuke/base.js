@@ -35,3 +35,16 @@ org.koshinuke.hash = function(var_args) {
 	});
 	return goog.crypt.byteArrayToHex(md5.digest());
 };
+
+org.koshinuke.findParent = function(el, findfor) {
+	var p;
+	do {
+		if( p = el.parentNode) {
+			if(p.tagName == findfor || p.tagName == 'BODY') {
+				return p;
+			}
+			el = p;
+		}
+	} while(p);
+	return el;
+}

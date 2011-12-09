@@ -15,6 +15,7 @@
 		<script src="../deps.js"></script>
 		<script>
 			goog.require('goog.array');
+			goog.require('goog.dom');
 			goog.require('goog.testing.PropertyReplacer');
 			goog.require('goog.testing.jsunit');
 			goog.require('goog.testing.recordFunction');
@@ -22,6 +23,23 @@
 		</script>
 	</head>
 	<body>
+		<table>
+			<tr id="1">
+				<td>a</td>
+				<td>aa</td>
+				<td>aaa</td>
+			</tr>
+			<tr id="2">
+				<td>b</td>
+				<td>bb</td>
+				<td>bbb</td>
+			</tr>
+			<tr id="3">
+				<td>c</td>
+				<td>cc</td>
+				<td>ccc</td>
+			</tr>
+		</table>
 		<script>
 			function assertArraysEqual(arr1, arr2) {
 				assertEquals('Expected length ' + arr1.length, arr1.length, arr2.length);
@@ -35,6 +53,11 @@
 				var expected = ["aaa", "aaa/bbb", "bbb", "bbb/ccc/dddd", "dddd"];
 				goog.array.sort(data);
 				assertArraysEqual(expected, data);
+			}
+
+			function testSibling() {
+				var el = goog.dom.getNextElementSibling(goog.dom.getElement("1"));
+				assertEquals("2", el.id);
 			}
 		</script>
 	</body>

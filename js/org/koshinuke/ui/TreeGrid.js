@@ -5,6 +5,7 @@ goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.events.Event');
 goog.require('goog.soy');
+goog.require('goog.style');
 
 goog.require('goog.ui.Component');
 
@@ -14,6 +15,7 @@ goog.require('org.koshinuke.template.treegrid');
 org.koshinuke.ui.TreeGrid = function(loaderfn, opt_domHelper) {
 	goog.ui.Component.call(this, opt_domHelper);
 	this.loaderfn = loaderfn;
+	this.listenEvents_();
 };
 goog.inherits(org.koshinuke.ui.TreeGrid, goog.ui.Component);
 
@@ -28,8 +30,7 @@ org.koshinuke.ui.TreeGrid.EventType = {
 /** @enum {string} */
 org.koshinuke.ui.TreeGrid.NodeState = {
 	EXPAND : "expand",
-	COLLAPSE : "collapse",
-	EMPTY : "empty"
+	COLLAPSE : "collapse"
 };
 
 /** @override */
@@ -44,33 +45,26 @@ org.koshinuke.ui.TreeGrid.prototype.decorateInternal = function(element) {
 		var el = e.target;
 		if(el.tagName == 'SPAN') {
 			var ary = goog.dom.classes.get(el);
-			var s = org.koshinuke.ui.TreeGrid.NodeState;
 			var et = org.koshinuke.ui.TreeGrid.EventType;
-			if(goog.array.contains(ary, s.EXPAND)) {
-				this.fire_(e, et.BEFORE_COLLAPSE, et.COLLAPSE, ary[0], s.COLLAPSE)
-			} else if(goog.array.contains(ary, s.COLLAPSE)) {
-				this.fire_(e, et.BEFORE_EXPAND, et.EXPAND, ary[0], s.EXPAND)
-			} else if(goog.array.contains(ary, s.EMPTY)) {
-				// do nothing.
-			} else {
-				var txt = goog.dom.getTextContent(el);
-				if(txt) {
-					this.dispatchEvent(e);
-				}
+			var ns = org.koshinuke.ui.TreeGrid.NodeState;
+			if(goog.array.contains(ary, ns.EXPAND)) {
+				this.fire_(e.target, et.BEFORE_COLLAPSE, et.COLLAPSE, ary[0], ns.COLLAPSE)
+			} else if(goog.array.contains(ary, ns.COLLAPSE)) {
+				this.fire_(e.target, et.BEFORE_EXPAND, et.EXPAND, ary[0], ns.EXPAND)
 			}
 		}
 	}, false, this);
 };
 /** @private */
-org.koshinuke.ui.TreeGrid.prototype.fire_ = function(event, beforeType, afterType, current, next) {
-	var el = event.target;
+org.koshinuke.ui.TreeGrid.prototype.fire_ = function(target, beforeType, afterType, current, next) {
+	var el = org.koshinuke.findParent(target, 'TR');
 	if(!this.dispatchEvent({
 		type : beforeType,
 		rowEl : el
 	})) {
 		return;
 	}
-	this.setState_(el, current, next);
+	this.setState_(target, current, next);
 	this.dispatchEvent({
 		type : afterType,
 		rowEl : el
@@ -80,9 +74,74 @@ org.koshinuke.ui.TreeGrid.prototype.fire_ = function(event, beforeType, afterTyp
 org.koshinuke.ui.TreeGrid.prototype.setState_ = function(el, current, next) {
 	goog.dom.classes.addRemove(el, current, next);
 };
+/** @private */
+org.koshinuke.ui.TreeGrid.prototype.listenEvents_ = function() {
+	var h = this.getHandler();
+	h.listen(this, org.koshinuke.ui.TreeGrid.EventType.BEFORE_COLLAPSE, this.handleBeforeCollapse_);
+	h.listen(this, org.koshinuke.ui.TreeGrid.EventType.BEFORE_EXPAND, this.handleBeforeExpand_);
+};
+/** @private */
+org.koshinuke.ui.TreeGrid.prototype.handleBeforeCollapse_ = function(e) {
+	this.switchChildNodes_(e.rowEl, function(el, mine, yours) {
+		var pl = yours.length;
+		if(0 < pl && mine.length < pl) {
+			goog.array.forEach(goog.dom.query('.expand', el), function(a) {
+				var ary = goog.dom.classes.get(a);
+				var et = org.koshinuke.ui.TreeGrid.EventType;
+				this.fire_(a, et.BEFORE_COLLAPSE, et.COLLAPSE, ary[0], org.koshinuke.ui.TreeGrid.NodeState.COLLAPSE);
+			}, this);
+			goog.style.showElement(el, false);
+			return false;
+		}
+		return true;
+	});
+	return true;
+};
+/** @private */
+org.koshinuke.ui.TreeGrid.prototype.getPath = function(el) {
+	var s = el.getAttribute('path');
+	if(s) {
+		return s.split('/');
+	}
+	return [];
+};
+/** @private */
+org.koshinuke.ui.TreeGrid.prototype.handleBeforeExpand_ = function(e) {
+	this.switchChildNodes_(e.rowEl, function(el, mine, yours) {
+		var ml = mine.length;
+		var yl = yours.length;
+		if(ml + 1 == yl) {
+			goog.style.showElement(el, true);
+		}
+		return ml == yl;
+	});
+};
+/** @private */
+org.koshinuke.ui.TreeGrid.prototype.switchChildNodes_ = function(re, fn) {
+	var myPath = this.getPath(re);
+	var next;
+	do {
+		next = goog.dom.getNextElementSibling(re);
+		if(next) {
+			var path = this.getPath(next);
+			if(fn.call(this, next, myPath, path)) {
+				break;
+			}
+			re = next;
+		}
+	} while(next);
+	return true;
+};
 /** @override */
 org.koshinuke.ui.TreeGrid.prototype.setModel = function(model) {
 	org.koshinuke.ui.TreeGrid.superClass_.setModel.call(this, model);
+	var el = this.getElement();
+	var tbody = goog.dom.query("tbody", el)[0];
+	goog.dom.removeChildren(tbody);
+
+	goog.soy.renderElement(tbody, org.koshinuke.template.treegrid.tmpl, {
+		list : model
+	});
 };
 /** @private */
 org.koshinuke.ui.TreeGrid.prototype.sortModel_ = function(rows) {
@@ -90,9 +149,7 @@ org.koshinuke.ui.TreeGrid.prototype.sortModel_ = function(rows) {
 		return goog.array.defaultCompare(left.path, right.path);
 	});
 };
-/**
- * @return {Array}
- */
+/** @return {Array} */
 org.koshinuke.ui.TreeGrid.prototype.loadRow = function(parent) {
 	return this.loaderfn(parent);
 };
