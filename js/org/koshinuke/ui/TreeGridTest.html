@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>TreeGrid test</title>
+		<script type="application/javascript" src="../../../../closure-library/closure/goog/base.js"></script>
+		<script type="application/javascript" src="../../../../closure-library/third_party/closure/goog/base.js"></script>
+		<script>
+			// name resolving hack
+			goog.require('goog.string.StringBuffer');
+			goog.require('goog.soy');
+
+		</script>
+		<script type="application/javascript" src="../../../../js/soyutils_usegoog.js"></script>
+		<script src="../deps.js"></script>
+		<script>
+			goog.require('goog.array');
+			goog.require('goog.testing.PropertyReplacer');
+			goog.require('goog.testing.jsunit');
+			goog.require('goog.testing.recordFunction');
+
+		</script>
+	</head>
+	<body>
+		<script>
+			function assertArraysEqual(arr1, arr2) {
+				assertEquals('Expected length ' + arr1.length, arr1.length, arr2.length);
+				for(var i = 0; i < arr1.length; i++) {
+					assertEquals(arr1[i] + ' expected at position ' + i, arr1[i], arr2[i]);
+				}
+			}
+
+			function testSortPath() {
+				var data = ["aaa", "dddd", "bbb", "aaa/bbb", "bbb/ccc/dddd"];
+				var expected = ["aaa", "aaa/bbb", "bbb", "bbb/ccc/dddd", "dddd"];
+				goog.array.sort(data);
+				assertArraysEqual(expected, data);
+			}
+		</script>
+	</body>
+</html>

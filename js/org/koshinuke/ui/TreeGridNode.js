@@ -18,9 +18,10 @@ org.koshinuke.ui.TreeGrid.Node.prototype.indent = 0;
 org.koshinuke.ui.TreeGrid.Node.prototype.setIndent = function(level) {
 	this.indent = level * 18;
 };
-org.koshinuke.ui.TreeGrid.Node.prototype.state = false;
+org.koshinuke.ui.TreeGrid.Node.prototype.state = "";
 org.koshinuke.ui.TreeGrid.Node.prototype.stateEl_ = false;
 org.koshinuke.ui.TreeGrid.Node.prototype.icon = "xxx";
+org.koshinuke.ui.TreeGrid.Node.prototype.path = "aaa/bbb/ccc";
 org.koshinuke.ui.TreeGrid.Node.prototype.name = "nnn.nnn";
 org.koshinuke.ui.TreeGrid.Node.prototype.timestamp = "YYYY-MM-DD hh:mm:ss";
 org.koshinuke.ui.TreeGrid.Node.prototype.message = "mmm";
