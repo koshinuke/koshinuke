@@ -83,7 +83,7 @@ goog.exportSymbol('main', function() {
 		var loader = function(model){
 			console.log(model);
 		}
-		var tg = new org.koshinuke.ui.TreeGrid(loader);
+		var tg = new org.koshinuke.ui.TreeGrid();
 		tg.decorate(el);
 	});
 });

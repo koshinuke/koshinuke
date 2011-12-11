@@ -12,19 +12,16 @@
 /**
  * make row
  * @param path
- * @param type branch or blob or tree
- * @param children
  * @param indent 0 or more
- * @param state collapse or expand
- * @param icon
  * @param name
+ * @param icon
  * @param timestamp
  * @param message
  * @param auther
  */
 {template .row}
-<tr path="{$path}" type="{$type}"{if $children} children="{$children}"{/if}>
-	<td{if 0 < $indent} style="padding-left: {$indent|noAutoescape}px;"{/if}><span class="{$state}"></span><span class="{$icon}">{$name}</span></td>
+<tr path="{$path}">
+	<td{if 0 < $indent} style="padding-left: {$indent|noAutoescape}px;"{/if}><span class="collapse"></span><span class="{$icon}">{$name}</span></td>
 	<td>{$timestamp}</td>
 	<td><span>{$message}</span></td>
 	<td><span>{$auther}</span></td>

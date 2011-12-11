@@ -13,12 +13,17 @@
 		</script>
 		<script type="application/javascript" src="../../../../js/soyutils_usegoog.js"></script>
 		<script src="../deps.js"></script>
+		<link rel="stylesheet/less" type="text/css" href="../../../../build/less/repos.less">
+		<script type="application/javascript" src="../../../../js/less-1.1.5.min.js"></script>
 		<script>
 			goog.require('goog.array');
 			goog.require('goog.dom');
+			goog.require('goog.dom.query');
 			goog.require('goog.testing.PropertyReplacer');
 			goog.require('goog.testing.jsunit');
 			goog.require('goog.testing.recordFunction');
+			goog.require('org.koshinuke.ui.TreeGrid');
+			goog.require('org.koshinuke.ui.TreeGrid.Node');
 
 		</script>
 	</head>
@@ -40,7 +45,33 @@
 				<td>ccc</td>
 			</tr>
 		</table>
+		<table id="tg" class="treegrid"></table>
 		<script>
+			function testTreeGridModel() {
+				var grid = new org.koshinuke.ui.TreeGrid();
+				var tgEl = goog.dom.getElement('tg');
+				grid.decorate(tgEl);
+
+				var loader = function(path) {
+					return [path, "hoge", "moge"];
+				}
+				var ary = goog.array.reduce(["master", "release", "develop"], function(prev, a) {
+					var tgn = new org.koshinuke.ui.TreeGrid.Node(loader);
+					tgn.path = a;
+					tgn.name = a;
+					prev.push(tgn);
+					return prev;
+				}, []);
+				assertEquals("master", ary[0].path);
+
+				goog.array.forEach(ary, function(a) {
+					grid.addChild(a, true);
+				});
+				var tr = goog.dom.query('tr',tgEl)[0];
+				assertEquals("master", tr.model.path);
+				
+			}
+
 			function assertArraysEqual(arr1, arr2) {
 				assertEquals('Expected length ' + arr1.length, arr1.length, arr2.length);
 				for(var i = 0; i < arr1.length; i++) {

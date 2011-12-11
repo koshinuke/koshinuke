@@ -1,4 +1,6 @@
 goog.provide('org.koshinuke.ui.TreeGrid');
+goog.provide('org.koshinuke.ui.TreeGrid.EventType');
+goog.provide('org.koshinuke.ui.TreeGrid.NodeState');
 
 goog.require('goog.array');
 goog.require('goog.dom');
@@ -9,12 +11,12 @@ goog.require('goog.style');
 
 goog.require('goog.ui.Component');
 
+goog.require('org.koshinuke');
 goog.require('org.koshinuke.template.treegrid');
 
 /** @constructor */
-org.koshinuke.ui.TreeGrid = function(loaderfn, opt_domHelper) {
+org.koshinuke.ui.TreeGrid = function(opt_domHelper) {
 	goog.ui.Component.call(this, opt_domHelper);
-	this.loaderfn = loaderfn;
 	this.listenEvents_();
 };
 goog.inherits(org.koshinuke.ui.TreeGrid, goog.ui.Component);
@@ -98,7 +100,7 @@ org.koshinuke.ui.TreeGrid.prototype.handleBeforeCollapse_ = function(e) {
 	return true;
 };
 /** @private */
-org.koshinuke.ui.TreeGrid.prototype.getPath = function(el) {
+org.koshinuke.ui.TreeGrid.prototype.getPath_ = function(el) {
 	var s = el.getAttribute('path');
 	if(s) {
 		return s.split('/');
@@ -112,18 +114,26 @@ org.koshinuke.ui.TreeGrid.prototype.handleBeforeExpand_ = function(e) {
 		var yl = yours.length;
 		if(ml + 1 == yl) {
 			goog.style.showElement(el, true);
+			return false;
+		} else if(ml == yl && el.model) {
+			var c = el.model.children;
+			if(c && goog.isNumber(c) && 0 < c) {
+				// TODO psuedoNodeを作ってaddChild
+				// TODO el.model.loader() を 非同期処理キューに入れる。
+				return true;
+			}
 		}
-		return ml == yl;
+		return true;
 	});
 };
 /** @private */
 org.koshinuke.ui.TreeGrid.prototype.switchChildNodes_ = function(re, fn) {
-	var myPath = this.getPath(re);
+	var myPath = this.getPath_(re);
 	var next;
 	do {
 		next = goog.dom.getNextElementSibling(re);
 		if(next) {
-			var path = this.getPath(next);
+			var path = this.getPath_(next);
 			if(fn.call(this, next, myPath, path)) {
 				break;
 			}
@@ -156,5 +166,4 @@ org.koshinuke.ui.TreeGrid.prototype.loadRow = function(parent) {
 /** @override */
 org.koshinuke.ui.TreeGrid.prototype.disposeInternal = function() {
 	org.koshinuke.ui.TreeGrid.superClass_.disposeInternal.call(this);
-	this.loaderfn = null;
 };
