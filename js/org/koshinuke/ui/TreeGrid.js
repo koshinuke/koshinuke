@@ -37,7 +37,7 @@ org.koshinuke.ui.TreeGrid.NodeState = {
 
 /** @override */
 org.koshinuke.ui.TreeGrid.prototype.canDecorate = function(element) {
-	return element.tagName == 'TABLE';
+	return element.tagName == 'TABLE' || element.tagName == 'TBODY';
 };
 /** @override */
 org.koshinuke.ui.TreeGrid.prototype.decorateInternal = function(element) {
@@ -84,47 +84,27 @@ org.koshinuke.ui.TreeGrid.prototype.listenEvents_ = function() {
 };
 /** @private */
 org.koshinuke.ui.TreeGrid.prototype.handleBeforeCollapse_ = function(e) {
-	this.switchChildNodes_(e.rowEl, function(el, mine, yours) {
-		var pl = yours.length;
-		if(0 < pl && mine.length < pl) {
-			goog.array.forEach(goog.dom.query('.expand', el), function(a) {
-				var ary = goog.dom.classes.get(a);
-				var et = org.koshinuke.ui.TreeGrid.EventType;
-				this.fire_(a, et.BEFORE_COLLAPSE, et.COLLAPSE, ary[0], org.koshinuke.ui.TreeGrid.NodeState.COLLAPSE);
-			}, this);
-			goog.style.showElement(el, false);
-			return false;
-		}
-		return true;
-	});
-	return true;
-};
-/** @private */
-org.koshinuke.ui.TreeGrid.prototype.getPath_ = function(el) {
-	var s = el.getAttribute('path');
-	if(s) {
-		return s.split('/');
-	}
-	return [];
-};
-/** @private */
-org.koshinuke.ui.TreeGrid.prototype.handleBeforeExpand_ = function(e) {
-	this.switchChildNodes_(e.rowEl, function(el, mine, yours) {
-		var ml = mine.length;
-		var yl = yours.length;
-		if(ml + 1 == yl) {
-			goog.style.showElement(el, true);
-			return false;
-		} else if(ml == yl && el.model) {
-			var c = el.model.children;
-			if(c && goog.isNumber(c) && 0 < c) {
-				// TODO psuedoNodeを作ってaddChild
-				// TODO el.model.loader() を 非同期処理キューに入れる。
+	var model = e.rowEl.model;
+	if(model.hasChild) {
+		if(model.isLoaded) {
+			this.switchChildNodes_(e.rowEl, function(next, mine, yours) {
+				var pl = yours.length;
+				if(0 < pl && mine.length < pl) {
+					goog.array.forEach(goog.dom.query('.expand', next), function(a) {
+						var ary = goog.dom.classes.get(a);
+						var et = org.koshinuke.ui.TreeGrid.EventType;
+						this.fire_(a, et.BEFORE_COLLAPSE, et.COLLAPSE, ary[0], org.koshinuke.ui.TreeGrid.NodeState.COLLAPSE);
+					}, this);
+					goog.style.showElement(next, false);
+					return false;
+				}
 				return true;
-			}
+			});
+		} else {
+			// now loading
+			e.preventDefault();
 		}
-		return true;
-	});
+	}
 };
 /** @private */
 org.koshinuke.ui.TreeGrid.prototype.switchChildNodes_ = function(re, fn) {
@@ -142,28 +122,29 @@ org.koshinuke.ui.TreeGrid.prototype.switchChildNodes_ = function(re, fn) {
 	} while(next);
 	return true;
 };
-/** @override */
-org.koshinuke.ui.TreeGrid.prototype.setModel = function(model) {
-	org.koshinuke.ui.TreeGrid.superClass_.setModel.call(this, model);
-	var el = this.getElement();
-	var tbody = goog.dom.query("tbody", el)[0];
-	goog.dom.removeChildren(tbody);
-
-	goog.soy.renderElement(tbody, org.koshinuke.template.treegrid.tmpl, {
-		list : model
-	});
+/** @private */
+org.koshinuke.ui.TreeGrid.prototype.getPath_ = function(el) {
+	if(el.model && el.model.path) {
+		return el.model.path.split('/');
+	}
+	return [];
 };
 /** @private */
-org.koshinuke.ui.TreeGrid.prototype.sortModel_ = function(rows) {
-	return goog.array.sort(rows, function(left, right) {
-		return goog.array.defaultCompare(left.path, right.path);
-	});
-};
-/** @return {Array} */
-org.koshinuke.ui.TreeGrid.prototype.loadRow = function(parent) {
-	return this.loaderfn(parent);
-};
-/** @override */
-org.koshinuke.ui.TreeGrid.prototype.disposeInternal = function() {
-	org.koshinuke.ui.TreeGrid.superClass_.disposeInternal.call(this);
+org.koshinuke.ui.TreeGrid.prototype.handleBeforeExpand_ = function(e) {
+	var model = e.rowEl.model;
+	if(model.hasChild) {
+		if(model.isLoaded) {
+			this.switchChildNodes_(e.rowEl, function(next, mine, yours) {
+				var ml = mine.length;
+				var yl = yours.length;
+				if(ml + 1 == yl) {
+					goog.style.showElement(next, true);
+					return false;
+				}
+				return true;
+			});
+		} else {
+			model.loadChild();
+		}
+	}
 };

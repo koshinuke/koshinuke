@@ -11,8 +11,8 @@
 
 /**
  * make row
- * @param path
  * @param indent 0 or more
+ * @param hasChild
  * @param name
  * @param icon
  * @param timestamp
@@ -20,10 +20,21 @@
  * @param auther
  */
 {template .row}
-<tr path="{$path}">
-	<td{if 0 < $indent} style="padding-left: {$indent|noAutoescape}px;"{/if}><span class="collapse"></span><span class="{$icon}">{$name}</span></td>
+<tr class="row">
+	<td{if 0 < $indent} style="padding-left: {$indent|noAutoescape}px;"{/if}><span{if 0 < $hasChild} class="collapse"{/if}></span><span class="{$icon}">{$name}</span></td>
 	<td>{$timestamp}</td>
 	<td><span>{$message}</span></td>
 	<td><span>{$auther}</span></td>
+</tr>
+{/template}
+
+/**
+ * make psuedo row
+ * @param path
+ * @param indent 0 or more
+ */
+{template .psuedo}
+<tr path="{$path}">
+	<td{if 0 < $indent} style="padding-left: {$indent|noAutoescape}px;"{/if} colspan="4"></div><span class=""></span><span class="loading">Loading ...</span></td>
 </tr>
 {/template}

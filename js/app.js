@@ -80,10 +80,27 @@ goog.exportSymbol('main', function() {
 	});
 
 	goog.array.forEach(goog.dom.query('.treegrid'), function(el) {
-		var loader = function(model){
-			console.log(model);
+		var loader = function(fn) {
+			console.log("loader called..");
+			setTimeout(function() {
+				var ary = [];
+				goog.array.forEach(["master2/aaa", "master2/aaa/bbb", "master2/aaa/ccc"], function(a) {
+					var tgn = new org.koshinuke.ui.TreeGrid.Node(loader);
+					tgn.path = a;
+					tgn.name = "aaa";
+					ary.push(tgn);
+				});
+				fn(ary);
+			}, 3000);
 		}
-		var tg = new org.koshinuke.ui.TreeGrid();
-		tg.decorate(el);
+		var grid = new org.koshinuke.ui.TreeGrid();
+		grid.decorate(el);
+		goog.array.forEach(["master2", "release2", "develop2"], function(a) {
+			var tgn = new org.koshinuke.ui.TreeGrid.Node(loader);
+			tgn.path = a;
+			tgn.name = a;
+			tgn.icon = "branch";
+			grid.addChild(tgn, true);
+		});
 	});
 });
