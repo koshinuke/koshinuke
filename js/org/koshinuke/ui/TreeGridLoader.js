@@ -24,6 +24,7 @@ org.koshinuke.ui.TreeGridLoader.prototype.load = function(model) {
 	var index = parent.indexOfChild(model) + 1;
 	parent.addChildAt(psuedo, index, true);
 
+	// TODO エラー処理, Timeout, ServerError
 	goog.net.XhrIo.send(this.toRequestUri(model).toString(), function(e) {
 		parent.removeChild(psuedo, true);
 		var data = goog.json.parse(e.target.getResponseText());
