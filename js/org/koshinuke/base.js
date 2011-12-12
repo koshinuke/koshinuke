@@ -19,6 +19,15 @@ org.koshinuke.PubSub.REPO_SELECT = "r.s";
 org.koshinuke.PubSub.TAB_SELECT = "t.s";
 org.koshinuke.PubSub.TAB_UNSELECT = "t.u";
 
+org.koshinuke.getExtension = function(path, nullvalue) {
+	if(path) {
+		var i = path.trim().lastIndexOf('.');
+		if(0 < i) {
+			return path.substr(i);
+		}
+	}
+	return nullvalue;
+}
 org.koshinuke.findIcon = function(key) {
 	return {
 	"$$b" : "branches",

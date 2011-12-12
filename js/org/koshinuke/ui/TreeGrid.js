@@ -15,9 +15,10 @@ goog.require('org.koshinuke');
 goog.require('org.koshinuke.template.treegrid');
 
 /** @constructor */
-org.koshinuke.ui.TreeGrid = function(opt_domHelper) {
+org.koshinuke.ui.TreeGrid = function(loader, opt_domHelper) {
 	goog.ui.Component.call(this, opt_domHelper);
 	this.listenEvents_();
+	this.loader = loader;
 };
 goog.inherits(org.koshinuke.ui.TreeGrid, goog.ui.Component);
 
@@ -144,7 +145,12 @@ org.koshinuke.ui.TreeGrid.prototype.handleBeforeExpand_ = function(e) {
 				return true;
 			});
 		} else {
-			model.loadChild();
+			this.loader.load(model);
 		}
 	}
+};
+/** @override */
+org.koshinuke.ui.TreeGrid.prototype.disposeInternal = function() {
+	org.koshinuke.ui.TreeGrid.superClass_.disposeInternal.call(this);
+	this.loader = null;
 };

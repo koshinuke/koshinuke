@@ -31,6 +31,9 @@ goog.require('org.koshinuke.ui.RepoUrls');
 goog.require('org.koshinuke.ui.RepoTabBar');
 goog.require('org.koshinuke.ui.TreeGrid');
 goog.require('org.koshinuke.ui.TreeGrid.Node');
+goog.require('org.koshinuke.ui.TreeGrid.Leaf');
+goog.require('org.koshinuke.ui.TreeGrid.Psuedo');
+goog.require('org.koshinuke.ui.TreeGridLoader');
 
 goog.exportSymbol('main', function() {
 	var PubSub = org.koshinuke.PubSub;
@@ -80,23 +83,12 @@ goog.exportSymbol('main', function() {
 	});
 
 	goog.array.forEach(goog.dom.query('.treegrid'), function(el) {
-		var loader = function(fn) {
-			console.log("loader called..");
-			setTimeout(function() {
-				var ary = [];
-				goog.array.forEach(["master2/aaa", "master2/aaa/bbb", "master2/aaa/ccc"], function(a) {
-					var tgn = new org.koshinuke.ui.TreeGrid.Node(loader);
-					tgn.path = a;
-					tgn.name = "aaa";
-					ary.push(tgn);
-				});
-				fn(ary);
-			}, 3000);
-		}
-		var grid = new org.koshinuke.ui.TreeGrid();
+		var uri = new goog.Uri(window.location.href);
+		var loader = new org.koshinuke.ui.TreeGridLoader(uri.resolve(new goog.Uri('/')));
+		var grid = new org.koshinuke.ui.TreeGrid(loader);
 		grid.decorate(el);
-		goog.array.forEach(["master2", "release2", "develop2"], function(a) {
-			var tgn = new org.koshinuke.ui.TreeGrid.Node(loader);
+		goog.array.forEach(["master", "release", "develop"], function(a) {
+			var tgn = new org.koshinuke.ui.TreeGrid.Node();
 			tgn.path = a;
 			tgn.name = a;
 			tgn.icon = "branch";

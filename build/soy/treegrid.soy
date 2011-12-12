@@ -1,15 +1,6 @@
 {namespace org.koshinuke.template.treegrid}
 
 /**
- * @param list
- */
-{template .tmpl}
-{foreach $e in $list}
-	{call .row data="$e" /}
-{/foreach}
-{/template}
-
-/**
  * make row
  * @param indent 0 or more
  * @param hasChild
@@ -17,14 +8,14 @@
  * @param icon
  * @param timestamp
  * @param message
- * @param auther
+ * @param author
  */
 {template .row}
 <tr class="row">
 	<td{if 0 < $indent} style="padding-left: {$indent|noAutoescape}px;"{/if}><span{if 0 < $hasChild} class="collapse"{/if}></span><span class="{$icon}">{$name}</span></td>
 	<td>{$timestamp}</td>
 	<td><span>{$message}</span></td>
-	<td><span>{$auther}</span></td>
+	<td><span>{$author}</span></td>
 </tr>
 {/template}
 
