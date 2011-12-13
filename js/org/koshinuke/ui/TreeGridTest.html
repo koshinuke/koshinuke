@@ -52,56 +52,37 @@
 					return goog.array.defaultCompare(l.ary[i], r.ary[i]);
 				};
 				var lc = function(l, r) {
-					// prevent overflow
-					if(l.level < r.level) {
-						return -1;
-					}
-					if(r.level < l.level) {
-						return 1;
-					}
-					return 0;
+					return goog.array.defaultCompare(l.level, r.level);
 				}
 				var comp = function(l, r) {
-					var length = l.level;
-					if(r.level < l.level) {
-						length = r.level;
-					}
-					for(var i = 0; i < length; i++) {
+					var minL = Math.min(l.level, r.level);
+					for(var i = 0; i < minL; i++) {
 						var diff = dc(l, r, i);
 						if(diff) {
 							return diff;
 						}
 					}
-					if(l.type == r.type) {
-						if(l.level == r.level) {
-							var diff = dc(l, r, length);
+					if(l.type == 'tree') {
+						if(l.type == r.type || l.level < r.level) {
+							var diff = dc(l, r, minL);
 							if(diff) {
 								return diff;
 							}
 						}
-						if(l.type == 'tree') {
-							var diff = dc(l, r, length);
-							if(diff) {
-								return diff;
-							}
+						if(l.type == r.type) {
 							return lc(l, r);
-						} else if(l.type == 'blob') {
-							return lc(r, l);
-						}
-					} else if(l.type == 'tree') {
-						if(l.level < r.level) {
-							var diff = dc(l, r, length);
-							if(diff) {
-								return diff;
-							}
 						}
 						return -1;
-					} else if(l.type == 'blob') {
-						if(r.level < l.level) {
-							var diff = dc(l, r, length);
+					}
+					if(l.type == 'blob') {
+						if((l.type == r.type && r.level == l.level) || (l.type != r.type && r.level < l.level)) {
+							var diff = dc(l, r, minL);
 							if(diff) {
 								return diff;
 							}
+						}
+						if(l.type == r.type) {
+							return lc(r, l);
 						}
 						return 1;
 					}
