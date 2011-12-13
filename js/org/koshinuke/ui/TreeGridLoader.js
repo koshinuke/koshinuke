@@ -9,8 +9,9 @@ goog.require('org.koshinuke.ui.TreeGrid.Leaf');
 goog.require('org.koshinuke.ui.TreeGrid.Psuedo');
 
 /** @constructor */
-org.koshinuke.ui.TreeGridLoader = function(uri) {
+org.koshinuke.ui.TreeGridLoader = function(uri, opt_comparator) {
 	this.uri = uri;
+	this.comparator = opt_comparator || org.koshinuke.ui.TreeGridLoader.defaultCompare;
 };
 
 org.koshinuke.ui.TreeGridLoader.prototype.toRequestUri = function(model) {
@@ -23,16 +24,17 @@ org.koshinuke.ui.TreeGridLoader.prototype.load = function(model) {
 	var parent = model.getParent();
 	var index = parent.indexOfChild(model) + 1;
 	parent.addChildAt(psuedo, index, true);
-
+	
+	var self = this;
 	// TODO エラー処理, Timeout, ServerError
 	goog.net.XhrIo.send(this.toRequestUri(model).toString(), function(e) {
 		parent.removeChild(psuedo, true);
-		var data = goog.json.parse(e.target.getResponseText());
-		var ary = [];
-		goog.array.forEach(data, function(a) {
+		var raw = goog.json.parse(e.target.getResponseText());
+		var kids = [];
+		goog.array.forEach(raw, function(a) {
 			var m;
-			var type = a['type'].toLowerCase();
-			if(type.toLowerCase() == 'tree') {
+			var type = a['type'];
+			if(type == 'tree') {
 				m = new org.koshinuke.ui.TreeGrid.Node();
 			} else {
 				m = new org.koshinuke.ui.TreeGrid.Leaf();
@@ -45,16 +47,59 @@ org.koshinuke.ui.TreeGridLoader.prototype.load = function(model) {
 			m.timestamp = a['timestamp'];
 			m.message = a['message'];
 			m.author = a['author'];
-			ary.push(m);
+
+			var ary = m.path.split('/');
+			m.ary = ary;
+			m.level = ary.length - 1;
+
+			kids.push(m);
 		});
-		// TODO ソート
-		goog.array.sort(ary, function(l, r) {
-			return goog.array.defaultCompare(l.path, r.path);
-		});
-		goog.array.forEach(ary, function(a, i) {
+		goog.array.sort(kids, self.comparator);
+		goog.array.forEach(kids, function(a, i) {
 			parent.addChildAt(a, index + i, true);
 		});
 
 		model.isLoaded = true;
 	});
+};
+
+org.koshinuke.ui.TreeGridLoader.pathElementCompare = function(l, r, i) {
+	return goog.array.defaultCompare(l.ary[i], r.ary[i]);
+};
+org.koshinuke.ui.TreeGridLoader.levelCompare = function(l, r) {
+	return goog.array.defaultCompare(l.level, r.level);
+};
+org.koshinuke.ui.TreeGridLoader.defaultCompare = function(l, r) {
+	var minL = Math.min(l.level, r.level);
+	for(var i = 0; i < minL; i++) {
+		var diff = org.koshinuke.ui.TreeGridLoader.pathElementCompare(l, r, i);
+		if(diff) {
+			return diff;
+		}
+	}
+	if(l.type == 'tree') {
+		if(l.type == r.type || l.level < r.level) {
+			var diff = org.koshinuke.ui.TreeGridLoader.pathElementCompare(l, r, minL);
+			if(diff) {
+				return diff;
+			}
+		}
+		if(l.type == r.type) {
+			return org.koshinuke.ui.TreeGridLoader.levelCompare(l, r);
+		}
+		return -1;
+	}
+	if(l.type == 'blob') {
+		if((l.type == r.type && r.level == l.level) || (l.type != r.type && r.level < l.level)) {
+			var diff = org.koshinuke.ui.TreeGridLoader.pathElementCompare(l, r, minL);
+			if(diff) {
+				return diff;
+			}
+		}
+		if(l.type == r.type) {
+			return org.koshinuke.ui.TreeGridLoader.levelCompare(r, l);
+		}
+		return 1;
+	}
+	return 0;
 };

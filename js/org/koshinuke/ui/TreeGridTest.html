@@ -24,6 +24,7 @@
 			goog.require('goog.testing.recordFunction');
 			goog.require('org.koshinuke.ui.TreeGrid');
 			goog.require('org.koshinuke.ui.TreeGrid.Node');
+			goog.require('org.koshinuke.ui.TreeGridLoader');
 
 		</script>
 	</head>
@@ -48,46 +49,6 @@
 		<table id="tg" class="treegrid"></table>
 		<script>
 			function testSortModel() {
-				var dc = function(l, r, i) {
-					return goog.array.defaultCompare(l.ary[i], r.ary[i]);
-				};
-				var lc = function(l, r) {
-					return goog.array.defaultCompare(l.level, r.level);
-				}
-				var comp = function(l, r) {
-					var minL = Math.min(l.level, r.level);
-					for(var i = 0; i < minL; i++) {
-						var diff = dc(l, r, i);
-						if(diff) {
-							return diff;
-						}
-					}
-					if(l.type == 'tree') {
-						if(l.type == r.type || l.level < r.level) {
-							var diff = dc(l, r, minL);
-							if(diff) {
-								return diff;
-							}
-						}
-						if(l.type == r.type) {
-							return lc(l, r);
-						}
-						return -1;
-					}
-					if(l.type == 'blob') {
-						if((l.type == r.type && r.level == l.level) || (l.type != r.type && r.level < l.level)) {
-							var diff = dc(l, r, minL);
-							if(diff) {
-								return diff;
-							}
-						}
-						if(l.type == r.type) {
-							return lc(r, l);
-						}
-						return 1;
-					}
-					return 0;
-				};
 				var data = [{
 					path : "aa/cc/zz",
 					type : "blob"
@@ -119,7 +80,7 @@
 					a.ary = ary;
 				});
 				var trace = function(l, r) {
-					var result = comp(l, r);
+					var result = org.koshinuke.ui.TreeGridLoader.defaultCompare(l, r);
 					console.log(l.type, ':', l.path, '-', r.type, ':', r.path, '=', result);
 					return result;
 				}
@@ -133,6 +94,122 @@
 						assertEquals(a, data[i].path);
 					});
 				}
+			}
+
+			function testSortModelMore() {
+				var data = [{
+					"path" : "master/.hgignore",
+					"type" : "blob"
+				}, {
+					"path" : "master/README.rst",
+					"type" : "blob"
+				}, {
+					"path" : "master/TODO",
+					"type" : "blob"
+				}, {
+					"path" : "master/bootstrap.py",
+					"type" : "blob"
+				}, {
+					"path" : "master/buildout.cfg",
+					"type" : "blob"
+				}, {
+					"path" : "master/setup.py",
+					"type" : "blob"
+				}, {
+					"path" : "master/src",
+					"type" : "tree",
+					"children" : 1
+				}, {
+					"path" : "master/src/heso",
+					"type" : "tree",
+					"children" : 12
+				}, {
+					"path" : "master/src/heso/Procfile",
+					"type" : "blob"
+				}, {
+					"path" : "master/src/heso/Rakefile",
+					"type" : "blob"
+				}, {
+					"path" : "master/src/heso/__init__.py",
+					"type" : "blob"
+				}, {
+					"path" : "master/src/heso/application.py",
+					"type" : "blob"
+				}, {
+					"path" : "master/src/heso/controller.py",
+					"type" : "blob"
+				}, {
+					"path" : "master/src/heso/heroku.py",
+					"type" : "blob"
+				}, {
+					"path" : "master/src/heso/mock.py",
+					"type" : "blob"
+				}, {
+					"path" : "master/src/heso/requirements.txt",
+					"type" : "blob"
+				}, {
+					"path" : "master/src/heso/setting.py",
+					"type" : "blob"
+				}, {
+					"path" : "master/src/heso/static",
+					"type" : "tree",
+					"children" : 4
+				}, {
+					"path" : "master/src/heso/templates",
+					"type" : "tree",
+					"children" : 2
+				}, {
+					"path" : "master/src/heso/tests.py",
+					"type" : "blob"
+				}, {
+					"path" : "master/src/heso/static/favicon.ico",
+					"type" : "blob"
+				}, {
+					"path" : "master/src/heso/static/lib",
+					"type" : "tree",
+					"children" : 2
+				}, {
+					"path" : "master/src/heso/static/script.js",
+					"type" : "blob"
+				}, {
+					"path" : "master/src/heso/static/style.css",
+					"type" : "blob"
+				}, {
+					"path" : "master/src/heso/templates/heso.html",
+					"type" : "blob"
+				}, {
+					"path" : "master/src/heso/templates/index.html",
+					"type" : "blob"
+				}, {
+					"path" : "master/src/heso/static/lib/bootstrap",
+					"type" : "tree",
+					"children" : 2
+				}, {
+					"path" : "master/src/heso/static/lib/codemirror",
+					"type" : "tree",
+					"children" : 5
+				}, {
+					"path" : "master/src/heso/static/lib/bootstrap/bootstrap-1.2.0.css",
+					"type" : "blob"
+				}, {
+					"path" : "master/src/heso/static/lib/bootstrap/bootstrap.custom.css",
+					"type" : "blob"
+				}];
+				goog.array.forEach(data, function(a) {
+					var ary = a.path.split('/');
+					a.level = ary.length - 1;
+					a.ary = ary;
+				});
+				var trace = function(l, r) {
+					var result = org.koshinuke.ui.TreeGridLoader.defaultCompare(l, r);
+					console.log(l.type, ':', l.path, '-', r.type, ':', r.path, '=', result);
+					return result;
+				}
+				goog.array.sort(data, trace);
+				assertEquals("master/src",data[0].path);
+				goog.array.forEach(data,function(a){
+					console.log(a.path);
+				});
 			}
 
 			function assertArraysEqual(arr1, arr2) {
