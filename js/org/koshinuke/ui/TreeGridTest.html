@@ -47,29 +47,97 @@
 		</table>
 		<table id="tg" class="treegrid"></table>
 		<script>
-			function testTreeGridModel() {
-				var grid = new org.koshinuke.ui.TreeGrid();
-				var tgEl = goog.dom.getElement('tg');
-				grid.decorate(tgEl);
-
-				var loader = function(path) {
-					return [path, "hoge", "moge"];
-				}
-				var ary = goog.array.reduce(["master", "release", "develop"], function(prev, a) {
-					var tgn = new org.koshinuke.ui.TreeGrid.Node(loader);
-					tgn.path = a;
-					tgn.name = a;
-					prev.push(tgn);
-					return prev;
-				}, []);
-				assertEquals("master", ary[0].path);
-
-				goog.array.forEach(ary, function(a) {
-					grid.addChild(a, true);
+			function testSortModel() {
+				var dc = function(l, r, i) {
+					return goog.array.defaultCompare(l.ary[i], r.ary[i]);
+				};
+				var comp = function(l, r) {
+					var length = l.level;
+					if(r.level < l.level) {
+						length = r.level;
+					}
+					for(var i = 0; i < length; i++) {
+						var diff = dc(l, r, i);
+						if(diff) {
+							return diff;
+						}
+					}
+					if(l.type == r.type) {
+						if(l.level == r.level) {
+							var diff = dc(l, r, l.level);
+							if(diff) {
+								return diff;
+							}
+						} else {
+							if(l.type == 'blob') {
+								return (l.level - r.level) * -1;
+							}
+							if(l.type == 'tree') {
+								var diff = dc(l, r, length);
+								if(diff) {
+									return diff;
+								}
+								return l.level - r.level;
+							}
+						}
+					} else if(l.type == 'tree') {
+						if(l.level < r.level) {
+							return 1;
+						}
+						return -1;
+					} else if(l.type == 'blob') {
+						if(r.level < l.level) {
+							var diff = dc(l, r, length);
+							if(diff) {
+								return diff;
+							}
+						}
+						return 1;
+					}
+					return 0; // TODO error ?
+				};
+				var data = [{
+					path : "aa/cc/zz",
+					type : "blob"
+				}, {
+					path : "aaa/bbb",
+					type : "tree"
+				}, {
+					path : "aa/cc",
+					type : "tree"
+				}, {
+					path : "aaa",
+					type : "tree"
+				}, {
+					path : "a",
+					type : "blob"
+				}, {
+					path : "aa",
+					type : "tree"
+				}, {
+					path : "aa",
+					type : "blob"
+				}, {
+					path : "aa/bb",
+					type : "blob"
+				}];
+				goog.array.forEach(data, function(a) {
+					var ary = a.path.split('/');
+					a.level = ary.length - 1;
+					a.ary = ary;
 				});
-				var tr = goog.dom.query('tr',tgEl)[0];
-				assertEquals("master", tr.model.path);
-				
+				var trace = function(l, r) {
+					var result = comp(l, r);
+					console.log(l.type, ':', l.path, '-', r.type, ':', r.path, '=', result);
+					return result;
+				}
+
+				goog.array.sort(data, trace);
+				console.log(data);
+				assertEquals('aa', data[0].path);
+				assertEquals('aa/cc', data[1].path);
+				assertEquals('aa/cc/zz', data[2].path);
+				assertEquals('aa/bb', data[3].path);
 			}
 
 			function assertArraysEqual(arr1, arr2) {
