@@ -1,4 +1,5 @@
 goog.provide('org.koshinuke.ui.TreeGrid.Node');
+goog.provide('org.koshinuke.ui.TreeGrid.Node.State');
 goog.provide('org.koshinuke.ui.TreeGrid.Leaf');
 goog.provide('org.koshinuke.ui.TreeGrid.Psuedo');
 
@@ -29,11 +30,28 @@ org.koshinuke.ui.TreeGrid.Psuedo = function(parentPath) {
 };
 goog.inherits(org.koshinuke.ui.TreeGrid.Psuedo, org.koshinuke.ui.TreeGrid.Leaf);
 
+/** @enum {string} */
+org.koshinuke.ui.TreeGrid.Node.State = {
+	EXPAND : "expand",
+	COLLAPSE : "collapse"
+};
+
 org.koshinuke.ui.TreeGrid.Node.prototype.indent = 0;
 org.koshinuke.ui.TreeGrid.Node.prototype.type = "tttyyypppeee";
 org.koshinuke.ui.TreeGrid.Node.prototype.path = "aaa/bbb/ccc";
+org.koshinuke.ui.TreeGrid.Node.prototype.level = 0;
 org.koshinuke.ui.TreeGrid.Node.prototype.name = "nnn.nnn";
+org.koshinuke.ui.TreeGrid.Node.prototype.visible = false;
+org.koshinuke.ui.TreeGrid.Node.prototype.setVisible = function(state) {
+	this.visible = state;
+	var el = this.getElement();
+	if(el) {
+		goog.style.showElement(el, state);
+	}
+};
 
+org.koshinuke.ui.TreeGrid.Node.prototype.state = org.koshinuke.ui.TreeGrid.Node.State.COLLAPSE;
+org.koshinuke.ui.TreeGrid.Node.prototype.children = 0;
 org.koshinuke.ui.TreeGrid.Node.prototype.hasChild = true;
 org.koshinuke.ui.TreeGrid.Leaf.prototype.hasChild = false;
 org.koshinuke.ui.TreeGrid.Node.prototype.isLoaded = false;
@@ -76,12 +94,9 @@ org.koshinuke.ui.TreeGrid.Node.prototype.exitDocument = function() {
 };
 /** @protected */
 org.koshinuke.ui.TreeGrid.Node.prototype.emitIndent = function() {
-	var ary = this.path.split('/');
-	this.indent = (ary.length - 1) * 18;
+	this.indent = this.level * 18;
 };
 /** @override */
 org.koshinuke.ui.TreeGrid.Leaf.prototype.emitIndent = function() {
-	var ary = this.path.split('/');
-	this.indent = ary.length * 18;
+	this.indent = (this.level + 1) * 18;
 };
-

@@ -1,6 +1,5 @@
 goog.provide('org.koshinuke.ui.TreeGrid');
 goog.provide('org.koshinuke.ui.TreeGrid.EventType');
-goog.provide('org.koshinuke.ui.TreeGrid.NodeState');
 
 goog.require('goog.array');
 goog.require('goog.dom');
@@ -30,12 +29,6 @@ org.koshinuke.ui.TreeGrid.EventType = {
 	COLLAPSE : goog.ui.Component.EventType.CLOSE
 };
 
-/** @enum {string} */
-org.koshinuke.ui.TreeGrid.NodeState = {
-	EXPAND : "expand",
-	COLLAPSE : "collapse"
-};
-
 /** @override */
 org.koshinuke.ui.TreeGrid.prototype.canDecorate = function(element) {
 	return element.tagName == 'TABLE' || element.tagName == 'TBODY';
@@ -49,7 +42,7 @@ org.koshinuke.ui.TreeGrid.prototype.decorateInternal = function(element) {
 		if(el.tagName == 'SPAN') {
 			var ary = goog.dom.classes.get(el);
 			var et = org.koshinuke.ui.TreeGrid.EventType;
-			var ns = org.koshinuke.ui.TreeGrid.NodeState;
+			var ns = org.koshinuke.ui.TreeGrid.Node.State;
 			if(goog.array.contains(ary, ns.EXPAND)) {
 				this.fire_(e.target, et.BEFORE_COLLAPSE, et.COLLAPSE, ary[0], ns.COLLAPSE)
 			} else if(goog.array.contains(ary, ns.COLLAPSE)) {
@@ -88,15 +81,14 @@ org.koshinuke.ui.TreeGrid.prototype.handleBeforeCollapse_ = function(e) {
 	var model = e.rowEl.model;
 	if(model.hasChild) {
 		if(model.isLoaded) {
-			this.switchChildNodes_(e.rowEl, function(next, mine, yours) {
-				var pl = yours.length;
-				if(0 < pl && mine.length < pl) {
-					goog.array.forEach(goog.dom.query('.expand', next), function(a) {
+			this.switchChildNodes_(e.rowEl, function(next) {
+				if(0 < next.level && model.level < next.level) {
+					goog.array.forEach(goog.dom.query('.expand', next.getElement()), function(a) {
 						var ary = goog.dom.classes.get(a);
 						var et = org.koshinuke.ui.TreeGrid.EventType;
-						this.fire_(a, et.BEFORE_COLLAPSE, et.COLLAPSE, ary[0], org.koshinuke.ui.TreeGrid.NodeState.COLLAPSE);
+						this.fire_(a, et.BEFORE_COLLAPSE, et.COLLAPSE, ary[0], org.koshinuke.ui.TreeGrid.Node.State.COLLAPSE);
 					}, this);
-					goog.style.showElement(next, false);
+					next.setVisible(false);
 					return false;
 				}
 				return true;
@@ -109,13 +101,11 @@ org.koshinuke.ui.TreeGrid.prototype.handleBeforeCollapse_ = function(e) {
 };
 /** @private */
 org.koshinuke.ui.TreeGrid.prototype.switchChildNodes_ = function(re, fn) {
-	var myPath = this.getPath_(re);
 	var next;
 	do {
 		next = goog.dom.getNextElementSibling(re);
 		if(next) {
-			var path = this.getPath_(next);
-			if(fn.call(this, next, myPath, path)) {
+			if(fn.call(this, next.model)) {
 				break;
 			}
 			re = next;
@@ -124,22 +114,16 @@ org.koshinuke.ui.TreeGrid.prototype.switchChildNodes_ = function(re, fn) {
 	return true;
 };
 /** @private */
-org.koshinuke.ui.TreeGrid.prototype.getPath_ = function(el) {
-	if(el.model && el.model.path) {
-		return el.model.path.split('/');
-	}
-	return [];
-};
-/** @private */
 org.koshinuke.ui.TreeGrid.prototype.handleBeforeExpand_ = function(e) {
 	var model = e.rowEl.model;
 	if(model.hasChild) {
 		if(model.isLoaded) {
-			this.switchChildNodes_(e.rowEl, function(next, mine, yours) {
-				var ml = mine.length;
-				var yl = yours.length;
-				if(ml + 1 == yl) {
-					goog.style.showElement(next, true);
+			this.switchChildNodes_(e.rowEl, function(next) {
+				if(model.level + 1 == next.level) {
+					next.setVisible(true);
+					return false;
+				}
+				if(model.level + 1 < next.level) {
 					return false;
 				}
 				return true;

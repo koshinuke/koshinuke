@@ -92,6 +92,7 @@ goog.exportSymbol('main', function() {
 			tgn.path = a;
 			tgn.name = a;
 			tgn.icon = "branch";
+			tgn.visible = true;
 			grid.addChild(tgn, true);
 		});
 	});
