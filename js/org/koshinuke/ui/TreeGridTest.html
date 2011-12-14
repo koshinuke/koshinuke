@@ -48,6 +48,61 @@
 		</table>
 		<table id="tg" class="treegrid"></table>
 		<script>
+			function testTreeGridLoaderCompare() {
+				var model = function(t, p) {
+					var a = p.split('/');
+					return {
+						type : t,
+						path : p,
+						ary : a,
+						level : a.length - 1
+					};
+				};
+				var tree = goog.partial(model, 'tree');
+				var blob = goog.partial(model, 'blob');
+				var assertCompare = function(expected, l, r) {
+					var actual = org.koshinuke.ui.TreeGridLoader.defaultCompare(l, r);
+					assertEquals(expected, actual);
+				};
+				var assertSwap = function(l, r) {
+					assertCompare(-1, l, r);
+					assertCompare(1, r, l);
+				};
+				// same paths
+				assertCompare(0, tree('a'), tree('a'));
+				assertCompare(0, blob('a'), blob('a'));
+				// path only compare
+				assertSwap(tree('a/b/c'), tree('a/c/b'));
+				assertSwap(tree('a/b/c'), blob('a/c/b'));
+				assertSwap(blob('a/b/c'), blob('a/c/b'));
+
+				// tree / tree - level ==
+				assertSwap(tree('a/a'), tree('a/b'));
+
+				// tree / tree - level <
+				// tree / tree - level >
+				assertSwap(tree('a'), tree('a/b'));
+
+				// tree / blob - level ==
+				// blob / tree - level ==
+				assertSwap(tree('a'), blob('a'));
+
+				// tree / blob - level <
+				// blob / tree - level >
+				assertSwap(tree('a'), blob('a/b'));
+
+				// tree / blob - level >
+				// blob / tree - level <
+				assertSwap(tree('a/b'), blob('a'));
+
+				// blob / blob - level ==
+				assertSwap(blob('a/a'), blob('a/b'));
+
+				// blob / blob - level <
+				// blob / blob - level >
+				assertSwap(blob('a/b'), blob('a'));
+			}
+
 			function testSortModel() {
 				var data = [{
 					path : "aa/cc/zz",
@@ -206,8 +261,8 @@
 					return result;
 				}
 				goog.array.sort(data, trace);
-				assertEquals("master/src",data[0].path);
-				goog.array.forEach(data,function(a){
+				assertEquals("master/src", data[0].path);
+				goog.array.forEach(data, function(a) {
 					console.log(a.path);
 				});
 			}
