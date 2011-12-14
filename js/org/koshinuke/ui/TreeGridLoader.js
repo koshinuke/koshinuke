@@ -42,7 +42,20 @@ org.koshinuke.ui.TreeGridLoader.prototype.jsonToModel = function(json) {
 	}
 	return m;
 };
-
+org.koshinuke.ui.TreeGridLoader.prototype.emitLoaded = function(kids, cursor, model) {
+	var kL = kids.length;
+	var i = model.children;
+	for(; 0 < i; i--) {
+		var last = cursor + i;
+		if(last < kL) {
+			if(goog.string.startsWith(kids[last].path, model.path)) {
+				model.isLoaded = true;
+				return;
+			}
+		}
+	}
+	model.loadedOffset = i;
+};
 org.koshinuke.ui.TreeGridLoader.prototype.load = function(model) {
 	var psuedo = new org.koshinuke.ui.TreeGrid.Psuedo(model.path);
 	org.koshinuke.ui.TreeGridLoader.setUpForSort(psuedo);
@@ -59,20 +72,19 @@ org.koshinuke.ui.TreeGridLoader.prototype.load = function(model) {
 		goog.array.forEach(raw, function(a) {
 			var m = self.jsonToModel(a);
 			org.koshinuke.ui.TreeGridLoader.setUpForSort(m);
-			m.visible = (model.level + 1) == m.level;
 			kids.push(m);
 		});
 		goog.array.sort(kids, self.comparator);
 		goog.array.forEach(kids, function(a, i) {
-			if(0 < a.children) {
-				var last = i + a.children;
-				a.isLoaded = last < kids.length && goog.string.startsWith(kids[last].path, a.path);
-			}
+			self.emitLoaded(kids, i, a);
 			org.koshinuke.ui.TreeGridLoader.tearDownForSort(a);
 			parent.addChildAt(a, index + i, true);
 		});
-
 		model.isLoaded = true;
+		parent.dispatchEvent({
+			type : org.koshinuke.ui.TreeGrid.EventType.BEFORE_EXPAND,
+			rowEl : model.getElement()
+		});
 	});
 };
 org.koshinuke.ui.TreeGridLoader.setUpForSort = function(model) {

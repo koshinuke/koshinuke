@@ -55,6 +55,7 @@ org.koshinuke.ui.TreeGrid.Node.prototype.children = 0;
 org.koshinuke.ui.TreeGrid.Node.prototype.hasChild = true;
 org.koshinuke.ui.TreeGrid.Leaf.prototype.hasChild = false;
 org.koshinuke.ui.TreeGrid.Node.prototype.isLoaded = false;
+org.koshinuke.ui.TreeGrid.Node.prototype.loadedOffset = 0;
 
 org.koshinuke.ui.TreeGrid.Node.prototype.icon = "folder";
 org.koshinuke.ui.TreeGrid.Leaf.prototype.icon = "txt";
