@@ -24,7 +24,7 @@ org.koshinuke.ui.TreeGridLoader.prototype.load = function(model) {
 	var parent = model.getParent();
 	var index = parent.indexOfChild(model) + 1;
 	parent.addChildAt(psuedo, index, true);
-	
+
 	var self = this;
 	// TODO エラー処理, Timeout, ServerError
 	goog.net.XhrIo.send(this.toRequestUri(model).toString(), function(e) {
@@ -48,10 +48,7 @@ org.koshinuke.ui.TreeGridLoader.prototype.load = function(model) {
 			m.message = a['message'];
 			m.author = a['author'];
 
-			var ary = m.path.split('/');
-			m.ary = ary;
-			m.level = ary.length - 1;
-
+			org.koshinuke.ui.TreeGridLoader.setUpForSort(m);
 			kids.push(m);
 		});
 		goog.array.sort(kids, self.comparator);
@@ -62,7 +59,15 @@ org.koshinuke.ui.TreeGridLoader.prototype.load = function(model) {
 		model.isLoaded = true;
 	});
 };
-
+org.koshinuke.ui.TreeGridLoader.setUpForSort = function(model) {
+	var ary = model.path.split('/');
+	model.ary = ary;
+	model.level = ary.length - 1;
+};
+org.koshinuke.ui.TreeGridLoader.tearDownForSort = function(model) {
+	delete model.ary;
+	delete model.level;
+};
 org.koshinuke.ui.TreeGridLoader.pathElementCompare = function(l, r, i) {
 	return goog.array.defaultCompare(l.ary[i], r.ary[i]);
 };

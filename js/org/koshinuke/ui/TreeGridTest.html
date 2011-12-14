@@ -50,13 +50,12 @@
 		<script>
 			function testTreeGridLoaderCompare() {
 				var model = function(t, p) {
-					var a = p.split('/');
-					return {
+					var m = {
 						type : t,
 						path : p,
-						ary : a,
-						level : a.length - 1
 					};
+					org.koshinuke.ui.TreeGridLoader.setUpForSort(m);
+					return m;
 				};
 				var tree = goog.partial(model, 'tree');
 				var blob = goog.partial(model, 'blob');
@@ -129,17 +128,13 @@
 					path : "aa/bb",
 					type : "blob"
 				}];
-				goog.array.forEach(data, function(a) {
-					var ary = a.path.split('/');
-					a.level = ary.length - 1;
-					a.ary = ary;
-				});
 				var trace = function(l, r) {
 					var result = org.koshinuke.ui.TreeGridLoader.defaultCompare(l, r);
 					console.log(l.type, ':', l.path, '-', r.type, ':', r.path, '=', result);
 					return result;
 				}
 				for(var x = 0; x < 5; x++) {
+					goog.array.forEach(data, org.koshinuke.ui.TreeGridLoader.setUpForSort);
 					goog.array.shuffle(data);
 					console.log(data);
 					goog.array.sort(data, trace);
@@ -149,6 +144,7 @@
 						assertEquals(a, data[i].path);
 					});
 				}
+				goog.array.forEach(data, org.koshinuke.ui.TreeGridLoader.tearDownForSort);
 			}
 
 			function testSortModelMore() {
