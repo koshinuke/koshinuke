@@ -1,17 +1,78 @@
 [
 	{
-		"host":"koshinuke.jp",
-		"path":"web/",
-		"name":"koshinuke"
-	},
-	{
-		"host":"koshinuke.com",
-		"path":"servers/java/",
-		"name":"koshinuke.java"
-	},
-	{
-		"host":"koshinuke.org",
-		"path":"servers/python/",
-		"name":"koshinuke.py"
+		"host": "koshinuke.jp",
+		"path": "web/",
+		"name": "koshinuke",
+		"branches": [
+			{
+				"path": "master",
+				"name": "master",
+				"timestamp": 1323880375974,
+				"author": "lanius",
+				"message": "master master master"
+			}, {
+				"path": "develop",
+				"name": "develop",
+				"timestamp": 1323861375974,
+				"author": "lanius",
+				"message": "develop develop develop"
+			}, {
+				"path": "release",
+				"name": "release",
+				"timestamp": 1323811375974,
+				"author": "taichi",
+				"message": "release release release"
+			}
+		]
+	}, {
+		"host": "koshinuke.com",
+		"path": "servers/java/",
+		"name": "koshinuke.java",
+		"branches": [
+			{
+				"path": "master2",
+				"name": "master2",
+				"timestamp": 1323880375974,
+				"author": "lanius",
+				"message": "master master master"
+			}, {
+				"path": "develop2",
+				"name": "develop2",
+				"timestamp": 1323861375974,
+				"author": "lanius",
+				"message": "develop develop develop"
+			}, {
+				"path": "release2",
+				"name": "release2",
+				"timestamp": 1323811375974,
+				"author": "taichi",
+				"message": "release release release"
+			}
+		]
+	}, {
+		"host": "koshinuke.org",
+		"path": "servers/python/",
+		"name": "koshinuke.py",
+		"branches": [
+			{
+				"path": "master3",
+				"name": "master3",
+				"timestamp": 1323880375974,
+				"author": "lanius",
+				"message": "master master master"
+			}, {
+				"path": "develop3",
+				"name": "develop3",
+				"timestamp": 1323861375974,
+				"author": "lanius",
+				"message": "develop develop develop"
+			}, {
+				"path": "release3",
+				"name": "release3",
+				"timestamp": 1323811375974,
+				"author": "taichi",
+				"message": "release release release"
+			}
+		]
 	}
 ]
