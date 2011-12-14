@@ -1,6 +1,7 @@
 goog.provide('org.koshinuke.ui.TreeGridLoader');
 
 goog.require('goog.array');
+goog.require('goog.i18n.DateTimeFormat');
 goog.require('goog.net.XhrIo');
 
 goog.require('org.koshinuke');
@@ -19,41 +20,46 @@ org.koshinuke.ui.TreeGridLoader.prototype.toRequestUri = function(model) {
 	return this.uri.resolve(new goog.Uri('/koshinuke/stub/' + model.path + '.json'));
 };
 
+org.koshinuke.ui.TreeGridLoader.prototype.jsonToModel = function(json) {
+	var m;
+	var type = json['type'];
+	if(type == 'tree') {
+		m = new org.koshinuke.ui.TreeGrid.Node();
+	} else {
+		m = new org.koshinuke.ui.TreeGrid.Leaf();
+		var ext = org.koshinuke.getExtension(json['path'], m.icon);
+		m.icon = org.koshinuke.findIcon(ext);
+	}
+	m.type = type;
+	m.path = goog.string.urlDecode(json['path']);
+	m.name = goog.string.urlDecode(json['name']);
+	m.timestamp = new goog.i18n.DateTimeFormat('yyyy-MM-dd HH:mm:ss').format(new Date(json['timestamp']));
+	m.message = goog.string.urlDecode(json['message']);
+	m.author = goog.string.urlDecode(json['author']);
+	var c = json['children'];
+	if(c) {
+		m.children = c;
+	}
+	return m;
+};
+
 org.koshinuke.ui.TreeGridLoader.prototype.load = function(model) {
 	var psuedo = new org.koshinuke.ui.TreeGrid.Psuedo(model.path);
+	org.koshinuke.ui.TreeGridLoader.setUpForSort(psuedo);
 	var parent = model.getParent();
 	var index = parent.indexOfChild(model) + 1;
 	parent.addChildAt(psuedo, index, true);
 
 	var self = this;
-	// TODO エラー処理, Timeout, ServerError
+	// TODO エラー処理, Timeout, ServerError, エラー時のリトライ用Node？
 	goog.net.XhrIo.send(this.toRequestUri(model).toString(), function(e) {
-		parent.removeChild(psuedo, true);
 		var raw = goog.json.parse(e.target.getResponseText());
+		parent.removeChild(psuedo, true);
 		var kids = [];
 		goog.array.forEach(raw, function(a) {
-			var m;
-			var type = a['type'];
-			if(type == 'tree') {
-				m = new org.koshinuke.ui.TreeGrid.Node();
-			} else {
-				m = new org.koshinuke.ui.TreeGrid.Leaf();
-				var ext = org.koshinuke.getExtension(a['path'], m.icon);
-				m.icon = org.koshinuke.findIcon(ext);
-			}
-			m.type = type;
-			m.path = goog.string.urlDecode(a['path']);
-			m.name = goog.string.urlDecode(a['name']);
-			m.timestamp = a['timestamp'];
-			m.message = goog.string.urlDecode(a['message']);
-			m.author = goog.string.urlDecode(a['author']);
+			var m = self.jsonToModel(a);
 			org.koshinuke.ui.TreeGridLoader.setUpForSort(m);
 			m.visible = (model.level + 1) == m.level;
-			var c = a['children'];
-			if(c) {
-				m.children = c;
-			}
-
 			kids.push(m);
 		});
 		goog.array.sort(kids, self.comparator);
@@ -62,6 +68,7 @@ org.koshinuke.ui.TreeGridLoader.prototype.load = function(model) {
 				var last = i + a.children;
 				a.isLoaded = last < kids.length && goog.string.startsWith(kids[last].path, a.path);
 			}
+			org.koshinuke.ui.TreeGridLoader.tearDownForSort(a);
 			parent.addChildAt(a, index + i, true);
 		});
 
