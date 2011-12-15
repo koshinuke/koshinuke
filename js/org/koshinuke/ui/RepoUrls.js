@@ -161,13 +161,13 @@ org.koshinuke.ui.RepoUrls.prototype.setModel = function(model) {
 };
 /** @private */
 org.koshinuke.ui.RepoUrls.prototype.ssh_ = function(user, host, path, name) {
-	return goog.string.format('%s@%s:%s%s.git', user, host, path, name);
+	return goog.string.format('%s@%s:%s/%s.git', user, host, path, name);
 };
 /** @private */
 org.koshinuke.ui.RepoUrls.prototype.https_ = function(user, host, path, name) {
-	return goog.string.format('https://%s@%s/%s%s.git', user, host, path, name);
+	return goog.string.format('https://%s@%s/%s/%s.git', user, host, path, name);
 };
 /** @private */
 org.koshinuke.ui.RepoUrls.prototype.git_ = function(user, host, path, name) {
-	return goog.string.format('git://%s/%s%s.git', host, path, name);
+	return goog.string.format('git://%s/%s/%s.git', host, path, name);
 };

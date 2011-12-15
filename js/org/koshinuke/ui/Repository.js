@@ -4,6 +4,7 @@ goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.query');
+goog.require('goog.events');
 
 goog.require('goog.ui.Tab');
 
@@ -16,7 +17,12 @@ org.koshinuke.ui.Repository = function(content, opt_renderer, opt_domHelper) {
 };
 goog.inherits(org.koshinuke.ui.Repository, goog.ui.Tab);
 
+org.koshinuke.ui.Repository.EventType = {
+	REPO_CONTEXT_SELECTED : "r.c.s"
+};
+
 org.koshinuke.ui.Repository.prototype.tabbar = false;
+org.koshinuke.ui.Repository.prototype.listenerKey = null;
 org.koshinuke.ui.Repository.prototype.host = "hhoosstt";
 org.koshinuke.ui.Repository.prototype.path = "ppaatthh";
 org.koshinuke.ui.Repository.prototype.name = "reponame";
@@ -30,18 +36,28 @@ org.koshinuke.ui.Repository.prototype.enterDocument = function() {
 	org.koshinuke.ui.Repository.superClass_.enterDocument.call(this);
 	var el = goog.dom.query('.repo-context', this.getElement())[0];
 	this.tabbar.decorate(el);
-	goog.array.forEach(goog.dom.query('div', el), function(a) {
-		var t = new goog.ui.Tab();
-		t.decorate(a);
-		this.tabbar.addChild(t);
-	}, this);
-	this.tabbar.setSelectedTabIndex(0);
+	this.listenerKey = goog.events.listen(this.tabbar, goog.ui.Component.EventType.SELECT, function(e) {
+		var el = e.target.getElement();
+		this.dispatchEvent({
+			type : org.koshinuke.ui.Repository.EventType.REPO_CONTEXT_SELECTED,
+			context : el.getAttribute('context'),
+			label : goog.dom.getTextContent(el)
+		});
+	}, false, this);
 };
 org.koshinuke.ui.Repository.prototype.exitDocument = function() {
 	org.koshinuke.ui.Repository.superClass_.exitDocument.call(this);
+	goog.events.unlistenByKey(this.listenerKey);
 };
 org.koshinuke.ui.Repository.prototype.disposeInternal = function() {
 	org.koshinuke.ui.Repository.superClass_.disposeInternal.call(this);
 	this.tabbar.dispose();
 	this.tabbar = null;
+	this.listenerKey = null;
+};
+org.koshinuke.ui.Repository.prototype.getSelectedTab = function() {
+	return this.tabbar.getSelectedTab();
+};
+org.koshinuke.ui.Repository.prototype.setSelectedTabIndex = function(index) {
+	this.tabbar.setSelectedTabIndex(index);
 };

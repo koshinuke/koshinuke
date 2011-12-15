@@ -1,1 +1,0 @@
-call soy.cmd repolist.soy

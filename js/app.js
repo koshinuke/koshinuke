@@ -27,7 +27,6 @@ goog.require('CodeMirror.modes');
 goog.require('org.koshinuke');
 goog.require('org.koshinuke.ui.Breadcrumb');
 goog.require('org.koshinuke.ui.Repository');
-goog.require('org.koshinuke.ui.RepoList');
 goog.require('org.koshinuke.ui.RepoUrls');
 goog.require('org.koshinuke.ui.RepoTabBar');
 goog.require('org.koshinuke.ui.TreeGrid');
@@ -74,13 +73,6 @@ goog.exportSymbol('main', function() {
 	});
 
 	goog.array.forEach(goog.dom.query('.repo-list'), function(root) {
-		// var list = new org.koshinuke.ui.RepoList(function(repo, li, is) {
-		// if(is) {
-		// PubSub.publish(PubSub.REPO_SELECT, list.makeModel(repo, li));
-		// }
-		// });
-		// list.decorate(root);
-		// list.setSelectedIndex(0, 0);
 		var tabbar = new goog.ui.TabBar(goog.ui.TabBar.Location.START);
 		tabbar.decorate(root);
 		goog.array.forEach(["koshinuke", "koshinuke.py", "koshinuke.java"], function(a) {
@@ -88,8 +80,19 @@ goog.exportSymbol('main', function() {
 			r.name = a;
 			tabbar.addChild(r, true);
 		});
-
+		goog.events.listen(tabbar, org.koshinuke.ui.Repository.EventType.REPO_CONTEXT_SELECTED, function(e) {
+			var t = e.target;
+			PubSub.publish(PubSub.REPO_SELECT, {
+				context : e.context,
+				label : e.label,
+				user : "taichi",// TODO from cookie?
+				host : t.host,
+				path : t.path,
+				name : t.name
+			});
+		});
 		tabbar.setSelectedTabIndex(0);
+		tabbar.getSelectedTab().setSelectedTabIndex(0);
 	});
 
 	goog.array.forEach(goog.dom.query('.treegrid'), function(el) {
