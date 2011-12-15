@@ -25,6 +25,7 @@ goog.require('org.koshinuke.ui.TreeGridLoader');
 
 goog.exportSymbol('main', function() {
 	var PubSub = org.koshinuke.PubSub;
+	var uri = new goog.Uri(window.location.href);
 
 	goog.array.forEach(goog.dom.query('.repo-urls'), function(root) {
 		var ru = new org.koshinuke.ui.RepoUrls();
@@ -63,7 +64,6 @@ goog.exportSymbol('main', function() {
 	goog.array.forEach(goog.dom.query('.repo-list'), function(root) {
 		var tabbar = new goog.ui.TabBar(goog.ui.TabBar.Location.START);
 		tabbar.decorate(root);
-		var uri = new goog.Uri(window.location.href);
 		var rl = new org.koshinuke.ui.RepositoryLoader(uri);
 		rl.load(function(repo) {
 			tabbar.addChild(repo, true);
@@ -85,7 +85,6 @@ goog.exportSymbol('main', function() {
 	});
 
 	goog.array.forEach(goog.dom.query('.treegrid'), function(el) {
-		var uri = new goog.Uri(window.location.href);
 		var loader = new org.koshinuke.ui.TreeGridLoader(uri);
 		var grid = new org.koshinuke.ui.TreeGrid(loader);
 		grid.decorate(el);

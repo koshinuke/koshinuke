@@ -36,6 +36,12 @@ org.koshinuke.ui.RepoTabBar.prototype.addTab = function(model) {
 	}
 	this.setSelectedTab(tab);
 };
+org.koshinuke.ui.RepoTabBar.prototype.newPane = function(tab) {
+	var model = tab.getModel();
+	var ctx = model.context;
+	// TODO context に応じたPaneの生成処理
+};
+
 /** @private */
 org.koshinuke.ui.RepoTabBar.prototype.hash = function(model) {
 	return org.koshinuke.hash(model.host, model.path, model.name, model.context);
