@@ -20,27 +20,6 @@ org.koshinuke.ui.TreeGridLoader.prototype.toRequestUri = function(model) {
 	return this.uri.resolve(new goog.Uri('/koshinuke/stub/' + model.path + '.json'));
 };
 
-org.koshinuke.ui.TreeGridLoader.prototype.jsonToModel = function(json) {
-	var m;
-	var type = json['type'];
-	if(type == 'tree') {
-		m = new org.koshinuke.ui.TreeGrid.Node();
-		m.children = json['children'];
-	} else {
-		m = new org.koshinuke.ui.TreeGrid.Leaf();
-		var ext = org.koshinuke.getExtension(json['path'], m.icon);
-		m.icon = org.koshinuke.findIcon(ext);
-		var t = Number(json['timestamp']);
-		m.timestamp = new goog.i18n.DateTimeFormat('yyyy-MM-dd HH:mm:ss').format(new Date(t * 1000));
-		m.message = goog.string.urlDecode(json['message']);
-		m.author = goog.string.urlDecode(json['author']);
-	}
-	m.type = type;
-	m.path = goog.string.urlDecode(json['path']);
-	m.name = goog.string.urlDecode(json['name']);
-
-	return m;
-};
 org.koshinuke.ui.TreeGridLoader.prototype.emitLoaded = function(kids, cursor, model) {
 	var kL = kids.length;
 	var i = model.children;
@@ -69,12 +48,13 @@ org.koshinuke.ui.TreeGridLoader.prototype.load = function(model) {
 		parent.removeChild(psuedo, true);
 		var kids = [];
 		goog.array.forEach(raw, function(a) {
-			var m = self.jsonToModel(a);
+			var m = org.koshinuke.ui.TreeGrid.newFromJson(a);
 			org.koshinuke.ui.TreeGridLoader.setUpForSort(m);
 			kids.push(m);
 		});
 		goog.array.sort(kids, self.comparator);
 		goog.array.forEach(kids, function(a, i) {
+			// TODO 子要素のうち最新のtimestamp,message, authorを拾って設定する
 			self.emitLoaded(kids, i, a);
 			org.koshinuke.ui.TreeGridLoader.tearDownForSort(a);
 			parent.addChildAt(a, index + i, true);

@@ -2,6 +2,7 @@ goog.provide('org.koshinuke.ui.TreeGrid.Node');
 goog.provide('org.koshinuke.ui.TreeGrid.Node.State');
 goog.provide('org.koshinuke.ui.TreeGrid.Leaf');
 goog.provide('org.koshinuke.ui.TreeGrid.Psuedo');
+goog.provide('org.koshinuke.ui.TreeGrid.newFromJson');
 
 goog.require('goog.dom.classes');
 goog.require('goog.dom.query');
@@ -18,14 +19,14 @@ org.koshinuke.ui.TreeGrid.Node = function(opt_domHelper) {
 goog.inherits(org.koshinuke.ui.TreeGrid.Node, goog.ui.Component);
 
 /** @constructor */
-org.koshinuke.ui.TreeGrid.Leaf = function() {
-	org.koshinuke.ui.TreeGrid.Node.call(this);
+org.koshinuke.ui.TreeGrid.Leaf = function(opt_domHelper) {
+	org.koshinuke.ui.TreeGrid.Node.call(this, opt_domHelper);
 };
 goog.inherits(org.koshinuke.ui.TreeGrid.Leaf, org.koshinuke.ui.TreeGrid.Node);
 
 /** @constructor */
-org.koshinuke.ui.TreeGrid.Psuedo = function(parentPath) {
-	org.koshinuke.ui.TreeGrid.Leaf.call(this);
+org.koshinuke.ui.TreeGrid.Psuedo = function(parentPath, opt_domHelper) {
+	org.koshinuke.ui.TreeGrid.Leaf.call(this, opt_domHelper);
 	this.path = parentPath + '/psuedo';
 };
 goog.inherits(org.koshinuke.ui.TreeGrid.Psuedo, org.koshinuke.ui.TreeGrid.Leaf);
@@ -34,6 +35,35 @@ goog.inherits(org.koshinuke.ui.TreeGrid.Psuedo, org.koshinuke.ui.TreeGrid.Leaf);
 org.koshinuke.ui.TreeGrid.Node.State = {
 	EXPAND : "expand",
 	COLLAPSE : "collapse"
+};
+org.koshinuke.ui.TreeGrid.newFromJson = function(json) {
+	var m;
+	var type = json['type'];
+	if(type == 'tree') {
+		m = new org.koshinuke.ui.TreeGrid.Node();
+	} else {
+		m = new org.koshinuke.ui.TreeGrid.Leaf();
+	}
+	m.setJsonShared(json);
+	m.setJson(json);
+	return m;
+};
+org.koshinuke.ui.TreeGrid.Node.prototype.setJsonShared = function(json) {
+	// TODO more abstraction
+	this.type = json['type'];
+	this.path = goog.string.urlDecode(json['path']);
+	this.name = goog.string.urlDecode(json['name']);
+};
+org.koshinuke.ui.TreeGrid.Node.prototype.setJson = function(json) {
+	this.children = json['children'];
+};
+org.koshinuke.ui.TreeGrid.Leaf.prototype.setJson = function(json) {
+	var ext = org.koshinuke.getExtension(json['path'], this.icon);
+	this.icon = org.koshinuke.findIcon(ext);
+	var t = Number(json['timestamp']);
+	this.timestamp = new goog.i18n.DateTimeFormat('yyyy-MM-dd HH:mm:ss').format(new Date(t * 1000));
+	this.message = goog.string.urlDecode(json['message']);
+	this.author = goog.string.urlDecode(json['author']);
 };
 
 org.koshinuke.ui.TreeGrid.Node.prototype.indent = 0;
@@ -59,7 +89,7 @@ org.koshinuke.ui.TreeGrid.Node.prototype.loadedOffset = 0;
 
 org.koshinuke.ui.TreeGrid.Node.prototype.icon = "folder";
 org.koshinuke.ui.TreeGrid.Leaf.prototype.icon = "txt";
-org.koshinuke.ui.TreeGrid.Node.prototype.timestamp = "YYYY-MM-DD hh:mm:ss";
+org.koshinuke.ui.TreeGrid.Node.prototype.timestamp = "1970-01-01 00:00:00";
 org.koshinuke.ui.TreeGrid.Node.prototype.message = "mmeessaaggee";
 org.koshinuke.ui.TreeGrid.Node.prototype.author = "aauutthhoorr";
 
