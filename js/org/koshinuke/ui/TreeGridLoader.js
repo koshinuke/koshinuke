@@ -25,22 +25,20 @@ org.koshinuke.ui.TreeGridLoader.prototype.jsonToModel = function(json) {
 	var type = json['type'];
 	if(type == 'tree') {
 		m = new org.koshinuke.ui.TreeGrid.Node();
+		m.children = json['children'];
 	} else {
 		m = new org.koshinuke.ui.TreeGrid.Leaf();
 		var ext = org.koshinuke.getExtension(json['path'], m.icon);
 		m.icon = org.koshinuke.findIcon(ext);
+		var t = Number(json['timestamp']);
+		m.timestamp = new goog.i18n.DateTimeFormat('yyyy-MM-dd HH:mm:ss').format(new Date(t * 1000));
+		m.message = goog.string.urlDecode(json['message']);
+		m.author = goog.string.urlDecode(json['author']);
 	}
 	m.type = type;
 	m.path = goog.string.urlDecode(json['path']);
 	m.name = goog.string.urlDecode(json['name']);
-	var t = Number(json['timestamp']);
-	m.timestamp = new goog.i18n.DateTimeFormat('yyyy-MM-dd HH:mm:ss').format(new Date(t * 1000));
-	m.message = goog.string.urlDecode(json['message']);
-	m.author = goog.string.urlDecode(json['author']);
-	var c = json['children'];
-	if(c) {
-		m.children = c;
-	}
+
 	return m;
 };
 org.koshinuke.ui.TreeGridLoader.prototype.emitLoaded = function(kids, cursor, model) {
