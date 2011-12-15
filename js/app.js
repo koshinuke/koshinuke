@@ -26,6 +26,7 @@ goog.require('CodeMirror.modes');
 
 goog.require('org.koshinuke');
 goog.require('org.koshinuke.ui.Breadcrumb');
+goog.require('org.koshinuke.ui.Repository');
 goog.require('org.koshinuke.ui.RepoList');
 goog.require('org.koshinuke.ui.RepoUrls');
 goog.require('org.koshinuke.ui.RepoTabBar');
@@ -73,13 +74,22 @@ goog.exportSymbol('main', function() {
 	});
 
 	goog.array.forEach(goog.dom.query('.repo-list'), function(root) {
-		var list = new org.koshinuke.ui.RepoList(function(repo, li, is) {
-			if(is) {
-				PubSub.publish(PubSub.REPO_SELECT, list.makeModel(repo, li));
-			}
+		// var list = new org.koshinuke.ui.RepoList(function(repo, li, is) {
+		// if(is) {
+		// PubSub.publish(PubSub.REPO_SELECT, list.makeModel(repo, li));
+		// }
+		// });
+		// list.decorate(root);
+		// list.setSelectedIndex(0, 0);
+		var tabbar = new goog.ui.TabBar(goog.ui.TabBar.Location.START);
+		tabbar.decorate(root);
+		goog.array.forEach(["koshinuke", "koshinuke.py", "koshinuke.java"], function(a) {
+			var r = new org.koshinuke.ui.Repository();
+			r.name = a;
+			tabbar.addChild(r, true);
 		});
-		list.decorate(root);
-		list.setSelectedIndex(0, 0);
+
+		tabbar.setSelectedTabIndex(0);
 	});
 
 	goog.array.forEach(goog.dom.query('.treegrid'), function(el) {

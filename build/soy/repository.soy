@@ -1,0 +1,16 @@
+{namespace org.koshinuke.template.repository}
+
+/**
+ * @param name
+ */
+{template .tmpl}
+<div class="repository">
+	<div class="repo-name">{$name}</div>
+	<div class="repo-context">
+		<div context="$$b" class="branches">Branch</div>
+		<div context="$$t" class="tags">Tags</div>
+		<div context="$$h" class="histories">Histories</div>
+		<div context="$$g" class="graph">Graph</div>
+	</div>
+</div>
+{/template}

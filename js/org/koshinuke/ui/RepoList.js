@@ -10,9 +10,7 @@ goog.require('goog.ui.SelectionModel');
 
 goog.require('org.koshinuke.template.repolist');
 
-/**
- * @constructor
- */
+/** @constructor */
 org.koshinuke.ui.RepoList = function(fn, opt_domHelper) {
 	goog.ui.Component.call(this, opt_domHelper);
 	this.contextHandler = fn;

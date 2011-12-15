@@ -17,21 +17,21 @@
 	.clearfix;
 	padding: 0.1em 0.1em 0.3em 0.1em;
 	border-bottom: 1px solid #CCC;
-	li {
+	div {
 		font-size: medium;
 		#radius > .around;
 		&:hover {
 			background-color: whitesmoke;
 			cursor: pointer;
 		}
-		&.active {
+		&.goog-tab-selected {
 			background-color: @grayLighter;
 			cursor: default;
 		}
 	}
 }
 .repository {
-	&.active {
+	&.repository-selected {
 		.repo-name {
 			font-weight: bold;
 			&:hover {
@@ -43,15 +43,15 @@
 			display: block;
 		}
 	}
-	&.top .repo-name {
+	&:first-child .repo-name {
 		#radius > .top;
 	}
-	&.bottom {
+	&:last-child {
 		.repo-name {
 			border-style: none;
 			#radius > .bottom;
 		}
-		&.active {
+		&.repository-selected {
 			.repo-name {
 				border-style: none none solid none;
 				#radius > .bottom(0);
