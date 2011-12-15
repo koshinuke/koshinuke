@@ -73,7 +73,7 @@ org.koshinuke.ui.RepoUrls.prototype.decorateInternal = function(element) {
 
 	ZeroClipboard.setMoviePath('flash/ZeroClipboard.swf');
 
-	var img = goog.dom.query('.clip-container img')[0];
+	var img = goog.dom.query('.clip-container .copy')[0];
 
 	var g = function() {
 		return new org.koshinuke.positioning.GravityPosition(img, 'w', 1);
@@ -83,21 +83,13 @@ org.koshinuke.ui.RepoUrls.prototype.decorateInternal = function(element) {
 
 	var clip = this.clip;
 	clip.addEventListener('onMouseOver', function(client) {
-		var el = client.domElement;
-		el.setAttribute("src", "images/copy_button_over.png");
 		copyTip.setVisible(true);
 	});
 	clip.addEventListener('onMouseOut', function(client) {
-		client.domElement.setAttribute("src", "images/copy_button_up.png");
 		copyTip.setVisible(false);
 		compTip.setVisible(false);
 	});
-	clip.addEventListener('onMouseUp', function(client) {
-		client.domElement.setAttribute("src", "images/copy_button_up.png");
-	});
 	clip.addEventListener('onMouseDown', function(client) {
-		var el = client.domElement;
-		el.setAttribute("src", "images/copy_button_down.png");
 		clip.setText(urlbox.value);
 	});
 	clip.addEventListener('onComplete', function(client, text) {
@@ -113,6 +105,9 @@ org.koshinuke.ui.RepoUrls.prototype.tooltip_ = function(t) {
 	});
 	goog.dom.appendChild(document.body, el);
 	return el;
+};
+org.koshinuke.ui.RepoUrls.prototype.enterDocument = function(){
+	org.koshinuke.ui.RepoUrls.superClass_.enterDocument.call(this);
 };
 /** @private */
 org.koshinuke.ui.RepoUrls.prototype.listenEvents_ = function() {

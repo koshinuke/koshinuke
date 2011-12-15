@@ -53,8 +53,19 @@
 	
 	.clip-container {
 		float: left;
-		img {
+		.copy {
+			display: block;
 			margin: 0.5em;
+			background: url(images/copy_button_set.png) no-repeat top left;
+			width: 14px;
+			height: 14px;
+			background-position: 0 -30px;
+			&.hover {
+				background-position: 0 -15px;
+			} 
+			&.active {
+				background-position: 0 0;
+			}
 		}
 	}
 	
