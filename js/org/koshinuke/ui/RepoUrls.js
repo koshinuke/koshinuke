@@ -143,7 +143,7 @@ org.koshinuke.ui.RepoUrls.prototype.setModel = function(model) {
 	var el = this.getElement();
 
 	function f(fn, protocol) {
-		var href = fn(model.user, model.host, model.path, model.name);
+		var href = fn(model.user, model.host, model.path);
 		goog.array.forEach(goog.dom.query('.protocols .' + protocol, el), function(a) {
 			a.setAttribute('href', href);
 		});
@@ -155,14 +155,14 @@ org.koshinuke.ui.RepoUrls.prototype.setModel = function(model) {
 	this.internalSelect_(this.protocols.getSelectedItem());
 };
 /** @private */
-org.koshinuke.ui.RepoUrls.prototype.ssh_ = function(user, host, path, name) {
-	return goog.string.format('%s@%s:%s/%s.git', user, host, path, name);
+org.koshinuke.ui.RepoUrls.prototype.ssh_ = function(user, host, path) {
+	return goog.string.format('%s@%s:%s.git', user, host, path, name);
 };
 /** @private */
-org.koshinuke.ui.RepoUrls.prototype.https_ = function(user, host, path, name) {
-	return goog.string.format('https://%s@%s/%s/%s.git', user, host, path, name);
+org.koshinuke.ui.RepoUrls.prototype.https_ = function(user, host, path) {
+	return goog.string.format('https://%s@%s/%s.git', user, host, path);
 };
 /** @private */
-org.koshinuke.ui.RepoUrls.prototype.git_ = function(user, host, path, name) {
-	return goog.string.format('git://%s/%s/%s.git', host, path, name);
+org.koshinuke.ui.RepoUrls.prototype.git_ = function(user, host, path) {
+	return goog.string.format('git://%s/%s.git', host, path);
 };

@@ -2,7 +2,10 @@ goog.provide('org.koshinuke.ui.TreeGridLoader');
 
 goog.require('goog.array');
 goog.require('goog.i18n.DateTimeFormat');
+goog.require('goog.json');
+goog.require('goog.string');
 goog.require('goog.net.XhrIo');
+goog.require('goog.Uri');
 
 goog.require('org.koshinuke');
 goog.require('org.koshinuke.ui.TreeGrid.Node');

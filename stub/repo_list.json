@@ -1,7 +1,7 @@
 [
 	{
 		"host": "koshinuke.jp",
-		"path": "web/",
+		"path": "web/koshinuke",
 		"name": "koshinuke",
 		"branches": [
 			{
@@ -26,7 +26,7 @@
 		]
 	}, {
 		"host": "koshinuke.com",
-		"path": "servers/java/",
+		"path": "servers/koshinuke.java",
 		"name": "koshinuke.java",
 		"branches": [
 			{
@@ -51,7 +51,7 @@
 		]
 	}, {
 		"host": "koshinuke.org",
-		"path": "servers/python/",
+		"path": "servers/koshinuke.py",
 		"name": "koshinuke.py",
 		"branches": [
 			{

@@ -11,8 +11,8 @@ goog.require('goog.ui.Tab');
 goog.require('org.koshinuke.ui.RepositoryRenderer');
 
 /** @constructor */
-org.koshinuke.ui.Repository = function(content, opt_renderer, opt_domHelper) {
-	goog.ui.Tab.call(this, content, opt_renderer || org.koshinuke.ui.RepositoryRenderer.getInstance(), opt_domHelper);
+org.koshinuke.ui.Repository = function(opt_renderer, opt_domHelper) {
+	goog.ui.Tab.call(this, null, opt_renderer || org.koshinuke.ui.RepositoryRenderer.getInstance(), opt_domHelper);
 	this.tabbar = new goog.ui.TabBar(goog.ui.TabBar.Location.START);
 };
 goog.inherits(org.koshinuke.ui.Repository, goog.ui.Tab);

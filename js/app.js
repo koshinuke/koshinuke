@@ -4,22 +4,12 @@ goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.query');
-goog.require('goog.json');
-goog.require('goog.net.XhrIo');
-goog.require('goog.object');
 goog.require('goog.pubsub.PubSub');
-goog.require('goog.positioning.Corner');
-goog.require('goog.soy');
 goog.require('goog.style');
-goog.require('goog.Uri');
 
 goog.require('goog.ui.Component.EventType');
-goog.require('goog.ui.IdGenerator');
-goog.require('goog.ui.PopupMenu');
-goog.require('goog.ui.SelectionModel');
 goog.require('goog.ui.Tab');
 goog.require('goog.ui.TabBar');
-goog.require('goog.ui.TableSorter');
 
 goog.require('CodeMirror');
 goog.require('CodeMirror.modes');
@@ -27,12 +17,10 @@ goog.require('CodeMirror.modes');
 goog.require('org.koshinuke');
 goog.require('org.koshinuke.ui.Breadcrumb');
 goog.require('org.koshinuke.ui.Repository');
+goog.require('org.koshinuke.ui.RepositoryLoader');
 goog.require('org.koshinuke.ui.RepoUrls');
 goog.require('org.koshinuke.ui.RepoTabBar');
 goog.require('org.koshinuke.ui.TreeGrid');
-goog.require('org.koshinuke.ui.TreeGrid.Node');
-goog.require('org.koshinuke.ui.TreeGrid.Leaf');
-goog.require('org.koshinuke.ui.TreeGrid.Psuedo');
 goog.require('org.koshinuke.ui.TreeGridLoader');
 
 goog.exportSymbol('main', function() {
@@ -75,29 +63,30 @@ goog.exportSymbol('main', function() {
 	goog.array.forEach(goog.dom.query('.repo-list'), function(root) {
 		var tabbar = new goog.ui.TabBar(goog.ui.TabBar.Location.START);
 		tabbar.decorate(root);
-		goog.array.forEach(["koshinuke", "koshinuke.py", "koshinuke.java"], function(a) {
-			var r = new org.koshinuke.ui.Repository();
-			r.name = a;
-			tabbar.addChild(r, true);
+		var uri = new goog.Uri(window.location.href);
+		var rl = new org.koshinuke.ui.RepositoryLoader(uri);
+		rl.load(function(repo) {
+			tabbar.addChild(repo, true);
+		}, function() {
+			tabbar.setSelectedTabIndex(0);
+			tabbar.getSelectedTab().setSelectedTabIndex(0);
 		});
 		goog.events.listen(tabbar, org.koshinuke.ui.Repository.EventType.REPO_CONTEXT_SELECTED, function(e) {
 			var t = e.target;
 			PubSub.publish(PubSub.REPO_SELECT, {
 				context : e.context,
 				label : e.label,
-				user : "taichi",// TODO from cookie?
+				user : "taichi", // TODO from cookie?
 				host : t.host,
 				path : t.path,
 				name : t.name
 			});
 		});
-		tabbar.setSelectedTabIndex(0);
-		tabbar.getSelectedTab().setSelectedTabIndex(0);
 	});
 
 	goog.array.forEach(goog.dom.query('.treegrid'), function(el) {
 		var uri = new goog.Uri(window.location.href);
-		var loader = new org.koshinuke.ui.TreeGridLoader(uri.resolve(new goog.Uri('/')));
+		var loader = new org.koshinuke.ui.TreeGridLoader(uri);
 		var grid = new org.koshinuke.ui.TreeGrid(loader);
 		grid.decorate(el);
 		goog.array.forEach(["master", "release", "develop"], function(a) {
