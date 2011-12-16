@@ -17,6 +17,7 @@ org.koshinuke.ui.Repository = function(opt_renderer, opt_domHelper) {
 };
 goog.inherits(org.koshinuke.ui.Repository, goog.ui.Tab);
 
+/** @enum {string} */
 org.koshinuke.ui.Repository.EventType = {
 	REPO_CONTEXT_SELECTED : "r.c.s"
 };
@@ -31,7 +32,23 @@ org.koshinuke.ui.Repository.prototype.setJson = function(json) {
 	this.host = json['host'];
 	this.path = json['path'];
 	this.name = json['name'];
+	var f = function(rawJson) {
+		var ary = [];
+		if(rawJson) {
+			goog.array.forEach(rawJson, function(a) {
+				a.type = 'tree';
+				var n = org.koshinuke.ui.TreeGrid.newFromJson(a);
+				n.icon = "branch";
+				n.visible = true;
+				ary.push(n);
+			});
+		}
+		return ary;
+	}
+	this.branches = f(json['branches']);
+	this.tags = f(json['tags']);
 };
+/** @override */
 org.koshinuke.ui.Repository.prototype.enterDocument = function() {
 	org.koshinuke.ui.Repository.superClass_.enterDocument.call(this);
 	var el = goog.dom.query('.repo-context', this.getElement())[0];
@@ -45,6 +62,7 @@ org.koshinuke.ui.Repository.prototype.enterDocument = function() {
 		});
 	}, false, this);
 };
+/** @override */
 org.koshinuke.ui.Repository.prototype.exitDocument = function() {
 	org.koshinuke.ui.Repository.superClass_.exitDocument.call(this);
 	goog.events.unlistenByKey(this.listenerKey);

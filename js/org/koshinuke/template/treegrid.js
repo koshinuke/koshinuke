@@ -7,6 +7,13 @@ goog.require('soy');
 goog.require('soy.StringBuilder');
 
 
+org.koshinuke.template.treegrid.table = function(opt_data, opt_sb) {
+  var output = opt_sb || new soy.StringBuilder();
+  output.append('<table class="treegrid"><thead><tr><th class="name">name</th><th class="timestamp">timestamp</th><th class="message">message</th><th class="auther">auther</th></tr></thead></table>');
+  return opt_sb ? '' : output.toString();
+};
+
+
 org.koshinuke.template.treegrid.row = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
   output.append('<tr class="row"', (opt_data.visible == false) ? ' style="display: none;"' : '', '><td', (0 < opt_data.indent) ? ' style="padding-left: ' + opt_data.indent + 'px;"' : '', '><span', (0 < opt_data.hasChild) ? ' class="' + soy.$$escapeHtml(opt_data.state) + '"' : '', '></span><span class="', soy.$$escapeHtml(opt_data.icon), '">', soy.$$escapeHtml(opt_data.name), '</span></td><td>', soy.$$escapeHtml(opt_data.timestamp), '</td><td><span>', soy.$$escapeHtml(opt_data.message), '</span></td><td><span>', soy.$$escapeHtml(opt_data.author), '</span></td></tr>');

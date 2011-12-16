@@ -28,6 +28,11 @@ org.koshinuke.ui.TreeGrid.EventType = {
 	BEFORE_COLLAPSE : 'before' + goog.ui.Component.EventType.CLOSE,
 	COLLAPSE : goog.ui.Component.EventType.CLOSE
 };
+/** @override */
+org.koshinuke.ui.TreeGrid.prototype.createDom = function() {
+	var element = goog.soy.renderAsElement(org.koshinuke.template.treegrid.table, this);
+	this.decorateInternal(element);
+};
 
 /** @override */
 org.koshinuke.ui.TreeGrid.prototype.canDecorate = function(element) {
@@ -133,6 +138,13 @@ org.koshinuke.ui.TreeGrid.prototype.handleBeforeExpand_ = function(e) {
 		}
 	}
 };
+org.koshinuke.ui.TreeGrid.prototype.setVisible = function(state) {
+	var el = this.getElement();
+	if(el) {
+		goog.style.showElement(el, state);
+	}
+};
+
 /** @override */
 org.koshinuke.ui.TreeGrid.prototype.disposeInternal = function() {
 	org.koshinuke.ui.TreeGrid.superClass_.disposeInternal.call(this);

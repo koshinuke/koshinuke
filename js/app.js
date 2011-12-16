@@ -50,7 +50,7 @@ goog.exportSymbol('main', function() {
 	});
 
 	goog.array.forEach(goog.dom.query('.goog-tab-bar'), function(root) {
-		var tabbar = new org.koshinuke.ui.RepoTabBar();
+		var tabbar = new org.koshinuke.ui.RepoTabBar('tab-pane', uri);
 		tabbar.decorate(root);
 		PubSub.subscribe(PubSub.REPO_SELECT, tabbar.addTab, tabbar);
 		goog.events.listen(tabbar, goog.ui.Component.EventType.SELECT, function(e) {
@@ -79,22 +79,10 @@ goog.exportSymbol('main', function() {
 				user : "taichi", // TODO from cookie?
 				host : t.host,
 				path : t.path,
-				name : t.name
+				name : t.name,
+				branches : t.branches,
+				tags : t.tags
 			});
-		});
-	});
-
-	goog.array.forEach(goog.dom.query('.treegrid'), function(el) {
-		var loader = new org.koshinuke.ui.TreeGridLoader(uri);
-		var grid = new org.koshinuke.ui.TreeGrid(loader);
-		grid.decorate(el);
-		goog.array.forEach(["master", "release", "develop"], function(a) {
-			var tgn = new org.koshinuke.ui.TreeGrid.Node();
-			tgn.path = a;
-			tgn.name = a;
-			tgn.icon = "branch";
-			tgn.visible = true;
-			grid.addChild(tgn, true);
 		});
 	});
 });

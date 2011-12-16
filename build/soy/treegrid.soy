@@ -1,6 +1,22 @@
 {namespace org.koshinuke.template.treegrid}
 
 /**
+ *
+ */
+{template .table}
+<table class="treegrid">
+	<thead>
+		<tr>
+			<th class="name">name</th>
+			<th class="timestamp">timestamp</th>
+			<th class="message">message</th>
+			<th class="auther">auther</th>
+		</tr>
+	</thead>
+</table>
+{/template}
+
+/**
  * make row
  * @param visible
  * @param indent 0 or more
