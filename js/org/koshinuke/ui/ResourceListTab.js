@@ -81,14 +81,11 @@ org.koshinuke.ui.ResourceListTab.prototype.handleUnSelect = function(e) {
 org.koshinuke.ui.ResourceListTab.prototype.exitDocument = function() {
 	org.koshinuke.ui.ResourceListTab.superClass_.exitDocument.call(this);
 	if(this.pane) {
-		this.pane.exitDocument();
+		this.pane.dispose();
 	}
 };
 /** @override */
 org.koshinuke.ui.Repository.prototype.disposeInternal = function() {
 	org.koshinuke.ui.ResourceListTab.superClass_.disposeInternal.call(this);
-	if(this.pane) {
-		this.pane.dispose();
-	}
 	this.pane = null;
 };
