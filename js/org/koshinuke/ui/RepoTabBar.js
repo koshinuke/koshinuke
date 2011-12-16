@@ -10,6 +10,8 @@ goog.require('goog.ui.TabBar');
 goog.require('org.koshinuke');
 goog.require('org.koshinuke.ui.RepoTabRenderer');
 goog.require('org.koshinuke.ui.BranchListTab');
+goog.require('org.koshinuke.ui.TagListTab');
+goog.require('org.koshinuke.ui.ResourceTab');
 
 /**
  * @constructor
@@ -32,8 +34,6 @@ org.koshinuke.ui.RepoTabBar.prototype.addTab = function(model) {
 		tab = this.newPane(model);
 		this.addChild(tab, true);
 		this.tabmap[hash] = tab;
-		var el = tab.getElement();
-		goog.dom.classes.add(el, org.koshinuke.findIcon(model.context));
 	}
 	this.setSelectedTab(tab);
 };
@@ -49,8 +49,11 @@ org.koshinuke.ui.RepoTabBar.prototype.newPane = function(model) {
 		tab = new org.koshinuke.ui.TagListTab(this.paneWrapper, model.name, org.koshinuke.ui.RepoTabRenderer.getInstance());
 		tab.setModel(model);
 		tab.loadPane(this.uri);
-	}
-	else {
+	} else if(ctx == '$$r') {
+		tab = new org.koshinuke.ui.ResourceTab(this.paneWrapper, model.name, org.koshinuke.ui.RepoTabRenderer.getInstance());
+		tab.setModel(model);
+		tab.loadPane(this.uri);
+	} else {
 		tab = new goog.ui.Tab(model.name, org.koshinuke.ui.RepoTabRenderer.getInstance());
 		tab.setModel(model);
 	}

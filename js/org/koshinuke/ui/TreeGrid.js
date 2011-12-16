@@ -5,6 +5,7 @@ goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.events.Event');
+goog.require('goog.object');
 goog.require('goog.soy');
 goog.require('goog.style');
 
@@ -26,14 +27,16 @@ org.koshinuke.ui.TreeGrid.EventType = {
 	BEFORE_EXPAND : 'before' + goog.ui.Component.EventType.OPEN,
 	EXPAND : goog.ui.Component.EventType.OPEN,
 	BEFORE_COLLAPSE : 'before' + goog.ui.Component.EventType.CLOSE,
-	COLLAPSE : goog.ui.Component.EventType.CLOSE
+	COLLAPSE : goog.ui.Component.EventType.CLOSE,
+	PATH_CLICK : "p.c",
+	MESSAGE_CLICK : "m.c",
+	AUTHOR_CLICK : "a.c"
 };
 /** @override */
 org.koshinuke.ui.TreeGrid.prototype.createDom = function() {
 	var element = goog.soy.renderAsElement(org.koshinuke.template.treegrid.table, this);
 	this.decorateInternal(element);
 };
-
 /** @override */
 org.koshinuke.ui.TreeGrid.prototype.canDecorate = function(element) {
 	return element.tagName == 'TABLE' || element.tagName == 'TBODY';
@@ -52,9 +55,21 @@ org.koshinuke.ui.TreeGrid.prototype.decorateInternal = function(element) {
 				this.fire_(e.target, et.BEFORE_COLLAPSE, et.COLLAPSE, ary[0], ns.COLLAPSE)
 			} else if(goog.array.contains(ary, ns.COLLAPSE)) {
 				this.fire_(e.target, et.BEFORE_EXPAND, et.EXPAND, ary[0], ns.EXPAND)
+			} else if(goog.array.contains(ary, "path")) {
+				this.fireClick_(e, et.PATH_CLICK);
+			} else if(goog.array.contains(ary, "comment")) {
+				this.fireClick_(e, et.MESSAGE_CLICK);
+			} else if(goog.array.contains(ary, "user")) {
+				this.fireClick_(e, et.AUTHOR_CLICK);
 			}
 		}
 	}, false, this);
+};
+/** @private */
+org.koshinuke.ui.TreeGrid.prototype.fireClick_ = function(e, type) {
+	e.preventDefault();
+	e.type = type;
+	this.dispatchEvent(e);
 };
 /** @private */
 org.koshinuke.ui.TreeGrid.prototype.fire_ = function(target, beforeType, afterType, current, next) {
@@ -80,6 +95,28 @@ org.koshinuke.ui.TreeGrid.prototype.listenEvents_ = function() {
 	var h = this.getHandler();
 	h.listen(this, org.koshinuke.ui.TreeGrid.EventType.BEFORE_COLLAPSE, this.handleBeforeCollapse_);
 	h.listen(this, org.koshinuke.ui.TreeGrid.EventType.BEFORE_EXPAND, this.handleBeforeExpand_);
+	h.listen(this, org.koshinuke.ui.TreeGrid.EventType.PATH_CLICK, this.handlePathClick);
+	h.listen(this, org.koshinuke.ui.TreeGrid.EventType.MESSAGE_CLICK, this.handleMessageClick);
+	h.listen(this, org.koshinuke.ui.TreeGrid.EventType.AUTHOR_CLICK, this.handleAuthorClick);
+};
+org.koshinuke.ui.TreeGrid.prototype.handlePathClick = function(e) {
+	var rm = org.koshinuke.findParent(e.target, 'TR').model;
+	if(rm.type == 'blob') {
+		var m = goog.object.clone(this.getModel());
+		m.label = goog.array.flatten(m.label, rm.path.split('/'));
+		m.context = "$$r";
+		m.name = rm.name;
+		m.resourcePath = rm.path;
+		org.koshinuke.PubSub.publish(org.koshinuke.PubSub.RESOURCE_SELECT, m);
+	}
+};
+org.koshinuke.ui.TreeGrid.prototype.handleMessageClick = function(e) {
+	// TODO 省略したメッセージをポップアップする？
+	console.log(e, e.target);
+};
+org.koshinuke.ui.TreeGrid.prototype.handleAuthorClick = function(e) {
+	// TODO 特定ユーザの情報をポップアップする？
+	console.log(e, e.target);
 };
 /** @private */
 org.koshinuke.ui.TreeGrid.prototype.handleBeforeCollapse_ = function(e) {
@@ -144,7 +181,6 @@ org.koshinuke.ui.TreeGrid.prototype.setVisible = function(state) {
 		goog.style.showElement(el, state);
 	}
 };
-
 /** @override */
 org.koshinuke.ui.TreeGrid.prototype.disposeInternal = function() {
 	org.koshinuke.ui.TreeGrid.superClass_.disposeInternal.call(this);

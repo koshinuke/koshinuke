@@ -15,7 +15,8 @@ org.koshinuke.activationHandler = function(item, isSelect) {
 };
 
 org.koshinuke.PubSub = new goog.pubsub.PubSub();
-org.koshinuke.PubSub.REPO_SELECT = "r.s";
+org.koshinuke.PubSub.REPO_SELECT = "rep.s";
+org.koshinuke.PubSub.RESOURCE_SELECT = "res.s";
 org.koshinuke.PubSub.TAB_SELECT = "t.s";
 org.koshinuke.PubSub.TAB_UNSELECT = "t.u";
 
@@ -33,7 +34,16 @@ org.koshinuke.findIcon = function(key) {
 	"$$b" : "branches",
 	"$$t" : "tags",
 	"$$h" : "histories",
-	"$$g" : "graph"
+	"$$g" : "graph",
+	".py"  : "python",
+	".html" : "html",
+	".css" : "css",
+	".js" : "js",
+	".ico" : "pic",
+	".gif" : "pic",
+	".jpg" : "pic",
+	".png" : "pic",
+	".java": "java"
 	}[key] || "txt";
 };
 

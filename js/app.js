@@ -36,6 +36,7 @@ goog.exportSymbol('main', function() {
 		ru.setSelectedIndex(0);
 		PubSub.subscribe(PubSub.REPO_SELECT, ru.setModel, ru);
 		PubSub.subscribe(PubSub.TAB_SELECT, ru.setModel, ru);
+		PubSub.subscribe(PubSub.RESOURCE_SELECT, ru.setModel, ru);
 	});
 
 	goog.array.forEach(goog.dom.query('.breadcrumbs'), function(root) {
@@ -50,12 +51,16 @@ goog.exportSymbol('main', function() {
 		PubSub.subscribe(PubSub.TAB_UNSELECT, function(rm) {
 			b.setModel([]);
 		});
+		PubSub.subscribe(PubSub.RESOURCE_SELECT, function(m){
+			b.setModel(m.label);
+		});
 	});
 
 	goog.array.forEach(goog.dom.query('.tab-container .goog-tab-bar'), function(root) {
 		var tabbar = new org.koshinuke.ui.RepoTabBar('tab-pane', uri);
 		tabbar.decorate(root);
 		PubSub.subscribe(PubSub.REPO_SELECT, tabbar.addTab, tabbar);
+		PubSub.subscribe(PubSub.RESOURCE_SELECT, tabbar.addTab, tabbar);
 		goog.events.listen(tabbar, goog.ui.Component.EventType.SELECT, function(e) {
 			PubSub.publish(PubSub.TAB_SELECT, e.target.getModel());
 		});
