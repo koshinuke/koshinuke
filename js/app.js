@@ -23,6 +23,12 @@ goog.require('org.koshinuke.ui.RepoTabBar');
 goog.exportSymbol('main', function() {
 	var PubSub = org.koshinuke.PubSub;
 	var uri = new goog.Uri(window.location.href);
+	
+	goog.array.forEach(goog.dom.query('.nav'), function(root) {
+		var tabbar = new goog.ui.TabBar();
+		tabbar.decorate(root);
+		tabbar.setSelectedTabIndex(0);
+	});
 
 	goog.array.forEach(goog.dom.query('.repo-urls'), function(root) {
 		var ru = new org.koshinuke.ui.RepoUrls();
@@ -46,7 +52,7 @@ goog.exportSymbol('main', function() {
 		});
 	});
 
-	goog.array.forEach(goog.dom.query('.goog-tab-bar'), function(root) {
+	goog.array.forEach(goog.dom.query('.tab-container .goog-tab-bar'), function(root) {
 		var tabbar = new org.koshinuke.ui.RepoTabBar('tab-pane', uri);
 		tabbar.decorate(root);
 		PubSub.subscribe(PubSub.REPO_SELECT, tabbar.addTab, tabbar);

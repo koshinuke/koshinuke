@@ -12,7 +12,7 @@
 @import "tabs.less";
 @import "table.less";
 
-@top-height: 2.5em;
+@import "topbar.less";
 
 body {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -27,49 +27,10 @@ a {
 	text-decoration: none;
 }
 
-.topbar {
-	height: @top-height;
-	min-width: 800px;
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	z-index: 10000;
-	overflow: visible;
-	
-	.brand {
-		float: left;
-		display: block;
-		font-size: 1.25em;
-		padding: 0.5em 1.25em;
-		
-		a {
-			font-weight: bold;
-		}
-	}
-}
-.nav {
-	display: block;
-	float: left;
-	margin-right: 0.6em;
-	outline: none;
-	.goog-tab {
-		display: block;
-		float: left;
-	}
-	
-	a {
-		display: block;
-		float: none;
-		padding: 0.6em 0.6em;
-		line-height: 1.4em;
-	}
-}
-
 .outer {
 	width: 100%;
 	min-width: 800px;
-	margin-top: @top-height;
+	margin-top: 3em;
 }
 
 .sidebar, .contents {
