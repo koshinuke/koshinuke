@@ -5,7 +5,6 @@ goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.query');
 goog.require('goog.pubsub.PubSub');
-goog.require('goog.style');
 
 goog.require('goog.ui.Component.EventType');
 goog.require('goog.ui.Tab');
@@ -20,8 +19,6 @@ goog.require('org.koshinuke.ui.Repository');
 goog.require('org.koshinuke.ui.RepositoryLoader');
 goog.require('org.koshinuke.ui.RepoUrls');
 goog.require('org.koshinuke.ui.RepoTabBar');
-goog.require('org.koshinuke.ui.TreeGrid');
-goog.require('org.koshinuke.ui.TreeGridLoader');
 
 goog.exportSymbol('main', function() {
 	var PubSub = org.koshinuke.PubSub;

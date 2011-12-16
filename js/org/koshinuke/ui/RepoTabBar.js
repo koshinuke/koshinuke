@@ -45,7 +45,12 @@ org.koshinuke.ui.RepoTabBar.prototype.newPane = function(model) {
 		tab = new org.koshinuke.ui.BranchListTab(this.paneWrapper, model.name, org.koshinuke.ui.RepoTabRenderer.getInstance());
 		tab.setModel(model);
 		tab.loadPane(this.uri);
-	} else {
+	} else if(ctx == '$$t') {
+		tab = new org.koshinuke.ui.TagListTab(this.paneWrapper, model.name, org.koshinuke.ui.RepoTabRenderer.getInstance());
+		tab.setModel(model);
+		tab.loadPane(this.uri);
+	}
+	else {
 		tab = new goog.ui.Tab(model.name, org.koshinuke.ui.RepoTabRenderer.getInstance());
 		tab.setModel(model);
 	}

@@ -41,14 +41,18 @@ org.koshinuke.ui.TreeGrid.newFromJson = function(json) {
 	var type = json['type'];
 	if(type == 'tree') {
 		m = new org.koshinuke.ui.TreeGrid.Node();
+	} else if (type == 'branch' || type == 'tag') {
+		m = new org.koshinuke.ui.TreeGrid.Node();
+		m.hasChild = true;
+		m.setJsonDetail_(json);
 	} else {
 		m = new org.koshinuke.ui.TreeGrid.Leaf();
 	}
-	m.setJsonShared(json);
+	m.setJsonShared_(json);
 	m.setJson(json);
 	return m;
 };
-org.koshinuke.ui.TreeGrid.Node.prototype.setJsonShared = function(json) {
+org.koshinuke.ui.TreeGrid.Node.prototype.setJsonShared_ = function(json) {
 	// TODO more abstraction
 	this.type = json['type'];
 	this.path = goog.string.urlDecode(json['path']);
@@ -57,13 +61,16 @@ org.koshinuke.ui.TreeGrid.Node.prototype.setJsonShared = function(json) {
 org.koshinuke.ui.TreeGrid.Node.prototype.setJson = function(json) {
 	this.children = json['children'];
 };
-org.koshinuke.ui.TreeGrid.Leaf.prototype.setJson = function(json) {
-	var ext = org.koshinuke.getExtension(json['path'], this.icon);
-	this.icon = org.koshinuke.findIcon(ext);
+org.koshinuke.ui.TreeGrid.Node.prototype.setJsonDetail_ = function(json) {
 	var t = Number(json['timestamp']);
 	this.timestamp = new goog.i18n.DateTimeFormat('yyyy-MM-dd HH:mm:ss').format(new Date(t * 1000));
 	this.message = goog.string.urlDecode(json['message']);
 	this.author = goog.string.urlDecode(json['author']);
+};
+org.koshinuke.ui.TreeGrid.Leaf.prototype.setJson = function(json) {
+	var ext = org.koshinuke.getExtension(json['path'], this.icon);
+	this.icon = org.koshinuke.findIcon(ext);
+	this.setJsonDetail_(json);
 };
 
 org.koshinuke.ui.TreeGrid.Node.prototype.indent = 0;

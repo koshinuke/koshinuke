@@ -11,7 +11,8 @@ goog.require('goog.events');
 goog.require('goog.ui.Tab');
 
 goog.require('org.koshinuke.ui.TreeGrid');
-goog.require('org.koshinuke.ui.TreeGridLoader');
+goog.require('org.koshinuke.ui.BranchLoader');
+goog.require('org.koshinuke.ui.TagLoader');
 
 /** @constructor */
 org.koshinuke.ui.ResourceListTab = function(parent, content, opt_renderer, opt_domHelper) {
@@ -31,9 +32,13 @@ goog.inherits(org.koshinuke.ui.BranchListTab, org.koshinuke.ui.ResourceListTab);
 
 /** @override */
 org.koshinuke.ui.BranchListTab.prototype.loadPane = function(uri) {
-	var loader = new org.koshinuke.ui.TreeGridLoader(uri);
+	var loader = new org.koshinuke.ui.BranchLoader(uri);
+	this.internalLoadPane_(loader, this.getModel().branches);
+};
+/** @private */
+org.koshinuke.ui.ResourceListTab.prototype.internalLoadPane_ = function(loader,models) {
 	this.pane = new org.koshinuke.ui.TreeGrid(loader);
-	goog.array.forEach(this.getModel().branches, function(a) {
+	goog.array.forEach(models, function(a) {
 		this.pane.addChild(a, true);
 	}, this);
 };
@@ -45,7 +50,8 @@ goog.inherits(org.koshinuke.ui.TagListTab, org.koshinuke.ui.ResourceListTab);
 
 /** @override */
 org.koshinuke.ui.TagListTab.prototype.loadPane = function(uri) {
-	// TODO for tags
+	var loader = new org.koshinuke.ui.TagLoader(uri);
+	this.internalLoadPane_(loader, this.getModel().tags);
 };
 /** @override */
 org.koshinuke.ui.ResourceListTab.prototype.enterDocument = function() {

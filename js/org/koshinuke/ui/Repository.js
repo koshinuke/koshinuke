@@ -32,21 +32,21 @@ org.koshinuke.ui.Repository.prototype.setJson = function(json) {
 	this.host = json['host'];
 	this.path = json['path'];
 	this.name = json['name'];
-	var f = function(rawJson) {
+	var f = function(rawJson, type) {
 		var ary = [];
 		if(rawJson) {
 			goog.array.forEach(rawJson, function(a) {
-				a.type = 'tree';
+				a['type'] = type;
 				var n = org.koshinuke.ui.TreeGrid.newFromJson(a);
-				n.icon = "branch";
+				n.icon = type;
 				n.visible = true;
 				ary.push(n);
 			});
 		}
 		return ary;
 	}
-	this.branches = f(json['branches']);
-	this.tags = f(json['tags']);
+	this.branches = f(json['branches'], "branch");
+	this.tags = f(json['tags'], "tag");
 };
 /** @override */
 org.koshinuke.ui.Repository.prototype.enterDocument = function() {

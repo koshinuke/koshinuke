@@ -1,4 +1,6 @@
 goog.provide('org.koshinuke.ui.TreeGridLoader');
+goog.provide('org.koshinuke.ui.BranchLoader');
+goog.provide('org.koshinuke.ui.TagLoader');
 
 goog.require('goog.array');
 goog.require('goog.i18n.DateTimeFormat');
@@ -17,8 +19,28 @@ org.koshinuke.ui.TreeGridLoader = function(uri, opt_comparator) {
 	this.uri = uri;
 	this.comparator = opt_comparator || org.koshinuke.ui.TreeGridLoader.defaultCompare;
 };
+org.koshinuke.ui.TreeGridLoader.prototype.toRequestUri = goog.abstractMethod;
 
-org.koshinuke.ui.TreeGridLoader.prototype.toRequestUri = function(model) {
+/** @constructor */
+org.koshinuke.ui.BranchLoader = function(uri, opt_comparator) {
+	org.koshinuke.ui.TreeGridLoader.call(this, uri, opt_comparator);
+};
+goog.inherits(org.koshinuke.ui.BranchLoader, org.koshinuke.ui.TreeGridLoader);
+
+/** @override */
+org.koshinuke.ui.BranchLoader.prototype.toRequestUri = function(model) {
+	// TODO for mockup
+	return this.uri.resolve(new goog.Uri('/koshinuke/stub/' + model.path + '.json'));
+};
+
+/** @constructor */
+org.koshinuke.ui.TagLoader = function(uri, opt_comparator) {
+	org.koshinuke.ui.TreeGridLoader.call(this, uri, opt_comparator);
+};
+goog.inherits(org.koshinuke.ui.TagLoader, org.koshinuke.ui.TreeGridLoader);
+
+/** @override */
+org.koshinuke.ui.TagLoader.prototype.toRequestUri = function(model) {
 	// TODO for mockup
 	return this.uri.resolve(new goog.Uri('/koshinuke/stub/' + model.path + '.json'));
 };
