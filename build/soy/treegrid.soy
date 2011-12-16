@@ -30,10 +30,10 @@
  */
 {template .row}
 <tr class="row"{if $visible == false} style="display: none;"{/if}>
-	<td{if 0 < $indent} style="padding-left: {$indent|noAutoescape}px;"{/if}><span{if 0 < $hasChild} class="{$state}"{/if}></span><span class="{$icon}">{$name}</span></td>
-	<td>{$timestamp}</td>
-	<td><span>{$message}</span></td>
-	<td><span>{$author}</span></td>
+	<td{if 0 < $indent} style="padding-left: {$indent|noAutoescape}px;"{/if}><span{if 0 < $hasChild} class="{$state}"{/if}></span><span class="{$icon} c">{$name}</span></td>
+	<td><span class="calendar">{$timestamp}<span></td>
+	<td><span class="comment c">{$message}</span></td>
+	<td><span class="user c">{$author}</span></td>
 </tr>
 {/template}
 
