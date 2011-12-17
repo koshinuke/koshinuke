@@ -139,7 +139,9 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {
 
     indent: function(state, textAfter) {
       if (state.tokenize != tokenBase && state.tokenize != null) return 0;
-      var firstChar = textAfter && textAfter.charAt(0), ctx = state.context, closing = firstChar == ctx.type;
+      var ctx = state.context, firstChar = textAfter && textAfter.charAt(0);
+      if (ctx.type == "statement" && firstChar == "}") ctx = ctx.prev;
+      var closing = firstChar == ctx.type;
       if (ctx.type == "statement") return ctx.indented + (firstChar == "{" ? 0 : indentUnit);
       else if (ctx.align) return ctx.column + (closing ? 0 : 1);
       else return ctx.indented + (closing ? 0 : indentUnit);
@@ -248,213 +250,6 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {
     }
   });
 }());
-/**
- * Author: Hans Engel
- * Branched from CodeMirror's Scheme mode (by Koh Zi Han, based on implementation by Koh Zi Chun)
- */
-CodeMirror.defineMode("clojure", function (config, mode) {
-    var BUILTIN = "builtin", COMMENT = "comment", STRING = "string", TAG = "tag",
-        ATOM = "atom", NUMBER = "number", BRACKET = "bracket", KEYWORD="keyword";
-    var INDENT_WORD_SKIP = 2, KEYWORDS_SKIP = 1;
-
-    function makeKeywords(str) {
-        var obj = {}, words = str.split(" ");
-        for (var i = 0; i < words.length; ++i) obj[words[i]] = true;
-        return obj;
-    }
-
-    var atoms = makeKeywords("true false nil");
-
-    var keywords = makeKeywords(
-        // Control structures
-        "defn defn- def def- defonce defmulti defmethod defmacro defstruct deftype defprotocol defrecord deftest slice defalias defhinted defmacro- defn-memo defnk defnk defonce- defunbound defunbound- defvar defvar- let letfn do case cond condp for loop recur when when-not when-let when-first if if-let if-not . .. -> ->> doto and or dosync doseq dotimes dorun doall load import unimport ns in-ns refer try catch finally throw with-open with-local-vars binding gen-class gen-and-load-class gen-and-save-class handler-case handle" +
-
-        // Built-ins
-        "* *1 *2 *3 *agent* *allow-unresolved-vars* *assert *clojure-version* *command-line-args* *compile-files* *compile-path* *e *err* *file* *flush-on-newline* *in* *macro-meta* *math-context* *ns* *out* *print-dup* *print-length* *print-level* *print-meta* *print-readably* *read-eval* *source-path* *use-context-classloader* *warn-on-reflection* + - / < <= = == > >= accessor aclone agent agent-errors aget alength alias all-ns alter alter-meta! alter-var-root amap ancestors and apply areduce array-map aset aset-boolean aset-byte aset-char aset-double aset-float aset-int aset-long aset-short assert assoc assoc! assoc-in associative? atom await await-for await1 bases bean bigdec bigint binding bit-and bit-and-not bit-clear bit-flip bit-not bit-or bit-set bit-shift-left bit-shift-right bit-test bit-xor boolean boolean-array booleans bound-fn bound-fn* butlast byte byte-array bytes case cast char char-array char-escape-string char-name-string char? chars chunk chunk-append chunk-buffer chunk-cons chunk-first chunk-next chunk-rest chunked-seq? class class? clear-agent-errors clojure-version coll? comment commute comp comparator compare compare-and-set! compile complement concat cond condp conj conj! cons constantly construct-proxy contains? count counted? create-ns create-struct cycle dec decimal? declare definline defmacro defmethod defmulti defn defn- defonce defstruct delay delay? deliver deref derive descendants destructure disj disj! dissoc dissoc! distinct distinct? doall doc dorun doseq dosync dotimes doto double double-array doubles drop drop-last drop-while empty empty? ensure enumeration-seq eval even? every? extend extend-protocol extend-type extends? extenders false? ffirst file-seq filter find find-doc find-ns find-var first float float-array float? floats flush fn fn? fnext for force format future future-call future-cancel future-cancelled? future-done? future? gen-class gen-interface gensym get get-in get-method get-proxy-class get-thread-bindings get-validator hash hash-map hash-set identical? identity if-let if-not ifn? import in-ns inc init-proxy instance? int int-array integer? interleave intern interpose into into-array ints io! isa? iterate iterator-seq juxt key keys keyword keyword? last lazy-cat lazy-seq let letfn line-seq list list* list? load load-file load-reader load-string loaded-libs locking long long-array longs loop macroexpand macroexpand-1 make-array make-hierarchy map map? mapcat max max-key memfn memoize merge merge-with meta method-sig methods min min-key mod name namespace neg? newline next nfirst nil? nnext not not-any? not-empty not-every? not= ns ns-aliases ns-imports ns-interns ns-map ns-name ns-publics ns-refers ns-resolve ns-unalias ns-unmap nth nthnext num number? odd? or parents partial partition pcalls peek persistent! pmap pop pop! pop-thread-bindings pos? pr pr-str prefer-method prefers primitives-classnames print print-ctor print-doc print-dup print-method print-namespace-doc print-simple print-special-doc print-str printf println println-str prn prn-str promise proxy proxy-call-with-super proxy-mappings proxy-name proxy-super push-thread-bindings pvalues quot rand rand-int range ratio? rational? rationalize re-find re-groups re-matcher re-matches re-pattern re-seq read read-line read-string reify reduce ref ref-history-count ref-max-history ref-min-history ref-set refer refer-clojure release-pending-sends rem remove remove-method remove-ns repeat repeatedly replace replicate require reset! reset-meta! resolve rest resultset-seq reverse reversible? rseq rsubseq satisfies? second select-keys send send-off seq seq? seque sequence sequential? set set-validator! set? short short-array shorts shutdown-agents slurp some sort sort-by sorted-map sorted-map-by sorted-set sorted-set-by sorted? special-form-anchor special-symbol? split-at split-with str stream? string? struct struct-map subs subseq subvec supers swap! symbol symbol? sync syntax-symbol-anchor take take-last take-nth take-while test the-ns time to-array to-array-2d trampoline transient tree-seq true? type unchecked-add unchecked-dec unchecked-divide unchecked-inc unchecked-multiply unchecked-negate unchecked-remainder unchecked-subtract underive unquote unquote-splicing update-in update-proxy use val vals var-get var-set var? vary-meta vec vector vector? when when-first when-let when-not while with-bindings with-bindings* with-in-str with-loading-context with-local-vars with-meta with-open with-out-str with-precision xml-seq");
-
-    var indentKeys = makeKeywords(
-        // Built-ins
-        "ns fn def defn defmethod bound-fn if if-not case condp when while when-not when-first do future comment doto locking proxy with-open with-precision reify deftype defrecord defprotocol extend extend-protocol extend-type try catch" +
-
-        // Binding forms
-        "let letfn binding loop for doseq dotimes when-let if-let" +
-
-        // Data structures
-        "defstruct struct-map assoc" +
-
-        // clojure.test
-        "testing deftest" +
-
-        // contrib
-        "handler-case handle dotrace deftrace");
-
-    var tests = {
-        digit: /\d/,
-        digit_or_colon: /[\d:]/,
-        hex: /[0-9a-fA-F]/,
-        sign: /[+-]/,
-        exponent: /[eE]/,
-        keyword_char: /[^\s\(\[\;\)\]]/,
-        basic: /[\w\$_\-]/,
-        lang_keyword: /[\w*+!\-_?:\/]/
-    };
-
-    function stateStack(indent, type, prev) { // represents a state stack object
-        this.indent = indent;
-        this.type = type;
-        this.prev = prev;
-    }
-
-    function pushStack(state, indent, type) {
-        state.indentStack = new stateStack(indent, type, state.indentStack);
-    }
-
-    function popStack(state) {
-        state.indentStack = state.indentStack.prev;
-    }
-
-    function isNumber(ch, stream){
-        // hex
-        if ( ch === '0' && 'x' == stream.peek().toLowerCase() ) {
-            stream.eat('x');
-            stream.eatWhile(tests.hex);
-            return true;
-        }
-
-        // leading sign
-        if ( ch == '+' || ch == '-' ) {
-          stream.eat(tests.sign);
-          ch = stream.next();
-        }
-
-        if ( tests.digit.test(ch) ) {
-            stream.eat(ch);
-            stream.eatWhile(tests.digit);
-
-            if ( '.' == stream.peek() ) {
-                stream.eat('.');
-                stream.eatWhile(tests.digit);
-            }
-
-            if ( 'e' == stream.peek().toLowerCase() ) {
-                stream.eat(tests.exponent);
-                stream.eat(tests.sign);
-                stream.eatWhile(tests.digit);
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    return {
-        startState: function () {
-            return {
-                indentStack: null,
-                indentation: 0,
-                mode: false
-            };
-        },
-
-        token: function (stream, state) {
-            if (state.indentStack == null && stream.sol()) {
-                // update indentation, but only if indentStack is empty
-                state.indentation = stream.indentation();
-            }
-
-            // skip spaces
-            if (stream.eatSpace()) {
-                return null;
-            }
-            var returnType = null;
-
-            switch(state.mode){
-                case "string": // multi-line string parsing mode
-                    var next, escaped = false;
-                    while ((next = stream.next()) != null) {
-                        if (next == "\"" && !escaped) {
-
-                            state.mode = false;
-                            break;
-                        }
-                        escaped = !escaped && next == "\\";
-                    }
-                    returnType = STRING; // continue on in string mode
-                    break;
-                default: // default parsing mode
-                    var ch = stream.next();
-
-                    if (ch == "\"") {
-                        state.mode = "string";
-                        returnType = STRING;
-                    } else if (ch == "'" && !( tests.digit_or_colon.test(stream.peek()) )) {
-                        returnType = ATOM;
-                    } else if (ch == ";") { // comment
-                        stream.skipToEnd(); // rest of the line is a comment
-                        returnType = COMMENT;
-                    } else if (isNumber(ch,stream)){
-                        returnType = NUMBER;
-                    } else if (ch == "(" || ch == "[") {
-                        var keyWord = ''; var indentTemp = stream.column();
-                        /**
-                        Either
-                        (indent-word ..
-                        (non-indent-word ..
-                        (;something else, bracket, etc.
-                        */
-
-                        while ((letter = stream.eat(tests.keyword_char)) != null) {
-                            keyWord += letter;
-                        }
-
-                        if (keyWord.length > 0 && indentKeys.propertyIsEnumerable(keyWord)) { // indent-word
-
-                            pushStack(state, indentTemp + INDENT_WORD_SKIP, ch);
-                        } else { // non-indent word
-                            // we continue eating the spaces
-                            stream.eatSpace();
-                            if (stream.eol() || stream.peek() == ";") {
-                                // nothing significant after
-                                // we restart indentation 1 space after
-                                pushStack(state, indentTemp + 1, ch);
-                            } else {
-                                pushStack(state, indentTemp + stream.current().length, ch); // else we match
-                            }
-                        }
-                        stream.backUp(stream.current().length - 1); // undo all the eating
-
-                        returnType = BRACKET;
-                    } else if (ch == ")" || ch == "]") {
-                        returnType = BRACKET;
-                        if (state.indentStack != null && state.indentStack.type == (ch == ")" ? "(" : "[")) {
-                            popStack(state);
-                        }
-                    } else if ( ch == ":" ) {
-                        stream.eatWhile(tests.lang_keyword);
-                        return TAG;
-                    } else {
-                        stream.eatWhile(tests.basic);
-
-                        if (keywords && keywords.propertyIsEnumerable(stream.current())) {
-                            returnType = BUILTIN;
-                        } else if ( atoms && atoms.propertyIsEnumerable(stream.current()) ) {
-                            returnType = ATOM;
-                        } else returnType = null;
-                    }
-            }
-
-            return returnType;
-        },
-
-        indent: function (state, textAfter) {
-            if (state.indentStack == null) return state.indentation;
-            return state.indentStack.indent;
-        }
-    };
-});
-
-CodeMirror.defineMIME("text/x-clojure", "clojure");
 /**
  * Link to the project's GitHub page:
  * https://github.com/pickhardt/coffeescript-codemirror-mode
@@ -930,7 +725,8 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     return {
       "if": A, "while": A, "with": A, "else": B, "do": B, "try": B, "finally": B,
       "return": C, "break": C, "continue": C, "new": C, "delete": C, "throw": C,
-      "var": kw("var"), "function": kw("function"), "catch": kw("catch"),
+      "var": kw("var"), "const": kw("var"), "let": kw("var"),
+      "function": kw("function"), "catch": kw("catch"),
       "for": kw("for"), "switch": kw("switch"), "case": kw("case"), "default": kw("default"),
       "in": operator, "typeof": operator, "instanceof": operator,
       "true": atom, "false": atom, "null": atom, "undefined": atom, "NaN": atom, "Infinity": atom
@@ -1279,12 +1075,12 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {
   var htmlMode = CodeMirror.getMode(cmCfg, { name: 'xml', htmlMode: true });
 
   var header   = 'header'
-  ,   code     = 'code'
+  ,   code     = 'comment'
   ,   quote    = 'quote'
-  ,   list     = 'list'
+  ,   list     = 'string'
   ,   hr       = 'hr'
-  ,   linktext = 'linktext'
-  ,   linkhref = 'linkhref'
+  ,   linktext = 'link'
+  ,   linkhref = 'string'
   ,   em       = 'em'
   ,   strong   = 'strong'
   ,   emstrong = 'emstrong';
@@ -1327,9 +1123,6 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {
       state.indentation++;
       return quote;
     }
-    if (stream.peek() === '<') {
-      return switchBlock(stream, state, htmlBlock);
-    }
     if (stream.peek() === '[') {
       return switchInline(stream, state, footnoteLink);
     }
@@ -1350,51 +1143,59 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {
   }
 
   function htmlBlock(stream, state) {
-    var type = htmlMode.token(stream, state.htmlState);
-    if (stream.eol() && !state.htmlState.context) {
+    var style = htmlMode.token(stream, state.htmlState);
+    if (style === 'tag' && state.htmlState.type !== 'openTag' && !state.htmlState.context) {
+      state.f = inlineNormal;
       state.block = blockNormal;
     }
-    return type;
+    return style;
   }
 
 
   // Inline
+  function getType(state) {
+    return state.strong ? (state.em ? emstrong : strong)
+                        : (state.em ? em       : null);
+  }
+
+  function handleText(stream, state) {
+    if (stream.match(textRE, true)) {
+      return getType(state);
+    }
+    return undefined;        
+  }
 
   function inlineNormal(stream, state) {
-    function getType() {
-      return state.strong ? (state.em ? emstrong : strong)
-                          : (state.em ? em       : null);
-    }
-    
-    if (stream.match(textRE, true)) {
-      return getType();
-    }
+    var style = state.text(stream, state)
+    if (typeof style !== 'undefined')
+      return style;
     
     var ch = stream.next();
     
     if (ch === '\\') {
       stream.next();
-      return getType();
+      return getType(state);
     }
     if (ch === '`') {
       return switchInline(stream, state, inlineElement(code, '`'));
     }
-    if (ch === '<') {
-      return switchInline(stream, state, inlineElement(linktext, '>'));
-    }
     if (ch === '[') {
       return switchInline(stream, state, linkText);
     }
-    
-    var t = getType();
+    if (ch === '<' && stream.match(/^\w/, false)) {
+      stream.backUp(1);
+      return switchBlock(stream, state, htmlBlock);
+    }
+
+    var t = getType(state);
     if (ch === '*' || ch === '_') {
       if (stream.eat(ch)) {
-        return (state.strong = !state.strong) ? getType() : t;
+        return (state.strong = !state.strong) ? getType(state) : t;
       }
-      return (state.em = !state.em) ? getType() : t;
+      return (state.em = !state.em) ? getType(state) : t;
     }
     
-    return getType();
+    return getType(state);
   }
 
   function linkText(stream, state) {
@@ -1433,17 +1234,20 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {
     return linkhref;
   }
 
+  function inlineRE(endChar) {
+    if (!inlineRE[endChar]) {
+      // match any not-escaped-non-endChar and any escaped char
+      // then match endChar or eol
+      inlineRE[endChar] = new RegExp('^(?:[^\\\\\\' + endChar + ']|\\\\.)*(?:\\' + endChar + '|$)');
+    }
+    return inlineRE[endChar];
+  }
+
   function inlineElement(type, endChar, next) {
     next = next || inlineNormal;
     return function(stream, state) {
-      while (!stream.eol()) {
-        var ch = stream.next();
-        if (ch === '\\') stream.next();
-        if (ch === endChar) {
-          state.inline = state.f = next;
-          return type;
-        }
-      }
+      stream.match(inlineRE(endChar));
+      state.inline = state.f = next;
       return type;
     };
   }
@@ -1458,6 +1262,7 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {
         indentation: 0,
         
         inline: inlineNormal,
+        text: handleText,
         em: false,
         strong: false
       };
@@ -1472,6 +1277,7 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {
         indentation: s.indentation,
         
         inline: s.inline,
+        text: s.text,
         em: s.em,
         strong: s.strong
       };
@@ -1498,7 +1304,9 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {
         if (currentIndentation > 0) return null;
       }
       return state.f(stream, state);
-    }
+    },
+
+    getType: getType
   };
 
 });
@@ -1548,9 +1356,9 @@ CodeMirror.defineMIME("text/x-markdown", "markdown");
   };
 
   CodeMirror.defineMode("php", function(config, parserConfig) {
-    var htmlMode = CodeMirror.getMode(config, "text/html");
-    var jsMode = CodeMirror.getMode(config, "text/javascript");
-    var cssMode = CodeMirror.getMode(config, "text/css");
+    var htmlMode = CodeMirror.getMode(config, {name: "xml", htmlMode: true});
+    var jsMode = CodeMirror.getMode(config, "javascript");
+    var cssMode = CodeMirror.getMode(config, "css");
     var phpMode = CodeMirror.getMode(config, phpConfig);
 
     function dispatch(stream, state) { // TODO open PHP inside text/css
@@ -1809,6 +1617,10 @@ CodeMirror.defineMode("python", function(conf, parserConf) {
         type = type || 'py';
         var indentUnit = 0;
         if (type === 'py') {
+            if (state.scopes[0].type !== 'py') {
+                state.scopes[0].offset = stream.indentation();
+                return;
+            }
             for (var i = 0; i < state.scopes.length; ++i) {
                 if (state.scopes[i].type === 'py') {
                     indentUnit = state.scopes[i].offset + conf.indentUnit;
@@ -1824,7 +1636,8 @@ CodeMirror.defineMode("python", function(conf, parserConf) {
         });
     }
     
-    function dedent(stream, state) {
+    function dedent(stream, state, type) {
+        type = type || 'py';
         if (state.scopes.length == 1) return;
         if (state.scopes[0].type === 'py') {
             var _indent = stream.indentation();
@@ -1843,8 +1656,16 @@ CodeMirror.defineMode("python", function(conf, parserConf) {
             }
             return false
         } else {
-            state.scopes.shift();
-            return false;
+            if (type === 'py') {
+                state.scopes[0].offset = stream.indentation();
+                return false;
+            } else {
+                if (state.scopes[0].type != type) {
+                    return true;
+                }
+                state.scopes.shift();
+                return false;
+            }
         }
     }
 
@@ -1896,7 +1717,7 @@ CodeMirror.defineMode("python", function(conf, parserConf) {
         }
         delimiter_index = '])}'.indexOf(current);
         if (delimiter_index !== -1) {
-            if (dedent(stream, state)) {
+            if (dedent(stream, state, current)) {
                 return ERRORCLASS;
             }
         }
@@ -2019,7 +1840,7 @@ CodeMirror.defineMode('rst', function(config, options) {
 
             if (i >= 3 && stream.match(/^\s*$/)) {
                 setNormal(state, null);
-                return 'section';
+                return 'header';
             } else {
                 stream.backUp(i + 1);
             }
@@ -2029,8 +1850,7 @@ CodeMirror.defineMode('rst', function(config, options) {
             if (!stream.eol()) {
                 setState(state, directive);
             }
-
-            return 'directive-marker';
+            return 'meta';
         }
 
         if (stream.match(reVerbatimMarker)) {
@@ -2044,14 +1864,13 @@ CodeMirror.defineMode('rst', function(config, options) {
                     local: mode.startState()
                 });
             }
-
-            return 'verbatim-marker';
+            return 'meta';
         }
 
         if (sol && stream.match(reExamples, false)) {
             if (!pythonMode) {
                 setState(state, verbatim);
-                return 'verbatim-marker';
+                return 'meta';
             } else {
                 var mode = pythonMode;
 
@@ -2062,12 +1881,6 @@ CodeMirror.defineMode('rst', function(config, options) {
 
                 return null;
             }
-        }
-
-        if (sol && (stream.match(reEnumeratedList) ||
-                    stream.match(reBulletedList))) {
-            setNormal(state, stream);
-            return 'list';
         }
 
         function testBackward(re) {
@@ -2099,9 +1912,9 @@ CodeMirror.defineMode('rst', function(config, options) {
                 var token;
 
                 if (ch === ':') {
-                    token = 'role';
+                    token = 'builtin';
                 } else {
-                    token = 'replacement';
+                    token = 'atom';
                 }
 
                 setState(state, inline, {
@@ -2129,9 +1942,9 @@ CodeMirror.defineMode('rst', function(config, options) {
                     var token;
 
                     if (orig === '*') {
-                        token = wide ? 'strong' : 'emphasis';
+                        token = wide ? 'strong' : 'em';
                     } else {
-                        token = wide ? 'inline' : 'interpreted';
+                        token = wide ? 'string' : 'string-2';
                     }
 
                     setState(state, inline, {
@@ -2193,13 +2006,13 @@ CodeMirror.defineMode('rst', function(config, options) {
         var token = null;
 
         if (stream.match(reDirective)) {
-            token = 'directive';
+            token = 'attribute';
         } else if (stream.match(reHyperlink)) {
-            token = 'hyperlink';
+            token = 'link';
         } else if (stream.match(reFootnote)) {
-            token = 'footnote';
+            token = 'quote';
         } else if (stream.match(reCitation)) {
-            token = 'citation';
+            token = 'quote';
         } else {
             stream.eatSpace();
 
@@ -2213,6 +2026,7 @@ CodeMirror.defineMode('rst', function(config, options) {
             }
         }
 
+        // FIXME this is unreachable
         setState(state, body, {start: true});
         return token;
     }
@@ -2236,7 +2050,7 @@ CodeMirror.defineMode('rst', function(config, options) {
 
     function verbatim(stream, state) {
         if (!verbatimMode) {
-            return block(stream, state, 'verbatim');
+            return block(stream, state, 'meta');
         } else {
             if (stream.sol()) {
                 if (!stream.eatSpace()) {
@@ -2504,9 +2318,9 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {
   var Kludges = parserConfig.htmlMode ? {
     autoSelfClosers: {"br": true, "img": true, "hr": true, "link": true, "input": true,
                       "meta": true, "col": true, "frame": true, "base": true, "area": true},
-    doNotIndent: {"pre": true, "!cdata": true},
+    doNotIndent: {"pre": true},
     allowUnquoted: true
-  } : {autoSelfClosers: {}, doNotIndent: {"!cdata": true}, allowUnquoted: false};
+  } : {autoSelfClosers: {}, doNotIndent: {}, allowUnquoted: false};
   var alignCDATA = parserConfig.alignCDATA;
 
   // Return variables for tokenizers
@@ -2528,7 +2342,7 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {
         else if (stream.match("--")) return chain(inBlock("comment", "-->"));
         else if (stream.match("DOCTYPE", true, true)) {
           stream.eatWhile(/[\w\._\-]/);
-          return chain(inBlock("meta", ">"));
+          return chain(doctype(1));
         }
         else return null;
       }
@@ -2603,6 +2417,26 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {
       return style;
     };
   }
+  function doctype(depth) {
+    return function(stream, state) {
+      var ch;
+      while ((ch = stream.next()) != null) {
+        if (ch == "<") {
+          state.tokenize = doctype(depth + 1);
+          return state.tokenize(stream, state);
+        } else if (ch == ">") {
+          if (depth == 1) {
+            state.tokenize = inText;
+            break;
+          } else {
+            state.tokenize = doctype(depth - 1);
+            return state.tokenize(stream, state);
+          }
+        }
+      }
+      return "meta";
+    };
+  }
 
   var curState, setStyle;
   function pass() {
@@ -2628,8 +2462,10 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {
   }
 
   function element(type) {
-    if (type == "openTag") {curState.tagName = tagName; return cont(attributes, endtag(curState.startOfLine));}
-    else if (type == "closeTag") {
+    if (type == "openTag") {
+      curState.tagName = tagName;
+      return cont(attributes, endtag(curState.startOfLine));
+    } else if (type == "closeTag") {
       var err = false;
       if (curState.context) {
         err = curState.context.tagName != tagName;
@@ -2639,12 +2475,7 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {
       if (err) setStyle = "error";
       return cont(endclosetag(err));
     }
-    else if (type == "string") {
-      if (!curState.context || curState.context.name != "!cdata") pushContext("!cdata");
-      if (curState.tokenize == inText) popContext();
-      return cont();
-    }
-    else return cont();
+    return cont();
   }
   function endtag(startOfLine) {
     return function(type) {
@@ -2667,6 +2498,7 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {
   function attributes(type) {
     if (type == "word") {setStyle = "attribute"; return cont(attributes);}
     if (type == "equals") return cont(attvalue, attributes);
+    if (type == "string") {setStyle = "error"; return cont(attributes);}
     return pass();
   }
   function attvalue(type) {
@@ -2693,6 +2525,7 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {
 
       setStyle = type = tagName = null;
       var style = state.tokenize(stream, state);
+      state.type = type;
       if ((style || type) && style != "comment") {
         curState = state;
         while (true) {
@@ -2704,9 +2537,11 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {
       return setStyle || style;
     },
 
-    indent: function(state, textAfter) {
+    indent: function(state, textAfter, fullLine) {
       var context = state.context;
-      if (context && context.noIndent) return 0;
+      if ((state.tokenize != inTag && state.tokenize != inText) ||
+          context && context.noIndent)
+        return fullLine ? fullLine.match(/^(\s*)/)[0].length : 0;
       if (alignCDATA && /<!\[CDATA\[/.test(textAfter)) return 0;
       if (context && /^<\//.test(textAfter))
         context = context.prev;
@@ -2717,7 +2552,7 @@ CodeMirror.defineMode("xml", function(config, parserConfig) {
     },
 
     compareStates: function(a, b) {
-      if (a.indented != b.indented) return false;
+      if (a.indented != b.indented || a.tokenize != b.tokenize) return false;
       for (var ca = a.context, cb = b.context; ; ca = ca.prev, cb = cb.prev) {
         if (!ca || !cb) return ca == cb;
         if (ca.tagName != cb.tagName) return false;

@@ -7,9 +7,7 @@ goog.require('goog.soy');
 goog.require('goog.ui.Component');
 goog.require('org.koshinuke.template.breadcrumb');
 
-/**
- * @constructor
- */
+/** @constructor */
 org.koshinuke.ui.Breadcrumb = function(fn) {
 	this.fn = fn;
 };

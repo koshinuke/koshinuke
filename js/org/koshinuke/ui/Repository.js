@@ -67,6 +67,7 @@ org.koshinuke.ui.Repository.prototype.exitDocument = function() {
 	org.koshinuke.ui.Repository.superClass_.exitDocument.call(this);
 	goog.events.unlistenByKey(this.listenerKey);
 };
+/** @override */
 org.koshinuke.ui.Repository.prototype.disposeInternal = function() {
 	org.koshinuke.ui.Repository.superClass_.disposeInternal.call(this);
 	this.tabbar.dispose();
