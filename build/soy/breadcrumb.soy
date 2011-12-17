@@ -6,5 +6,6 @@
 {template .tmpl}
 {foreach $e in $list}
 <li>{$e}</li>
+{if not isLast($e)}<li class="sep"></li>{/if}
 {/foreach}
 {/template}
