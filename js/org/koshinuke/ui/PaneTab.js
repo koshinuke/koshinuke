@@ -14,9 +14,8 @@ goog.require('goog.ui.Tab');
 goog.require('org.koshinuke.ui.TreeGrid');
 goog.require('org.koshinuke.ui.BranchLoader');
 goog.require('org.koshinuke.ui.TagLoader');
-
-goog.require('CodeMirror');
-goog.require('CodeMirror.modes');
+goog.require('org.koshinuke.ui.ResourceLoader');
+goog.require('org.koshinuke.ui.CodeMirrorWrapper');
 
 
 /** @constructor */
@@ -69,15 +68,15 @@ goog.inherits(org.koshinuke.ui.ResourceTab, org.koshinuke.ui.PaneTab);
 /** @override */
 org.koshinuke.ui.ResourceTab.prototype.loadPane = function(uri) {
 	var loader = new org.koshinuke.ui.ResourceLoader(uri);
-	// TODO code mirror ?
+	this.pane = new org.koshinuke.ui.CodeMirrorWrapper(loader);
+	this.pane.setModel(this.getModel());
 };
 /** @override */
 org.koshinuke.ui.ResourceTab.prototype.enterDocument = function() {
-	org.koshinuke.ui.TagListTab.superClass_.enterDocument.call(this);
+	org.koshinuke.ui.ResourceTab.superClass_.enterDocument.call(this);
 	var extension = org.koshinuke.getExtension(this.getModel().resourcePath);
 	goog.dom.classes.add(this.getElement(), org.koshinuke.findIcon(extension));
 };
-
 
 /** @protected */
 org.koshinuke.ui.PaneTab.prototype.internalLoadPane_ = function(loader, model, models) {

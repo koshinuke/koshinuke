@@ -712,6 +712,89 @@ CodeMirror.defineMode("diff", function() {
 });
 
 CodeMirror.defineMIME("text/x-diff", "diff");
+CodeMirror.defineMode("htmlmixed", function(config, parserConfig) {
+  var htmlMode = CodeMirror.getMode(config, {name: "xml", htmlMode: true});
+  var jsMode = CodeMirror.getMode(config, "javascript");
+  var cssMode = CodeMirror.getMode(config, "css");
+
+  function html(stream, state) {
+    var style = htmlMode.token(stream, state.htmlState);
+    if (style == "tag" && stream.current() == ">" && state.htmlState.context) {
+      if (/^script$/i.test(state.htmlState.context.tagName)) {
+        state.token = javascript;
+        state.localState = jsMode.startState(htmlMode.indent(state.htmlState, ""));
+        state.mode = "javascript";
+      }
+      else if (/^style$/i.test(state.htmlState.context.tagName)) {
+        state.token = css;
+        state.localState = cssMode.startState(htmlMode.indent(state.htmlState, ""));
+        state.mode = "css";
+      }
+    }
+    return style;
+  }
+  function maybeBackup(stream, pat, style) {
+    var cur = stream.current();
+    var close = cur.search(pat);
+    if (close > -1) stream.backUp(cur.length - close);
+    return style;
+  }
+  function javascript(stream, state) {
+    if (stream.match(/^<\/\s*script\s*>/i, false)) {
+      state.token = html;
+      state.curState = null;
+      state.mode = "html";
+      return html(stream, state);
+    }
+    return maybeBackup(stream, /<\/\s*script\s*>/,
+                       jsMode.token(stream, state.localState));
+  }
+  function css(stream, state) {
+    if (stream.match(/^<\/\s*style\s*>/i, false)) {
+      state.token = html;
+      state.localState = null;
+      state.mode = "html";
+      return html(stream, state);
+    }
+    return maybeBackup(stream, /<\/\s*style\s*>/,
+                       cssMode.token(stream, state.localState));
+  }
+
+  return {
+    startState: function() {
+      var state = htmlMode.startState();
+      return {token: html, localState: null, mode: "html", htmlState: state};
+    },
+
+    copyState: function(state) {
+      if (state.localState)
+        var local = CodeMirror.copyState(state.token == css ? cssMode : jsMode, state.localState);
+      return {token: state.token, localState: local, mode: state.mode,
+              htmlState: CodeMirror.copyState(htmlMode, state.htmlState)};
+    },
+
+    token: function(stream, state) {
+      return state.token(stream, state);
+    },
+
+    indent: function(state, textAfter) {
+      if (state.token == html || /^\s*<\//.test(textAfter))
+        return htmlMode.indent(state.htmlState, textAfter);
+      else if (state.token == javascript)
+        return jsMode.indent(state.localState, textAfter);
+      else
+        return cssMode.indent(state.localState, textAfter);
+    },
+
+    compareStates: function(a, b) {
+      return htmlMode.compareStates(a.htmlState, b.htmlState);
+    },
+
+    electricChars: "/{}:"
+  }
+});
+
+CodeMirror.defineMIME("text/html", "htmlmixed");
 CodeMirror.defineMode("javascript", function(config, parserConfig) {
   var indentUnit = config.indentUnit;
   var jsonMode = parserConfig.json;
@@ -2286,33 +2369,6 @@ CodeMirror.defineMode("ruby", function(config, parserConfig) {
 });
 
 CodeMirror.defineMIME("text/x-ruby", "ruby");
-CodeMirror.runMode = function(string, modespec, callback) {
-  var mode = CodeMirror.getMode({indentUnit: 2}, modespec);
-  var isNode = callback.nodeType == 1;
-  if (isNode) {
-    var node = callback, accum = [];
-    callback = function(string, style) {
-      if (string == "\n")
-        accum.push("<br>");
-      else if (style)
-        accum.push("<span class=\"cm-" + CodeMirror.htmlEscape(style) + "\">" + CodeMirror.htmlEscape(string) + "</span>");
-      else
-        accum.push(CodeMirror.htmlEscape(string));
-    }
-  }
-  var lines = CodeMirror.splitLines(string), state = CodeMirror.startState(mode);
-  for (var i = 0, e = lines.length; i < e; ++i) {
-    if (i) callback("\n");
-    var stream = new CodeMirror.StringStream(lines[i]);
-    while (!stream.eol()) {
-      var style = mode.token(stream, state);
-      callback(stream.current(), style, i, stream.start);
-      stream.start = stream.pos;
-    }
-  }
-  if (isNode)
-    node.innerHTML = accum.join("");
-};
 CodeMirror.defineMode("xml", function(config, parserConfig) {
   var indentUnit = config.indentUnit;
   var Kludges = parserConfig.htmlMode ? {
