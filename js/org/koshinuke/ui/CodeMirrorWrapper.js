@@ -2,6 +2,7 @@ goog.provide('org.koshinuke.ui.CodeMirrorWrapper');
 
 goog.require('goog.array');
 goog.require('goog.dom');
+goog.require('goog.string');
 
 goog.require('goog.ui.Component');
 
@@ -25,20 +26,25 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.createDom = function() {
 	var element = goog.dom.createDom("div", null, this.loading);
 	this.decorateInternal(element);
 };
+// git blame
+// raw file
+// history
+// git note
 /** @override */
 org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
 	org.koshinuke.ui.CodeMirrorWrapper.superClass_.enterDocument.call(this);
 	var parent = this.getElement();
 	var model = this.getModel();
-	var path = model.resourcePath;
 	var self = this;
-	if(path.match(/\.(jpe?g|gif|png|ico)$/i)) {
-		this.img = goog.dom.createDom("img", {
-			"src" : this.loader.toRequestUri(model)
-		});
-		parent.replaceChild(this.img, self.loading);
-	} else {
-		this.loader.load(model, function(contentType, resource) {
+	this.loader.load(model, function(contentType, resource) {
+		if(contentType && goog.string.startsWith(contentType, 'image')) {
+			// data schemeでサーバからリソースが返ってくる事を期待する。
+			// http://tools.ietf.org/html/rfc2397
+			self.img = goog.dom.createDom("img", {
+				"src" : resource
+			});
+			parent.replaceChild(self.img, self.loading);
+		} else {
 			self.cm = CodeMirror(function(elt) {
 				parent.replaceChild(elt, self.loading);
 			}, {
@@ -48,8 +54,8 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
 				lineNumbers : true,
 				readOnly : true
 			});
-		});
-	}
+		}
+	});
 };
 /** @override */
 org.koshinuke.ui.CodeMirrorWrapper.prototype.exitDocument = function() {

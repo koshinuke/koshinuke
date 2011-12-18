@@ -42,10 +42,17 @@ org.koshinuke.ui.ResourceLoader.prototype.load = function(model, fn) {
 	goog.net.XhrIo.send(this.toRequestUri(model).toString(), function(e) {
 		var txt = e.target.getResponseText();
 		var ct = e.target.getResponseHeader('Content-Type');
-		if(!ct || ct == 'text/plain'
-		// TODO Aptanaのサーバがあんまりなので回避措置
-		|| ct == 'text/html') {
-			ct = org.koshinuke.ui.ResourceLoader.extToMIME(model.resourcePath);
+		var path = model.resourcePath;
+		if(!ct
+			// TODO Aptanaのサーバがあんまりなので回避措置
+			|| ct == 'text/html') {
+			var re = new RegExp('\\.(jpe?g|gif|png|ico)$', 'i');
+			var match = re.exec(path);
+			if(match) {
+				ct = "image/" + match[1];
+			} else {
+				ct = org.koshinuke.ui.ResourceLoader.extToMIME(model.resourcePath);
+			}
 		}
 		fn(ct, txt);
 	});
