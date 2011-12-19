@@ -14,7 +14,7 @@ org.koshinuke.ui.ResourceLoader = function(uri) {
 org.koshinuke.ui.ResourceLoader.prototype.toRequestUri = function(model) {
 	// TODO for mock
 	var u = this.uri.resolve(new goog.Uri('/koshinuke/stub/resource'));
-	u.setParameterValue('rp', model.resourcePath);
+	u.setParameterValue('rp', model.node.path);
 	return u;
 };
 /** @enum {string} */
@@ -42,7 +42,7 @@ org.koshinuke.ui.ResourceLoader.prototype.load = function(model, fn) {
 	goog.net.XhrIo.send(this.toRequestUri(model).toString(), function(e) {
 		var txt = e.target.getResponseText();
 		var ct = e.target.getResponseHeader('Content-Type');
-		var path = model.resourcePath;
+		var path = model.node.path;
 		if(!ct
 			// TODO Aptanaのサーバがあんまりなので回避措置
 			|| ct == 'text/html') {
@@ -51,7 +51,7 @@ org.koshinuke.ui.ResourceLoader.prototype.load = function(model, fn) {
 			if(match) {
 				ct = "image/" + match[1];
 			} else {
-				ct = org.koshinuke.ui.ResourceLoader.extToMIME(model.resourcePath);
+				ct = org.koshinuke.ui.ResourceLoader.extToMIME(path);
 			}
 		}
 		fn(ct, txt);

@@ -1,0 +1,18 @@
+{namespace org.koshinuke.template.codemirror}
+
+/**
+ * @param author
+ * @param timestamp
+ * @param message
+ **/
+{template .tmpl}
+<div class="CodeMirror-toolbox">
+	<span class="clip-container"><span class="copy"></span></span>
+	<span class="log username">{$author}</span>
+	<span class="log timestamp">{$timestamp}</span>
+	<span class="log message">{$message}</span>
+	<button class="history">history</button>
+	<button class="blame">blame</button>
+	<button class="edit">edit</button>
+</div>
+{/template}

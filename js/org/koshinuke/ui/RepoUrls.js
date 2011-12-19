@@ -70,10 +70,8 @@ org.koshinuke.ui.RepoUrls.prototype.decorateInternal = function(element) {
 			this.protocols.addItem(a);
 		}, this);
 	}, this);
-
-	ZeroClipboard.setMoviePath('flash/ZeroClipboard.swf');
-
-	var img = goog.dom.query('.clip-container .copy')[0];
+	// TODO refactor.
+	var img = goog.dom.query('.clip-container .copy', element)[0];
 
 	var g = function() {
 		return new org.koshinuke.positioning.GravityPosition(img, 'w', 1);
@@ -96,6 +94,13 @@ org.koshinuke.ui.RepoUrls.prototype.decorateInternal = function(element) {
 		compTip.setVisible(true);
 	});
 	clip.glue(img, img.parentNode);
+	clip.dispose = function() {
+		goog.array.forEach([copyTip, compTip], function(a) {
+			goog.dom.removeNode(a.getElement());
+			a.dispose();
+		});
+		clip.destroy();
+	};
 };
 /** @private */
 org.koshinuke.ui.RepoUrls.prototype.tooltip_ = function(t) {
@@ -106,7 +111,7 @@ org.koshinuke.ui.RepoUrls.prototype.tooltip_ = function(t) {
 	goog.dom.appendChild(document.body, el);
 	return el;
 };
-org.koshinuke.ui.RepoUrls.prototype.enterDocument = function(){
+org.koshinuke.ui.RepoUrls.prototype.enterDocument = function() {
 	org.koshinuke.ui.RepoUrls.superClass_.enterDocument.call(this);
 };
 /** @private */
@@ -133,7 +138,7 @@ org.koshinuke.ui.RepoUrls.prototype.reposition = function() {
 /** @override */
 org.koshinuke.ui.RepoUrls.prototype.disposeInternal = function() {
 	org.koshinuke.ui.RepoUrls.superClass_.disposeInternal.call(this);
-	this.clip.destroy();
+	this.clip.dispose();
 	this.clip = null;
 	this.protocols = null;
 };

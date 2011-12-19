@@ -2,11 +2,12 @@
 goog.addDependency("../../../js/org/koshinuke/base.js", ['org.koshinuke'], ['goog.array', 'goog.crypt', 'goog.crypt.Md5', 'goog.pubsub.PubSub']);
 goog.addDependency("../../../js/org/koshinuke/positioning/gravityposition.js", ['org.koshinuke.positioning.GravityPosition'], ['goog.positioning.AbstractPosition']);
 goog.addDependency("../../../js/org/koshinuke/template/breadcrumb.js", ['org.koshinuke.template.breadcrumb'], ['soy', 'soy.StringBuilder']);
+goog.addDependency("../../../js/org/koshinuke/template/codemirrorwrapper.js", ['org.koshinuke.template.codemirror'], ['soy', 'soy.StringBuilder']);
 goog.addDependency("../../../js/org/koshinuke/template/repository.js", ['org.koshinuke.template.repository'], ['soy', 'soy.StringBuilder']);
 goog.addDependency("../../../js/org/koshinuke/template/tooltip.js", ['org.koshinuke.template.tooltip'], ['soy', 'soy.StringBuilder']);
 goog.addDependency("../../../js/org/koshinuke/template/treegrid.js", ['org.koshinuke.template.treegrid'], ['soy', 'soy.StringBuilder']);
 goog.addDependency("../../../js/org/koshinuke/ui/Breadcrumb.js", ['org.koshinuke.ui.Breadcrumb'], ['goog.array', 'goog.dom', 'goog.soy', 'goog.ui.Component', 'org.koshinuke.template.breadcrumb']);
-goog.addDependency("../../../js/org/koshinuke/ui/CodeMirrorWrapper.js", ['org.koshinuke.ui.CodeMirrorWrapper'], ['goog.array', 'goog.dom', 'goog.string', 'goog.ui.Component', 'CodeMirror', 'CodeMirror.modes', 'org.koshinuke']);
+goog.addDependency("../../../js/org/koshinuke/ui/CodeMirrorWrapper.js", ['org.koshinuke.ui.CodeMirrorWrapper'], ['goog.array', 'goog.dom', 'goog.soy', 'goog.string', 'goog.ui.Component', 'CodeMirror', 'CodeMirror.modes', 'org.koshinuke', 'org.koshinuke.template.codemirror', 'org.koshinuke.template.tooltip']);
 goog.addDependency("../../../js/org/koshinuke/ui/PaneTab.js", ['org.koshinuke.ui.PaneTab', 'org.koshinuke.ui.BranchListTab', 'org.koshinuke.ui.TagListTab', 'org.koshinuke.ui.ResourceTab'], ['goog.array', 'goog.dom', 'goog.dom.classes', 'goog.dom.query', 'goog.events', 'goog.ui.Tab', 'org.koshinuke.ui.TreeGrid', 'org.koshinuke.ui.BranchLoader', 'org.koshinuke.ui.TagLoader', 'org.koshinuke.ui.ResourceLoader', 'org.koshinuke.ui.CodeMirrorWrapper']);
 goog.addDependency("../../../js/org/koshinuke/ui/Repository.js", ['org.koshinuke.ui.Repository'], ['goog.array', 'goog.dom', 'goog.dom.classes', 'goog.dom.query', 'goog.events', 'goog.ui.Tab', 'org.koshinuke.ui.RepositoryRenderer']);
 goog.addDependency("../../../js/org/koshinuke/ui/RepositoryLoader.js", ['org.koshinuke.ui.RepositoryLoader'], ['goog.array', 'goog.json', 'goog.net.XhrIo', 'goog.Uri', 'org.koshinuke.ui.Repository']);

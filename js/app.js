@@ -10,6 +10,8 @@ goog.require('goog.ui.Component.EventType');
 goog.require('goog.ui.Tab');
 goog.require('goog.ui.TabBar');
 
+goog.require('ZeroClipboard');
+
 goog.require('org.koshinuke');
 goog.require('org.koshinuke.ui.Breadcrumb');
 goog.require('org.koshinuke.ui.Repository');
@@ -20,6 +22,7 @@ goog.require('org.koshinuke.ui.RepoTabBar');
 goog.exportSymbol('main', function() {
 	var PubSub = org.koshinuke.PubSub;
 	var uri = new goog.Uri(window.location.href);
+	ZeroClipboard.setMoviePath('flash/ZeroClipboard.swf');
 
 	goog.array.forEach(goog.dom.query('.nav'), function(root) {
 		var tabbar = new goog.ui.TabBar();

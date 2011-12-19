@@ -74,7 +74,7 @@ org.koshinuke.ui.ResourceTab.prototype.loadPane = function(uri) {
 /** @override */
 org.koshinuke.ui.ResourceTab.prototype.enterDocument = function() {
 	org.koshinuke.ui.ResourceTab.superClass_.enterDocument.call(this);
-	var extension = org.koshinuke.getExtension(this.getModel().resourcePath);
+	var extension = org.koshinuke.getExtension(this.getModel().node.path);
 	goog.dom.classes.add(this.getElement(), org.koshinuke.findIcon(extension));
 };
 

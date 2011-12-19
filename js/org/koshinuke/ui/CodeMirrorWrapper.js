@@ -2,6 +2,7 @@ goog.provide('org.koshinuke.ui.CodeMirrorWrapper');
 
 goog.require('goog.array');
 goog.require('goog.dom');
+goog.require('goog.soy');
 goog.require('goog.string');
 
 goog.require('goog.ui.Component');
@@ -10,6 +11,8 @@ goog.require('CodeMirror');
 goog.require('CodeMirror.modes');
 
 goog.require('org.koshinuke');
+goog.require('org.koshinuke.template.codemirror');
+goog.require('org.koshinuke.template.tooltip');
 
 // TODO module化によるmodeの遅延ローディング
 /** @constructor */
@@ -37,18 +40,6 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
 	var model = this.getModel();
 	var self = this;
 	this.loader.load(model, function(contentType, resource) {
-		var newone = goog.dom.createDom('div', {
-			'class' : 'CodeMirror-toolbox'
-		}, goog.dom.createDom('div', {
-			'class' : 'copy'
-		}), goog.dom.createDom('span', {
-			'class' : 'username'
-		}, "taichi"), goog.dom.createDom('span', {
-			'class' : 'timestamp'
-		}, "2011-12-15 01:32:55"), goog.dom.createDom('span', {
-			'class' : 'message'
-		}, "fix bug..."), goog.dom.createDom('button', null, "history"), goog.dom.createDom('button', null, "blame"), goog.dom.createDom('button', null, "edit"));
-		self.getElement().insertBefore(newone, self.loading);
 
 		if(contentType && goog.string.startsWith(contentType, 'image')) {
 			// data schemeでサーバからリソースが返ってくる事を期待する。
@@ -58,6 +49,9 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
 			});
 			parent.replaceChild(self.img, self.loading);
 		} else {
+			var newone = goog.soy.renderAsElement(org.koshinuke.template.codemirror.tmpl, model.node);
+			self.getElement().insertBefore(newone, self.loading);
+			self.clip = self.setUpZC_(newone, resource);
 			self.cm = CodeMirror(function(elt) {
 				parent.replaceChild(elt, self.loading);
 			}, {
@@ -70,6 +64,50 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
 		}
 	});
 };
+/** @private */
+org.koshinuke.ui.CodeMirrorWrapper.prototype.setUpZC_ = function(element, copyValue) {
+	// TODO refactor.
+	var clip = new ZeroClipboard.Client();
+	var img = goog.dom.query('.clip-container .copy', element)[0];
+
+	var g = function() {
+		return new org.koshinuke.positioning.GravityPosition(img, 'w', 1);
+	}
+	var copyTip = new goog.ui.Popup(this.tooltip_('copy contents to clipboard'), g());
+	var compTip = new goog.ui.Popup(this.tooltip_('copied !!'), g());
+
+	clip.addEventListener('onMouseOver', function(client) {
+		copyTip.setVisible(true);
+	});
+	clip.addEventListener('onMouseOut', function(client) {
+		copyTip.setVisible(false);
+		compTip.setVisible(false);
+	});
+	clip.addEventListener('onMouseDown', function(client) {
+		clip.setText(copyValue);
+	});
+	clip.addEventListener('onComplete', function(client, text) {
+		compTip.setVisible(true);
+	});
+	clip.glue(img, img.parentNode);
+	clip.dispose = function() {
+		goog.array.forEach([copyTip, compTip], function(a){
+			goog.dom.removeNode(a.getElement());
+			a.dispose();
+		});
+		clip.destroy();
+	};
+	return clip;
+};
+/** @private */
+org.koshinuke.ui.CodeMirrorWrapper.prototype.tooltip_ = function(t) {
+	var el = goog.soy.renderAsElement(org.koshinuke.template.tooltip.tmpl, {
+		dir : 'right',
+		txt : t
+	});
+	goog.dom.appendChild(document.body, el);
+	return el;
+};
 /** @override */
 org.koshinuke.ui.CodeMirrorWrapper.prototype.exitDocument = function() {
 	org.koshinuke.ui.CodeMirrorWrapper.superClass_.exitDocument.call(this);
@@ -80,6 +118,10 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.exitDocument = function() {
 	if(this.cm) {
 		goog.dom.removeNode(this.cm.getWrapperElement());
 		this.cm = null;
+	}
+	if(this.clip) {
+		this.clip.dispose();
+		this.clip = null;
 	}
 };
 org.koshinuke.ui.CodeMirrorWrapper.prototype.setVisible = function(state) {
