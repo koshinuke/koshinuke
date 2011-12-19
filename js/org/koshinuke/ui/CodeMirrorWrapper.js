@@ -37,6 +37,19 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
 	var model = this.getModel();
 	var self = this;
 	this.loader.load(model, function(contentType, resource) {
+		var newone = goog.dom.createDom('div', {
+			'class' : 'CodeMirror-toolbox'
+		}, goog.dom.createDom('div', {
+			'class' : 'copy'
+		}), goog.dom.createDom('span', {
+			'class' : 'username'
+		}, "taichi"), goog.dom.createDom('span', {
+			'class' : 'timestamp'
+		}, "2011-12-15 01:32:55"), goog.dom.createDom('span', {
+			'class' : 'message'
+		}, "fix bug..."), goog.dom.createDom('button', null, "history"), goog.dom.createDom('button', null, "blame"), goog.dom.createDom('button', null, "edit"));
+		self.getElement().insertBefore(newone, self.loading);
+
 		if(contentType && goog.string.startsWith(contentType, 'image')) {
 			// data schemeでサーバからリソースが返ってくる事を期待する。
 			// http://tools.ietf.org/html/rfc2397
