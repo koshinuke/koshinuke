@@ -4,17 +4,10 @@ goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.query');
-goog.require('goog.soy');
 goog.require('goog.string.format');
 
 goog.require('goog.ui.Component');
 goog.require('goog.ui.SelectionModel');
-goog.require('goog.ui.Popup');
-
-goog.require('ZeroClipboard');
-
-goog.require('org.koshinuke.positioning.GravityPosition');
-goog.require('org.koshinuke.template.tooltip');
 
 /** @constructor */
 org.koshinuke.ui.RepoUrls = function(opt_domHelper) {
@@ -27,7 +20,6 @@ org.koshinuke.ui.RepoUrls = function(opt_domHelper) {
 			self.internalSelect_(item);
 		}
 	});
-	this.clip = new ZeroClipboard.Client();
 };
 goog.inherits(org.koshinuke.ui.RepoUrls, goog.ui.Component);
 
@@ -36,10 +28,12 @@ org.koshinuke.ui.RepoUrls.prototype.internalSelect_ = function(item) {
 	var element = this.getElement();
 	var desc = goog.dom.query('.desc-container span', element)[0];
 	var urlbox = goog.dom.query('.url-box', element)[0];
-	urlbox.setAttribute('value', item.getAttribute('href'));
+	var value = item.getAttribute('href');
+	urlbox.setAttribute('value', value);
 	var newone = goog.dom.createTextNode(item.getAttribute('desc'));
 	var oldone = desc.firstChild;
 	desc.replaceChild(newone, oldone);
+	this.clip.setCopyContents(value);
 };
 
 org.koshinuke.ui.RepoUrls.prototype.setSelectedIndex = function(i) {
@@ -70,84 +64,31 @@ org.koshinuke.ui.RepoUrls.prototype.decorateInternal = function(element) {
 			this.protocols.addItem(a);
 		}, this);
 	}, this);
-	// TODO refactor.
-	var img = goog.dom.query('.clip-container .copy', element)[0];
-
-	var g = function() {
-		return new org.koshinuke.positioning.GravityPosition(img, 'w', 1);
-	}
-	var copyTip = new goog.ui.Popup(this.tooltip_('copy to clipboard'), g());
-	var compTip = new goog.ui.Popup(this.tooltip_('copied !!'), g());
-
-	var clip = this.clip;
-	clip.addEventListener('onMouseOver', function(client) {
-		copyTip.setVisible(true);
-	});
-	clip.addEventListener('onMouseOut', function(client) {
-		copyTip.setVisible(false);
-		compTip.setVisible(false);
-	});
-	clip.addEventListener('onMouseDown', function(client) {
-		clip.setText(urlbox.value);
-	});
-	clip.addEventListener('onComplete', function(client, text) {
-		compTip.setVisible(true);
-	});
-	clip.glue(img, img.parentNode);
-	clip.dispose = function() {
-		goog.array.forEach([copyTip, compTip], function(a) {
-			goog.dom.removeNode(a.getElement());
-			a.dispose();
-		});
-		clip.destroy();
-	};
 };
-/** @private */
-org.koshinuke.ui.RepoUrls.prototype.tooltip_ = function(t) {
-	var el = goog.soy.renderAsElement(org.koshinuke.template.tooltip.tmpl, {
-		dir : 'right',
-		txt : t
-	});
-	goog.dom.appendChild(document.body, el);
-	return el;
-};
+
 org.koshinuke.ui.RepoUrls.prototype.enterDocument = function() {
 	org.koshinuke.ui.RepoUrls.superClass_.enterDocument.call(this);
+	this.clip = new org.koshinuke.ui.Clipboard(["", 'copy url to clipboard', 'copied !!']);
+	this.clip.decorate(this.getElement());
 };
-/** @private */
-org.koshinuke.ui.RepoUrls.prototype.listenEvents_ = function() {
-	var h = this.getHandler();
-	h.listen(this, goog.ui.Component.EventType.SHOW, this.handleShow_);
-	h.listen(this, goog.ui.Component.EventType.HIDE, this.handleHide_);
-	h.listen(this, goog.events.EventType.RESIZE, this.handleShow_);
-	h.listen(this, goog.events.EventType.PAGESHOW, this.handleShow_);
-	h.listen(this, goog.events.EventType.PAGEHIDE, this.handleHide_);
-};
-/** @private */
-org.koshinuke.ui.RepoUrls.prototype.handleShow_ = function() {
-	this.clip.show();
-};
-/** @private */
-org.koshinuke.ui.RepoUrls.prototype.handleHide_ = function() {
-	this.clip.hide();
-};
-
-org.koshinuke.ui.RepoUrls.prototype.reposition = function() {
-	this.clip.reposition();
-};
+/** @override */
+org.koshinuke.ui.RepoUrls.prototype.exitDocument = function() {
+	org.koshinuke.ui.RepoUrls.superClass_.exitDocument.call(this);
+	this.clip.exitDocument();
+}
 /** @override */
 org.koshinuke.ui.RepoUrls.prototype.disposeInternal = function() {
 	org.koshinuke.ui.RepoUrls.superClass_.disposeInternal.call(this);
 	this.clip.dispose();
 	this.clip = null;
+	this.protocols.dispose();
 	this.protocols = null;
 };
 /** @override */
 org.koshinuke.ui.RepoUrls.prototype.setModel = function(model) {
 	org.koshinuke.ui.RepoUrls.superClass_.setModel.call(this, model);
 	var el = this.getElement();
-
-	function f(fn, protocol) {
+	var f = function (fn, protocol) {
 		var href = fn(model.user, model.host, model.path);
 		goog.array.forEach(goog.dom.query('.protocols .' + protocol, el), function(a) {
 			a.setAttribute('href', href);

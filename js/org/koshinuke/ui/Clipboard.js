@@ -31,6 +31,9 @@ org.koshinuke.ui.Clipboard.prototype.setMessages = function(desc, follow) {
 	this.desc = desc;
 	this.follow = follow;
 };
+org.koshinuke.ui.Clipboard.prototype.desc = "copy to clipboard";
+org.koshinuke.ui.Clipboard.prototype.follow = "copied !!"
+
 /** @constructor */
 org.koshinuke.ui.Clipboard.Popup = function(pos) {
 	goog.ui.Popup.call(this, this.makeEl_(), pos);
@@ -83,7 +86,6 @@ org.koshinuke.ui.Clipboard.prototype.exitDocument = function() {
 	this.clip.destroy();
 	this.clip = null;
 	goog.dom.removeNode(this.popup.getElement());
-	this.popup.exitDocument();
 	this.popup.dispose();
 	this.popup = null;
 };
