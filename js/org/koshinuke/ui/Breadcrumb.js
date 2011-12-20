@@ -8,7 +8,8 @@ goog.require('goog.ui.Component');
 goog.require('org.koshinuke.template.breadcrumb');
 
 /** @constructor */
-org.koshinuke.ui.Breadcrumb = function(fn) {
+org.koshinuke.ui.Breadcrumb = function(fn, opt_domHelper) {
+	goog.ui.Component.call(this, opt_domHelper);
 	this.fn = fn;
 };
 goog.inherits(org.koshinuke.ui.Breadcrumb, goog.ui.Component);

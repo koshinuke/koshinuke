@@ -29,9 +29,6 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.createDom = function() {
 	var element = goog.dom.createDom("div", null, this.loading);
 	this.decorateInternal(element);
 };
-// git blame
-// raw file
-// history
 // git note
 /** @override */
 org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
@@ -40,7 +37,6 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
 	var model = this.getModel();
 	var self = this;
 	this.loader.load(model, function(contentType, resource) {
-
 		if(contentType && goog.string.startsWith(contentType, 'image')) {
 			// data schemeでサーバからリソースが返ってくる事を期待する。
 			// http://tools.ietf.org/html/rfc2397
@@ -91,7 +87,7 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.setUpZC_ = function(element, copyVa
 	});
 	clip.glue(img, img.parentNode);
 	clip.dispose = function() {
-		goog.array.forEach([copyTip, compTip], function(a){
+		goog.array.forEach([copyTip, compTip], function(a) {
 			goog.dom.removeNode(a.getElement());
 			a.dispose();
 		});
