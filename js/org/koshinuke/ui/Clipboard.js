@@ -14,18 +14,26 @@ goog.require('org.koshinuke.template.tooltip');
 
 /** @constructor */
 org.koshinuke.ui.Clipboard = function(text, opt_domHelper) {
-	this.text = text;
+	goog.ui.Component.call(this, opt_domHelper);
+	if(goog.isString(text)) {
+		this.text = text;
+	} else {
+		this.text = text[0];
+		this.setMessages(text[1], text[2]);
+	}
 };
 goog.inherits(org.koshinuke.ui.Clipboard, goog.ui.Component);
 
+org.koshinuke.ui.Clipboard.prototype.setCopyContents = function(text) {
+	this.text = text;
+};
 org.koshinuke.ui.Clipboard.prototype.setMessages = function(desc, follow) {
 	this.desc = desc;
 	this.follow = follow;
 };
-
 /** @constructor */
 org.koshinuke.ui.Clipboard.Popup = function(pos) {
-	goog.ui.Popup.call(this.makeEl_(), pos);
+	goog.ui.Popup.call(this, this.makeEl_(), pos);
 };
 goog.inherits(org.koshinuke.ui.Clipboard.Popup, goog.ui.Popup);
 
@@ -38,9 +46,8 @@ org.koshinuke.ui.Clipboard.Popup.prototype.makeEl_ = function() {
 	return el;
 };
 org.koshinuke.ui.Clipboard.Popup.prototype.setText = function(txt) {
-	var element = this.getElement();
-	goog.array.forEach(goog.dom.query('tooltip-inner', element), function(a) {
-		goog.dom.setTextContent(element, txt);
+	goog.array.forEach(goog.dom.query('.tooltip-inner', this.getElement()), function(a) {
+		goog.dom.setTextContent(a, txt);
 	});
 };
 /** @override */
@@ -50,27 +57,31 @@ org.koshinuke.ui.Clipboard.prototype.enterDocument = function() {
 	var clip = new ZeroClipboard.Client();
 	var img = goog.dom.query('.clip-container .copy', element)[0];
 	this.popup = new org.koshinuke.ui.Clipboard.Popup(new org.koshinuke.positioning.GravityPosition(img, 'w', 1));
-	
-	var copyValue = this.text;
-	var popup = this.popup;
+
+	var self = this;
+	var popup = self.popup;
 	clip.addEventListener('onMouseOver', function(client) {
-		
+		popup.setText(self.desc);
 		popup.setVisible(true);
 	});
 	clip.addEventListener('onMouseOut', function(client) {
 		popup.setVisible(false);
 	});
 	clip.addEventListener('onMouseDown', function(client) {
-		clip.setText(copyValue);
+		clip.setText(self.text);
 	});
 	clip.addEventListener('onComplete', function(client, text) {
+		popup.setText(self.follow);
 		popup.setVisible(true);
 	});
 	clip.glue(img, img.parentNode);
+	this.clip = clip;
 };
 /** @override */
 org.koshinuke.ui.Clipboard.prototype.exitDocument = function() {
 	org.koshinuke.ui.Clipboard.superClass_.exitDocument.call(this);
+	this.clip.destroy();
+	this.clip = null;
 	goog.dom.removeNode(this.popup.getElement());
 	this.popup.exitDocument();
 	this.popup.dispose();

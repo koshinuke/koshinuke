@@ -12,7 +12,8 @@ goog.require('CodeMirror.modes');
 
 goog.require('org.koshinuke');
 goog.require('org.koshinuke.template.codemirror');
-goog.require('org.koshinuke.template.tooltip');
+
+goog.require('org.koshinuke.ui.Clipboard');
 
 // TODO module化によるmodeの遅延ローディング
 /** @constructor */
@@ -47,7 +48,8 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
 		} else {
 			var newone = goog.soy.renderAsElement(org.koshinuke.template.codemirror.tmpl, model.node);
 			self.getElement().insertBefore(newone, self.loading);
-			self.clip = self.setUpZC_(newone, resource);
+			self.clip = new org.koshinuke.ui.Clipboard([resource, 'copy contents to clipboard', 'copied !!']);
+			self.clip.decorate(newone);
 			self.cm = CodeMirror(function(elt) {
 				parent.replaceChild(elt, self.loading);
 			}, {
@@ -60,50 +62,7 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
 		}
 	});
 };
-/** @private */
-org.koshinuke.ui.CodeMirrorWrapper.prototype.setUpZC_ = function(element, copyValue) {
-	// TODO refactor.
-	var clip = new ZeroClipboard.Client();
-	var img = goog.dom.query('.clip-container .copy', element)[0];
 
-	var g = function() {
-		return new org.koshinuke.positioning.GravityPosition(img, 'w', 1);
-	}
-	var copyTip = new goog.ui.Popup(this.tooltip_('copy contents to clipboard'), g());
-	var compTip = new goog.ui.Popup(this.tooltip_('copied !!'), g());
-
-	clip.addEventListener('onMouseOver', function(client) {
-		copyTip.setVisible(true);
-	});
-	clip.addEventListener('onMouseOut', function(client) {
-		copyTip.setVisible(false);
-		compTip.setVisible(false);
-	});
-	clip.addEventListener('onMouseDown', function(client) {
-		clip.setText(copyValue);
-	});
-	clip.addEventListener('onComplete', function(client, text) {
-		compTip.setVisible(true);
-	});
-	clip.glue(img, img.parentNode);
-	clip.dispose = function() {
-		goog.array.forEach([copyTip, compTip], function(a) {
-			goog.dom.removeNode(a.getElement());
-			a.dispose();
-		});
-		clip.destroy();
-	};
-	return clip;
-};
-/** @private */
-org.koshinuke.ui.CodeMirrorWrapper.prototype.tooltip_ = function(t) {
-	var el = goog.soy.renderAsElement(org.koshinuke.template.tooltip.tmpl, {
-		dir : 'right',
-		txt : t
-	});
-	goog.dom.appendChild(document.body, el);
-	return el;
-};
 /** @override */
 org.koshinuke.ui.CodeMirrorWrapper.prototype.exitDocument = function() {
 	org.koshinuke.ui.CodeMirrorWrapper.superClass_.exitDocument.call(this);
@@ -116,6 +75,7 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.exitDocument = function() {
 		this.cm = null;
 	}
 	if(this.clip) {
+		this.clip.exitDocument();
 		this.clip.dispose();
 		this.clip = null;
 	}
