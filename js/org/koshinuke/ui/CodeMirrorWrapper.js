@@ -51,6 +51,7 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
 			self.clip = new org.koshinuke.ui.Clipboard([resource, 'copy contents to clipboard', 'copied !!']);
 			self.clip.decorate(newone);
 			self.cm = CodeMirror(function(elt) {
+				goog.dom.classes.add(elt, "readonly");
 				parent.replaceChild(elt, self.loading);
 			}, {
 				mode : contentType,
@@ -62,7 +63,6 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
 		}
 	});
 };
-
 /** @override */
 org.koshinuke.ui.CodeMirrorWrapper.prototype.exitDocument = function() {
 	org.koshinuke.ui.CodeMirrorWrapper.superClass_.exitDocument.call(this);
