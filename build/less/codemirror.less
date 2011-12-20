@@ -6,8 +6,13 @@
 .CodeMirror-gutter {
 	#radius > .bottom-left();
 }
+
+.CodeMirror.readonly {
+	background-color: @grayLighter;
+}
+
 .readonly .CodeMirror-lines pre:hover
-, .activeline {
+, .CodeMirror-focused .activeline {
 	#radius > .around();
 	background: #f0fcff !important;
 }
