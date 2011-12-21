@@ -1833,7 +1833,7 @@ var CodeMirror = (function() {
   };
 
   var keyMap = CodeMirror.keyMap = {};
-  keyMap.basic = {
+  keyMap["basic"] = {
     "Left": "goCharLeft", "Right": "goCharRight", "Up": "goLineUp", "Down": "goLineDown",
     "End": "goLineEnd", "Home": "goLineStartSmart", "PageUp": "goPageUp", "PageDown": "goPageDown",
     "Delete": "delCharRight", "Backspace": "delCharLeft", "Tab": "indentMore", "Shift-Tab": "indentLess",
@@ -1858,7 +1858,7 @@ var CodeMirror = (function() {
     fallthrough: ["basic", "emacsy"]
   };
   keyMap["default"] = mac ? keyMap.macDefault : keyMap.pcDefault;
-  keyMap.emacsy = {
+  keyMap["emacsy"] = {
     "Ctrl-F": "goCharRight", "Ctrl-B": "goCharLeft", "Ctrl-P": "goLineUp", "Ctrl-N": "goLineDown",
     "Alt-F": "goWordRight", "Alt-B": "goWordLeft", "Ctrl-A": "goLineStart", "Ctrl-E": "goLineEnd",
     "Ctrl-V": "goPageUp", "Shift-Ctrl-V": "goPageDown", "Ctrl-D": "delCharRight", "Ctrl-H": "delCharLeft",
