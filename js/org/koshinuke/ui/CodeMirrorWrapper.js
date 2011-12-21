@@ -2,6 +2,7 @@ goog.provide('org.koshinuke.ui.CodeMirrorWrapper');
 
 goog.require('goog.array');
 goog.require('goog.dom');
+goog.require('goog.dom.forms');
 goog.require('goog.soy');
 goog.require('goog.string');
 goog.require('goog.style');
@@ -80,6 +81,12 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.setUpCMTools_ = function(element) {
 		b.decorate(a);
 		b.setParent(this);
 	}, this);
+	var commitBtn = goog.dom.query('button.commit', element)[0];
+	var commitMsg = goog.dom.query('.commit-message textarea', element)[0];
+	goog.events.listen(commitMsg, goog.events.EventType.KEYUP, function(e) {
+		var val = goog.dom.forms.getValue(e.target);
+		goog.dom.forms.setDisabled(commitBtn, !val || goog.string.trim(val).length < 1);
+	});
 	var value = this.cm.getValue();
 	goog.events.listen(this, goog.ui.Component.EventType.ACTION, function(e) {
 		var el = e.target.getElement();
@@ -89,6 +96,8 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.setUpCMTools_ = function(element) {
 		}
 		if(goog.dom.classes.has(el, 'drop')) {
 			this.cm.setValue(value);
+			goog.dom.forms.setValue(commitMsg, '');
+			goog.dom.forms.setDisabled(commitBtn, true);
 			this.toggleEdit_(element, false);
 		}
 		if(goog.dom.classes.has(el, 'commit')) {
@@ -96,7 +105,7 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.setUpCMTools_ = function(element) {
 			this.toggleEdit_(element, false);
 			// TODO reget some of resource metadatas.
 		}
-		
+
 	}, false, this);
 };
 org.koshinuke.ui.CodeMirrorWrapper.prototype.toggleEdit_ = function(element, editable) {

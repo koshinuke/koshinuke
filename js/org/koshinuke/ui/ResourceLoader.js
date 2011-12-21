@@ -40,7 +40,7 @@ org.koshinuke.ui.ResourceLoader.extToMIME = function(path) {
 };
 
 org.koshinuke.ui.ResourceLoader.prototype.load = function(model, fn) {
-	goog.net.XhrIo.send(this.toRequestUri(model).toString(), function(e) {
+	goog.net.XhrIo.send(this.toRequestUri(model), function(e) {
 		var raw = goog.json.parse(e.target.getResponseText());
 		var resourceModel = {
 			commit : raw['commit'],
@@ -52,8 +52,8 @@ org.koshinuke.ui.ResourceLoader.prototype.load = function(model, fn) {
 		var ct = e.target.getResponseHeader('Content-Type');
 		var path = model.node.path;
 		if(!ct
-			// TODO Aptanaのサーバがあんまりなので回避措置
-			|| ct == 'text/html') {
+		// TODO Aptanaのサーバがあんまりなので回避措置
+		|| ct == 'text/html') {
 			var re = new RegExp('\\.(jpe?g|gif|png|ico)$', 'i');
 			var match = re.exec(path);
 			if(match) {
@@ -63,5 +63,23 @@ org.koshinuke.ui.ResourceLoader.prototype.load = function(model, fn) {
 			}
 		}
 		fn(ct, resourceModel);
+	});
+};
+
+org.koshinuke.ui.ResourceLoader.prototype.handleResponse = function(e) {
+	
+};
+
+org.koshinuke.ui.ResourceLoader.prototype.send = function(model, fn) {
+	var sendmodel = {
+		"commit" : model.commit,
+		"message" : goog.string.urlEncode(model.message),
+		"contents" : goog.string.urlEncode(model.contents)
+	};
+	var json = goog.json.serialize(sendmodel);
+	goog.net.XhrIo.send(this.toRequestUri(model), function(e) {
+		// TODO load と全く同じ処理…
+	}, "POST", json, {
+		"X-KOSHINUKE" : true
 	});
 };
