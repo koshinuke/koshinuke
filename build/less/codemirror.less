@@ -37,12 +37,35 @@
 		border-left: 1px solid #DDD;
 	}
 	
+	.tool-buttons {
+    .clearfix;
+    button {
+      margin-right: 0.25em;
+    }
+	}
+  .commit-form {
+    margin: 0.2em 0;
+    .clearfix;
+    textarea {
+      width: 100%;
+    }
+    button {
+      font-size: large;
+      &.cancel {
+        float: left;
+        color: #900;
+      }
+      &.confirm {
+        float: right;
+      }
+    }
+  }
+	
 	button {
 		float: left;
 		border: 1px solid #DDD;
 		#radius > .around();
 		padding: 0.25em 0.5em;
-		margin-right: 0.25em;
 		
 		text-shadow: 1px 1px 0 white;
 		font-weight: bold;
