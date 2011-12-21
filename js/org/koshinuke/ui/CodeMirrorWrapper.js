@@ -107,7 +107,7 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.toggleEdit_ = function(element, edi
 	} else {
 		goog.dom.classes.add(this.cm.getWrapperElement(), "readonly");
 	}
-	goog.array.forEach(goog.dom.query('.drop, .commit', element), function(dc) {
+	goog.array.forEach(goog.dom.query('.drop, .commit, .commit-message', element), function(dc) {
 		goog.style.showElement(dc, editable);
 	}, this);
 	goog.array.forEach(goog.dom.query('.edit', element), function(dc) {
