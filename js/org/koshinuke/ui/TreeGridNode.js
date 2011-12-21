@@ -9,6 +9,7 @@ goog.require('goog.dom.query');
 
 goog.require('goog.ui.Component');
 
+goog.require('org.koshinuke');
 goog.require('org.koshinuke.template.treegrid');
 
 // TODO 汎用的に使える形に丸めるのは後で。
@@ -62,8 +63,7 @@ org.koshinuke.ui.TreeGrid.Node.prototype.setJson = function(json) {
 	this.children = json['children'];
 };
 org.koshinuke.ui.TreeGrid.Node.prototype.setJsonDetail_ = function(json) {
-	var t = Number(json['timestamp']);
-	this.timestamp = new goog.i18n.DateTimeFormat('yyyy-MM-dd HH:mm:ss').format(new Date(t * 1000));
+	this.timestamp = org.koshinuke.toDateString(json['timestamp']);
 	this.message = goog.string.urlDecode(json['message']);
 	this.author = goog.string.urlDecode(json['author']);
 };

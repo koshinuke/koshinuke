@@ -66,4 +66,9 @@ org.koshinuke.findParent = function(el, findfor) {
 		}
 	} while(p);
 	return el;
-}
+};
+
+org.koshinuke.toDateString = function(unixTime) {
+	var t = Number(unixTime);
+	return new goog.i18n.DateTimeFormat('yyyy-MM-dd HH:mm:ss').format(new Date(t * 1000));
+};

@@ -19,7 +19,8 @@ goog.require('org.koshinuke.ui.Clipboard');
 
 // TODO module化によるmodeの遅延ローディング
 /** @constructor */
-org.koshinuke.ui.CodeMirrorWrapper = function(loader) {
+org.koshinuke.ui.CodeMirrorWrapper = function(loader, opt_domHelper) {
+	goog.ui.Component.call(this, opt_domHelper);
 	this.loader = loader;
 };
 goog.inherits(org.koshinuke.ui.CodeMirrorWrapper, goog.ui.Component);
@@ -39,22 +40,22 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
 	var parent = this.getElement();
 	var model = this.getModel();
 	var self = this;
-	this.loader.load(model, function(contentType, resource) {
+	this.loader.load(model, function(contentType, resourceModel) {
 		if(contentType && goog.string.startsWith(contentType, 'image')) {
 			// data schemeでサーバからリソースが返ってくる事を期待する。
 			// http://tools.ietf.org/html/rfc2397
 			self.img = goog.dom.createDom("img", {
-				"src" : resource
+				"src" : resourceModel.contents
 			});
 			parent.replaceChild(self.img, self.loading);
 		} else {
-			var toolsEl = goog.soy.renderAsElement(org.koshinuke.template.codemirror.tmpl, model.node);
+			var toolsEl = goog.soy.renderAsElement(org.koshinuke.template.codemirror.tmpl, resourceModel);
 			self.getElement().insertBefore(toolsEl, self.loading);
-			self.clip = new org.koshinuke.ui.Clipboard([resource, 'copy contents to clipboard', 'copied !!']);
+			self.clip = new org.koshinuke.ui.Clipboard([resourceModel.contents, 'copy contents to clipboard', 'copied !!']);
 			self.clip.decorate(toolsEl);
 			self.cmOption = {
 				mode : contentType,
-				value : resource,
+				value : resourceModel.contents,
 				matchBrackets : true,
 				lineNumbers : true,
 				readOnly : true,

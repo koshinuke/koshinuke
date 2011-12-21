@@ -2,6 +2,7 @@ goog.provide('org.koshinuke.ui.ResourceLoader');
 
 goog.require('goog.array');
 goog.require('goog.net.XhrIo');
+goog.require('goog.string');
 goog.require('goog.Uri');
 
 goog.require('org.koshinuke');
@@ -13,7 +14,7 @@ org.koshinuke.ui.ResourceLoader = function(uri) {
 
 org.koshinuke.ui.ResourceLoader.prototype.toRequestUri = function(model) {
 	// TODO for mock
-	var u = this.uri.resolve(new goog.Uri('/koshinuke/stub/resource'));
+	var u = this.uri.resolve(new goog.Uri('/koshinuke/stub/resource.json'));
 	u.setParameterValue('rp', model.node.path);
 	return u;
 };
@@ -40,7 +41,14 @@ org.koshinuke.ui.ResourceLoader.extToMIME = function(path) {
 
 org.koshinuke.ui.ResourceLoader.prototype.load = function(model, fn) {
 	goog.net.XhrIo.send(this.toRequestUri(model).toString(), function(e) {
-		var txt = e.target.getResponseText();
+		var raw = goog.json.parse(e.target.getResponseText());
+		var resourceModel = {
+			commit : raw['commit'],
+			timestamp : org.koshinuke.toDateString(raw['timestamp']),
+			author : goog.string.urlDecode(raw['author']),
+			message : goog.string.urlDecode(raw['message']),
+			contents : goog.string.urlDecode(raw['contents'])
+		};
 		var ct = e.target.getResponseHeader('Content-Type');
 		var path = model.node.path;
 		if(!ct
@@ -54,6 +62,6 @@ org.koshinuke.ui.ResourceLoader.prototype.load = function(model, fn) {
 				ct = org.koshinuke.ui.ResourceLoader.extToMIME(path);
 			}
 		}
-		fn(ct, txt);
+		fn(ct, resourceModel);
 	});
 };
