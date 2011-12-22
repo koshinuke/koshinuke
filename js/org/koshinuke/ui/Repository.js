@@ -8,6 +8,7 @@ goog.require('goog.events');
 
 goog.require('goog.ui.Tab');
 
+goog.require('org.koshinuke.ui.PaneTab.Factory');
 goog.require('org.koshinuke.ui.RepositoryRenderer');
 
 /** @constructor */
@@ -51,13 +52,22 @@ org.koshinuke.ui.Repository.prototype.setJson = function(json) {
 /** @override */
 org.koshinuke.ui.Repository.prototype.enterDocument = function() {
 	org.koshinuke.ui.Repository.superClass_.enterDocument.call(this);
-	var el = goog.dom.query('.repo-context', this.getElement())[0];
-	this.tabbar.decorate(el);
+	var element = goog.dom.query('.repo-context', this.getElement())[0];
+	this.tabbar.decorate(element);
 	this.listenerKey = goog.events.listen(this.tabbar, goog.ui.Component.EventType.SELECT, function(e) {
 		var el = e.target.getElement();
+		var cls = goog.dom.classes.get(el);
+		var ctx;
+		if(goog.array.contains(cls, 'branches')) {
+			ctx = org.koshinuke.ui.PaneTab.Factory.Branches;
+		} else if(goog.array.contains(cls, 'tags')) {
+			ctx = org.koshinuke.ui.PaneTab.Factory.Tags;
+		} else if(goog.array.contains(cls, 'histories')) {
+			ctx = org.koshinuke.ui.PaneTab.Factory.Histories;
+		}
 		this.dispatchEvent({
 			type : org.koshinuke.ui.Repository.EventType.REPO_CONTEXT_SELECTED,
-			context : el.getAttribute('context'),
+			context : ctx,
 			label : goog.dom.getTextContent(el)
 		});
 	}, false, this);

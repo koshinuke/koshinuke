@@ -17,7 +17,7 @@ goog.require('org.koshinuke.ui.Breadcrumb');
 goog.require('org.koshinuke.ui.Repository');
 goog.require('org.koshinuke.ui.RepositoryLoader');
 goog.require('org.koshinuke.ui.RepoUrls');
-goog.require('org.koshinuke.ui.RepoTabBar');
+goog.require('org.koshinuke.ui.PaneTabBar');
 
 goog.exportSymbol('main', function() {
 	var PubSub = org.koshinuke.PubSub;
@@ -57,7 +57,7 @@ goog.exportSymbol('main', function() {
 	});
 
 	goog.array.forEach(goog.dom.query('.tab-container .goog-tab-bar'), function(root) {
-		var tabbar = new org.koshinuke.ui.RepoTabBar('tab-pane', uri);
+		var tabbar = new org.koshinuke.ui.PaneTabBar('tab-pane', uri);
 		tabbar.decorate(root);
 		PubSub.subscribe(PubSub.REPO_SELECT, tabbar.addTab, tabbar);
 		PubSub.subscribe(PubSub.RESOURCE_SELECT, tabbar.addTab, tabbar);

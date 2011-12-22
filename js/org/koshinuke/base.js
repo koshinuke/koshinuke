@@ -31,10 +31,6 @@ org.koshinuke.getExtension = function(path, nullvalue) {
 }
 org.koshinuke.findIcon = function(key) {
 	return {
-	"$$b" : "branches",
-	"$$t" : "tags",
-	"$$h" : "histories",
-	"$$g" : "graph",
 	".py"  : "python",
 	".html" : "html",
 	".css" : "css",

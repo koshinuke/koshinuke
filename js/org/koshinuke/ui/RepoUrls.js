@@ -102,7 +102,7 @@ org.koshinuke.ui.RepoUrls.prototype.setModel = function(model) {
 };
 /** @private */
 org.koshinuke.ui.RepoUrls.prototype.ssh_ = function(user, host, path) {
-	return goog.string.format('%s@%s:%s.git', user, host, path, name);
+	return goog.string.format('%s@%s:%s.git', user, host, path);
 };
 /** @private */
 org.koshinuke.ui.RepoUrls.prototype.https_ = function(user, host, path) {

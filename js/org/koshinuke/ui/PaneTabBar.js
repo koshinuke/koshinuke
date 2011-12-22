@@ -1,4 +1,4 @@
-goog.provide('org.koshinuke.ui.RepoTabBar');
+goog.provide('org.koshinuke.ui.PaneTabBar');
 
 goog.require('goog.array');
 goog.require('goog.dom');
@@ -8,16 +8,12 @@ goog.require('goog.dom.query');
 goog.require('goog.ui.TabBar');
 
 goog.require('org.koshinuke');
-goog.require('org.koshinuke.ui.RepoTabRenderer');
-goog.require('org.koshinuke.ui.BranchListTab');
-goog.require('org.koshinuke.ui.TagListTab');
-goog.require('org.koshinuke.ui.ResourceTab');
 
 /**
  * @constructor
  * @extends {goog.ui.TabBar}
  * */
-org.koshinuke.ui.RepoTabBar = function(paneWrapper, uri, opt_location, opt_renderer, opt_domHelper) {
+org.koshinuke.ui.PaneTabBar = function(paneWrapper, uri, opt_location, opt_renderer, opt_domHelper) {
 	goog.ui.TabBar.call(this, opt_location, opt_renderer, opt_domHelper);
 	this.paneWrapper = paneWrapper;
 	this.uri = uri;
@@ -25,9 +21,9 @@ org.koshinuke.ui.RepoTabBar = function(paneWrapper, uri, opt_location, opt_rende
 	this.listenEvents_();
 	this.lastSelected = null;
 };
-goog.inherits(org.koshinuke.ui.RepoTabBar, goog.ui.TabBar);
+goog.inherits(org.koshinuke.ui.PaneTabBar, goog.ui.TabBar);
 
-org.koshinuke.ui.RepoTabBar.prototype.addTab = function(model) {
+org.koshinuke.ui.PaneTabBar.prototype.addTab = function(model) {
 	var hash = this.hash(model);
 	var tab = this.tabmap[hash];
 	if(!tab) {
@@ -37,35 +33,26 @@ org.koshinuke.ui.RepoTabBar.prototype.addTab = function(model) {
 	}
 	this.setSelectedTab(tab);
 };
-org.koshinuke.ui.RepoTabBar.prototype.newPane = function(model) {
+org.koshinuke.ui.PaneTabBar.prototype.newPane = function(model) {
 	var ctx = model.context;
 	var tab;
-	// TODO context に応じたPaneの生成処理
-	if(ctx == '$$b') {
-		tab = new org.koshinuke.ui.BranchListTab(this.paneWrapper, model.name, org.koshinuke.ui.RepoTabRenderer.getInstance());
-		tab.setModel(model);
-		tab.loadPane(this.uri);
-	} else if(ctx == '$$t') {
-		tab = new org.koshinuke.ui.TagListTab(this.paneWrapper, model.name, org.koshinuke.ui.RepoTabRenderer.getInstance());
-		tab.setModel(model);
-		tab.loadPane(this.uri);
-	} else if(ctx == '$$r') {
-		tab = new org.koshinuke.ui.ResourceTab(this.paneWrapper, model.name, org.koshinuke.ui.RepoTabRenderer.getInstance());
+	if(goog.isFunction(ctx)) {
+		tab = ctx(this.paneWrapper, model.name);
 		tab.setModel(model);
 		tab.loadPane(this.uri);
 	} else {
-		tab = new goog.ui.Tab(model.name, org.koshinuke.ui.RepoTabRenderer.getInstance());
+		tab = new goog.ui.Tab(model.name);
 		tab.setModel(model);
 	}
 	return tab;
 };
 /** @private */
-org.koshinuke.ui.RepoTabBar.prototype.hash = function(model) {
-	return org.koshinuke.hash(model.host, model.path, model.name, model.context);
+org.koshinuke.ui.PaneTabBar.prototype.hash = function(model) {
+	return org.koshinuke.hash(model.host, model.path, model.name, model.label);
 };
 /** @override */
-org.koshinuke.ui.RepoTabBar.prototype.decorateInternal = function(element) {
-	org.koshinuke.ui.RepoTabBar.superClass_.decorateInternal.call(this, element);
+org.koshinuke.ui.PaneTabBar.prototype.decorateInternal = function(element) {
+	org.koshinuke.ui.PaneTabBar.superClass_.decorateInternal.call(this, element);
 	goog.events.listen(element, goog.events.EventType.CLICK, function(e) {
 		var t = e.target;
 		if(goog.dom.classes.has(t, "close")) {
@@ -92,16 +79,16 @@ org.koshinuke.ui.RepoTabBar.prototype.decorateInternal = function(element) {
 	}, false, this);
 };
 /** @private */
-org.koshinuke.ui.RepoTabBar.prototype.listenEvents_ = function() {
+org.koshinuke.ui.PaneTabBar.prototype.listenEvents_ = function() {
 	var h = this.getHandler();
 	h.listen(this, goog.ui.Component.EventType.UNSELECT, this.handleUnSelect);
 };
-org.koshinuke.ui.RepoTabBar.prototype.handleUnSelect = function(e) {
+org.koshinuke.ui.PaneTabBar.prototype.handleUnSelect = function(e) {
 	this.lastSelected = e.target;
 };
 /** @override */
-org.koshinuke.ui.RepoTabBar.prototype.disposeInternal = function() {
-	org.koshinuke.ui.RepoTabBar.superClass_.disposeInternal.call(this);
+org.koshinuke.ui.PaneTabBar.prototype.disposeInternal = function() {
+	org.koshinuke.ui.PaneTabBar.superClass_.disposeInternal.call(this);
 	this.paneWrapper = null;
 	this.uri = null;
 	this.lastSelected = null;
