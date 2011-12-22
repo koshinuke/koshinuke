@@ -4,7 +4,6 @@ goog.provide('org.koshinuke.ui.TagLoader');
 
 goog.require('goog.array');
 goog.require('goog.i18n.DateTimeFormat');
-goog.require('goog.json');
 goog.require('goog.string');
 goog.require('goog.net.XhrIo');
 goog.require('goog.Uri');
@@ -69,7 +68,7 @@ org.koshinuke.ui.TreeGridLoader.prototype.load = function(model) {
 	var self = this;
 	// TODO エラー処理, Timeout, ServerError, エラー時のリトライ用Node？
 	goog.net.XhrIo.send(this.toRequestUri(model).toString(), function(e) {
-		var raw = goog.json.parse(e.target.getResponseText());
+		var raw = e.target.getResponseJson();
 		parent.removeChild(psuedo, true);
 		var kids = [];
 		goog.array.forEach(raw, function(a) {

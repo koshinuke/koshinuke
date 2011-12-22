@@ -42,6 +42,7 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
 	var model = this.getModel();
 	var self = this;
 	this.loader.load(model, function(contentType, resourceModel) {
+		model.commit = resourceModel.commit;
 		if(contentType && goog.string.startsWith(contentType, 'image')) {
 			// data schemeでサーバからリソースが返ってくる事を期待する。
 			// http://tools.ietf.org/html/rfc2397
@@ -84,7 +85,7 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.setUpCMTools_ = function(element) {
 	var commitBtn = goog.dom.query('button.commit', element)[0];
 	var commitMsg = goog.dom.query('.commit-message textarea', element)[0];
 	goog.events.listen(commitMsg, goog.events.EventType.KEYUP, function(e) {
-		var val = goog.dom.forms.getValue(e.target);
+		var val = goog.dom.$F(e.target);
 		goog.dom.forms.setDisabled(commitBtn, !val || goog.string.trim(val).length < 1);
 	});
 	var value = this.cm.getValue();
@@ -101,9 +102,17 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.setUpCMTools_ = function(element) {
 			this.toggleEdit_(element, false);
 		}
 		if(goog.dom.classes.has(el, 'commit')) {
-			// TODO commit current contents and message.
-			this.toggleEdit_(element, false);
-			// TODO reget some of resource metadatas.
+			goog.dom.forms.setDisabled(commitBtn, true);
+			goog.dom.forms.setDisabled(commitMsg, true);
+			this.loader.send({
+				path : this.getModel().path,
+				commit : this.getModel().commit,
+				message : goog.dom.$F(commitMsg),
+				contents : this.cm.getValue()
+			}, function(contentType, resourceModel) {
+				goog.dom.forms.setValue(commitMsg, '');
+				this.toggleEdit_(element, false);
+			});
 		}
 
 	}, false, this);

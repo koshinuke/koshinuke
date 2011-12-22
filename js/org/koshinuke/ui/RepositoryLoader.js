@@ -1,7 +1,6 @@
 goog.provide('org.koshinuke.ui.RepositoryLoader');
 
 goog.require('goog.array');
-goog.require('goog.json');
 goog.require('goog.net.XhrIo');
 goog.require('goog.Uri');
 
@@ -17,8 +16,7 @@ org.koshinuke.ui.RepositoryLoader.prototype.toRequestUri = function() {
 };
 org.koshinuke.ui.RepositoryLoader.prototype.load = function(every, fin) {
 	goog.net.XhrIo.send(this.toRequestUri().toString(), function(e) {
-		var raw = goog.json.parse(e.target.getResponseText());
-		goog.array.forEach(raw, function(a) {
+		goog.array.forEach(e.target.getResponseJson(), function(a) {
 			var r = new org.koshinuke.ui.Repository();
 			r.setJson(a);
 			every(r);

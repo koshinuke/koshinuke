@@ -15,7 +15,7 @@ org.koshinuke.ui.ResourceLoader = function(uri) {
 org.koshinuke.ui.ResourceLoader.prototype.toRequestUri = function(model) {
 	// TODO for mock
 	var u = this.uri.resolve(new goog.Uri('/koshinuke/stub/resource.json'));
-	u.setParameterValue('rp', model.node.path);
+	u.setParameterValue('rp', model.path);
 	return u;
 };
 /** @enum {string} */
@@ -40,46 +40,45 @@ org.koshinuke.ui.ResourceLoader.extToMIME = function(path) {
 };
 
 org.koshinuke.ui.ResourceLoader.prototype.load = function(model, fn) {
-	goog.net.XhrIo.send(this.toRequestUri(model), function(e) {
-		var raw = goog.json.parse(e.target.getResponseText());
-		var resourceModel = {
-			commit : raw['commit'],
-			timestamp : org.koshinuke.toDateString(raw['timestamp']),
-			author : goog.string.urlDecode(raw['author']),
-			message : goog.string.urlDecode(raw['message']),
-			contents : goog.string.urlDecode(raw['contents'])
-		};
-		var ct = e.target.getResponseHeader('Content-Type');
-		var path = model.node.path;
-		if(!ct
-		// TODO Aptanaのサーバがあんまりなので回避措置
-		|| ct == 'text/html') {
-			var re = new RegExp('\\.(jpe?g|gif|png|ico)$', 'i');
-			var match = re.exec(path);
-			if(match) {
-				ct = "image/" + match[1];
-			} else {
-				ct = org.koshinuke.ui.ResourceLoader.extToMIME(path);
-			}
-		}
-		fn(ct, resourceModel);
-	});
+	goog.net.XhrIo.send(this.toRequestUri(model), goog.partial(this.handleResponse, model, fn));
 };
 
-org.koshinuke.ui.ResourceLoader.prototype.handleResponse = function(e) {
-	
+org.koshinuke.ui.ResourceLoader.prototype.handleResponse = function(model, fn, e) {
+	// TODO error handling.
+	var raw = e.target.getResponseJson();
+	var resourceModel = {
+		commit : raw['commit'],
+		timestamp : org.koshinuke.toDateString(raw['timestamp']),
+		author : goog.string.urlDecode(raw['author']),
+		message : goog.string.urlDecode(raw['message']),
+		contents : goog.string.urlDecode(raw['contents'])
+	};
+	var ct = e.target.getResponseHeader('Content-Type');
+	var path = model.path;
+	if(!ct
+	// TODO Aptanaのサーバがあんまりなので回避措置
+	|| ct == 'text/html') {
+		var re = new RegExp('\\.(jpe?g|gif|png|ico)$', 'i');
+		var match = re.exec(path);
+		if(match) {
+			ct = "image/" + match[1];
+		} else {
+			ct = org.koshinuke.ui.ResourceLoader.extToMIME(path);
+		}
+	}
+	fn(ct, resourceModel);
 };
 
 org.koshinuke.ui.ResourceLoader.prototype.send = function(model, fn) {
 	var sendmodel = {
+		"path" : model.path,
 		"commit" : model.commit,
 		"message" : goog.string.urlEncode(model.message),
 		"contents" : goog.string.urlEncode(model.contents)
 	};
 	var json = goog.json.serialize(sendmodel);
-	goog.net.XhrIo.send(this.toRequestUri(model), function(e) {
-		// TODO load と全く同じ処理…
-	}, "POST", json, {
+	goog.net.XhrIo.send(this.toRequestUri(model), goog.partial(this.handleResponse, model, fn), "POST", json, {
+		// TODO CSRFトークンを投げる。
 		"X-KOSHINUKE" : true
 	});
 };

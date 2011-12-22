@@ -69,7 +69,7 @@ goog.inherits(org.koshinuke.ui.ResourceTab, org.koshinuke.ui.PaneTab);
 org.koshinuke.ui.ResourceTab.prototype.loadPane = function(uri) {
 	var loader = new org.koshinuke.ui.ResourceLoader(uri);
 	this.pane = new org.koshinuke.ui.CodeMirrorWrapper(loader);
-	this.pane.setModel(this.getModel());
+	this.pane.setModel(this.getModel().node);
 };
 /** @override */
 org.koshinuke.ui.ResourceTab.prototype.enterDocument = function() {
