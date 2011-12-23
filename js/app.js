@@ -13,9 +13,10 @@ goog.require('goog.ui.TabBar');
 goog.require('ZeroClipboard');
 
 goog.require('org.koshinuke');
+goog.require('org.koshinuke.model.RepositoryFacade');
+
 goog.require('org.koshinuke.ui.Breadcrumb');
 goog.require('org.koshinuke.ui.Repository');
-goog.require('org.koshinuke.ui.RepositoryLoader');
 goog.require('org.koshinuke.ui.RepoUrls');
 goog.require('org.koshinuke.ui.PaneTabBar');
 
@@ -72,7 +73,7 @@ goog.exportSymbol('main', function() {
 	goog.array.forEach(goog.dom.query('.repo-list'), function(root) {
 		var tabbar = new goog.ui.TabBar(goog.ui.TabBar.Location.START);
 		tabbar.decorate(root);
-		var rl = new org.koshinuke.ui.RepositoryLoader(uri);
+		var rl = new org.koshinuke.model.RepositoryFacade(uri);
 		rl.load(function(repo) {
 			tabbar.addChild(repo, true);
 		}, function() {

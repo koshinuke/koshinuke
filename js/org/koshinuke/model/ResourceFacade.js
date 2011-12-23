@@ -1,4 +1,4 @@
-goog.provide('org.koshinuke.ui.ResourceLoader');
+goog.provide('org.koshinuke.model.ResourceFacade');
 
 goog.require('goog.array');
 goog.require('goog.net.XhrIo');
@@ -8,18 +8,18 @@ goog.require('goog.Uri');
 goog.require('org.koshinuke');
 
 /** @constructor */
-org.koshinuke.ui.ResourceLoader = function(uri) {
+org.koshinuke.model.ResourceFacade = function(uri) {
 	this.uri = uri;
 };
 
-org.koshinuke.ui.ResourceLoader.prototype.toRequestUri = function(model) {
+org.koshinuke.model.ResourceFacade.prototype.toRequestUri = function(model) {
 	// TODO for mock
 	var u = this.uri.resolve(new goog.Uri('/koshinuke/stub/resource.json'));
 	u.setParameterValue('rp', model.path);
 	return u;
 };
 /** @enum {string} */
-org.koshinuke.ui.ResourceLoader.ExtensionToMIME = {
+org.koshinuke.model.ResourceFacade.ExtensionToMIME = {
 	".coffee" : "text/x-coffeescript",
 	".css" : "text/css",
 	".diff" : "text/x-diff",
@@ -34,16 +34,16 @@ org.koshinuke.ui.ResourceLoader.ExtensionToMIME = {
 	".html" : "text/html",
 	".yml" : "text/x-yaml"
 };
-org.koshinuke.ui.ResourceLoader.extToMIME = function(path) {
+org.koshinuke.model.ResourceFacade.extToMIME = function(path) {
 	var ext = org.koshinuke.getExtension(path, "");
-	return org.koshinuke.ui.ResourceLoader.ExtensionToMIME[ext.toLowerCase()];
+	return org.koshinuke.model.ResourceFacade.ExtensionToMIME[ext.toLowerCase()];
 };
 
-org.koshinuke.ui.ResourceLoader.prototype.load = function(model, fn) {
+org.koshinuke.model.ResourceFacade.prototype.load = function(model, fn) {
 	goog.net.XhrIo.send(this.toRequestUri(model), goog.partial(this.handleResponse, model, fn));
 };
 
-org.koshinuke.ui.ResourceLoader.prototype.handleResponse = function(model, fn, e) {
+org.koshinuke.model.ResourceFacade.prototype.handleResponse = function(model, fn, e) {
 	// TODO error handling.
 	var raw = e.target.getResponseJson();
 	var resourceModel = {
@@ -63,13 +63,13 @@ org.koshinuke.ui.ResourceLoader.prototype.handleResponse = function(model, fn, e
 		if(match) {
 			ct = "image/" + match[1];
 		} else {
-			ct = org.koshinuke.ui.ResourceLoader.extToMIME(path);
+			ct = org.koshinuke.model.ResourceFacade.extToMIME(path);
 		}
 	}
 	fn(ct, resourceModel);
 };
 
-org.koshinuke.ui.ResourceLoader.prototype.send = function(model, fn) {
+org.koshinuke.model.ResourceFacade.prototype.send = function(model, fn) {
 	var sendmodel = {
 		"path" : model.path,
 		"commit" : model.commit,

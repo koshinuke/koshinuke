@@ -24,7 +24,7 @@
 			goog.require('goog.testing.recordFunction');
 			goog.require('org.koshinuke.ui.TreeGrid');
 			goog.require('org.koshinuke.ui.TreeGrid.Node');
-			goog.require('org.koshinuke.ui.TreeGridLoader');
+			goog.require('org.koshinuke.model.TreeGridFacade');
 
 		</script>
 	</head>
@@ -54,13 +54,13 @@
 						type : t,
 						path : p,
 					};
-					org.koshinuke.ui.TreeGridLoader.setUpForSort(m);
+					org.koshinuke.model.TreeGridFacade.setUpForSort(m);
 					return m;
 				};
 				var tree = goog.partial(model, 'tree');
 				var blob = goog.partial(model, 'blob');
 				var assertCompare = function(expected, l, r) {
-					var actual = org.koshinuke.ui.TreeGridLoader.defaultCompare(l, r);
+					var actual = org.koshinuke.model.TreeGridFacade.defaultCompare(l, r);
 					assertEquals(expected, actual);
 				};
 				var assertSwap = function(l, r) {
@@ -129,12 +129,12 @@
 					type : "blob"
 				}];
 				var trace = function(l, r) {
-					var result = org.koshinuke.ui.TreeGridLoader.defaultCompare(l, r);
+					var result = org.koshinuke.model.TreeGridFacade.defaultCompare(l, r);
 					console.log(l.type, ':', l.path, '-', r.type, ':', r.path, '=', result);
 					return result;
 				}
 				for(var x = 0; x < 5; x++) {
-					goog.array.forEach(data, org.koshinuke.ui.TreeGridLoader.setUpForSort);
+					goog.array.forEach(data, org.koshinuke.model.TreeGridFacade.setUpForSort);
 					goog.array.shuffle(data);
 					console.log(data);
 					goog.array.sort(data, trace);
@@ -144,7 +144,7 @@
 						assertEquals(a, data[i].path);
 					});
 				}
-				goog.array.forEach(data, org.koshinuke.ui.TreeGridLoader.tearDownForSort);
+				goog.array.forEach(data, org.koshinuke.model.TreeGridFacade.tearDownForSort);
 			}
 
 			function testSortModelMore() {
@@ -252,7 +252,7 @@
 					a.ary = ary;
 				});
 				var trace = function(l, r) {
-					var result = org.koshinuke.ui.TreeGridLoader.defaultCompare(l, r);
+					var result = org.koshinuke.model.TreeGridFacade.defaultCompare(l, r);
 					console.log(l.type, ':', l.path, '-', r.type, ':', r.path, '=', result);
 					return result;
 				}

@@ -15,10 +15,10 @@ goog.require('org.koshinuke');
 goog.require('org.koshinuke.template.treegrid');
 
 /** @constructor */
-org.koshinuke.ui.TreeGrid = function(loader, opt_domHelper) {
+org.koshinuke.ui.TreeGrid = function(facade, opt_domHelper) {
 	goog.ui.Component.call(this, opt_domHelper);
 	this.listenEvents_();
-	this.loader = loader;
+	this.facade = facade;
 };
 goog.inherits(org.koshinuke.ui.TreeGrid, goog.ui.Component);
 
@@ -158,6 +158,7 @@ org.koshinuke.ui.TreeGrid.prototype.switchChildNodes_ = function(re, fn) {
 /** @private */
 org.koshinuke.ui.TreeGrid.prototype.handleBeforeExpand_ = function(e) {
 	var model = e.rowEl.model;
+	var self = this;
 	if(model.hasChild) {
 		if(model.isLoaded) {
 			this.switchChildNodes_(e.rowEl, function(next) {
@@ -171,7 +172,19 @@ org.koshinuke.ui.TreeGrid.prototype.handleBeforeExpand_ = function(e) {
 				return true;
 			});
 		} else {
-			this.loader.load(model);
+			var index = self.indexOfChild(model) + 1;
+			this.facade.load(model, function(kids) {
+				goog.array.forEach(kids, function(a, i) {
+					// TODO 子要素のうち最新のtimestamp,message, authorを拾って設定する
+					self.facade.emitLoaded(kids, i, a);
+					self.addChildAt(a, index + i, true);
+				});
+				model.isLoaded = true;
+				self.dispatchEvent({
+					type : org.koshinuke.ui.TreeGrid.EventType.BEFORE_EXPAND,
+					rowEl : model.getElement()
+				});
+			});
 		}
 	}
 };
@@ -184,5 +197,5 @@ org.koshinuke.ui.TreeGrid.prototype.setVisible = function(state) {
 /** @override */
 org.koshinuke.ui.TreeGrid.prototype.disposeInternal = function() {
 	org.koshinuke.ui.TreeGrid.superClass_.disposeInternal.call(this);
-	this.loader = null;
+	this.facade = null;
 };

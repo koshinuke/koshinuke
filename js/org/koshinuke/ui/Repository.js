@@ -8,6 +8,8 @@ goog.require('goog.events');
 
 goog.require('goog.ui.Tab');
 
+goog.require('org.koshinuke.ui.TreeGrid');
+goog.require('org.koshinuke.ui.TreeGrid.Node');
 goog.require('org.koshinuke.ui.PaneTab.Factory');
 goog.require('org.koshinuke.ui.RepositoryRenderer');
 
@@ -38,7 +40,7 @@ org.koshinuke.ui.Repository.prototype.setJson = function(json) {
 		if(rawJson) {
 			goog.array.forEach(rawJson, function(a) {
 				a['type'] = type;
-				var n = org.koshinuke.ui.TreeGrid.newFromJson(a);
+				var n = org.koshinuke.ui.TreeGrid.Node.newFromJson(a);
 				n.icon = type;
 				n.visible = true;
 				ary.push(n);

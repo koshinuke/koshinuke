@@ -2,7 +2,6 @@ goog.provide('org.koshinuke.ui.TreeGrid.Node');
 goog.provide('org.koshinuke.ui.TreeGrid.Node.State');
 goog.provide('org.koshinuke.ui.TreeGrid.Leaf');
 goog.provide('org.koshinuke.ui.TreeGrid.Psuedo');
-goog.provide('org.koshinuke.ui.TreeGrid.newFromJson');
 
 goog.require('goog.dom.classes');
 goog.require('goog.dom.query');
@@ -37,7 +36,7 @@ org.koshinuke.ui.TreeGrid.Node.State = {
 	EXPAND : "expand",
 	COLLAPSE : "collapse"
 };
-org.koshinuke.ui.TreeGrid.newFromJson = function(json) {
+org.koshinuke.ui.TreeGrid.Node.newFromJson = function(json) {
 	var m;
 	var type = json['type'];
 	if(type == 'tree') {
