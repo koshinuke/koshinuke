@@ -1,9 +1,11 @@
 goog.provide('org.koshinuke.main');
 
 goog.require('goog.array');
+goog.require('goog.async.Delay');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.query');
+goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('goog.pubsub.PubSub');
 
 goog.require('goog.ui.Component.EventType');
@@ -94,4 +96,109 @@ goog.exportSymbol('main', function() {
 			});
 		});
 	});
+	var json = {
+		'color' : ["#CCC"],
+		'values' : [{
+			'label' : '11/16',
+			'values' : 1
+		}, {
+			'label' : '11/17',
+			'values' : 10
+		}, {
+			'label' : '11/18',
+			'values' : 17
+		}, {
+			'label' : '11/19',
+			'values' : 5
+		}, {
+			'label' : '11/20',
+			'values' : 4
+		}, {
+			'label' : '11/21',
+			'values' : 2
+		}, {
+			'label' : '11/22',
+			'values' : 19
+		}, {
+			'label' : '11/23',
+			'values' : 0
+		}, {
+			'label' : '11/24',
+			'values' : 10
+		}, {
+			'label' : '11/25',
+			'values' : 17
+		}, {
+			'label' : '11/26',
+			'values' : 5
+		}, {
+			'label' : '11/27',
+			'values' : 4
+		}, {
+			'label' : '11/28',
+			'values' : 2
+		}, {
+			'label' : '11/29',
+			'values' : 19
+		}, {
+			'label' : '11/30',
+			'values' : 3
+		}, {
+			'label' : '12/01',
+			'values' : 0
+		}, {
+			'label' : '12/02',
+			'values' : 10
+		}, {
+			'label' : '12/03',
+			'values' : 17
+		}, {
+			'label' : '12/04',
+			'values' : 5
+		}, {
+			'label' : '12/05',
+			'values' : 4
+		}, {
+			'label' : '12/06',
+			'values' : 2
+		}, {
+			'label' : '12/07',
+			'values' : 19
+		}, {
+			'label' : '12/08',
+			'values' : 0
+		}, {
+			'label' : '12/09',
+			'values' : 10
+		}, {
+			'label' : '12/10',
+			'values' : 17
+		}, {
+			'label' : '12/11',
+			'values' : 5
+		}, {
+			'label' : '12/05',
+			'values' : 4
+		}, {
+			'label' : '12/06',
+			'values' : 2
+		}, {
+			'label' : '12/07',
+			'values' : 19
+		}, {
+			'label' : '12/08',
+			'values' : 3
+		}]
+
+	};
+	var vsm = new goog.dom.ViewportSizeMonitor();
+	var visCon = goog.dom.getElement('infovis');
+	var actHandle = renderBranchActivity(visCon, json);
+	var action = function() {
+		if(resizeGraph(actHandle, visCon.offsetWidth, visCon.offsetHeight) == false) {
+			delay.start();
+		}
+	};
+	var delay = new goog.async.Delay(action, 100);
+	goog.events.listen(vsm, goog.events.EventType.RESIZE, action);
 });
