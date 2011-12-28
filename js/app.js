@@ -6,11 +6,10 @@ goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.query');
 goog.require('goog.dom.ViewportSizeMonitor');
-goog.require('goog.pubsub.PubSub');
 
 goog.require('goog.ui.Component.EventType');
-goog.require('goog.ui.Tab');
 goog.require('goog.ui.TabBar');
+goog.require('goog.ui.IdGenerator');
 
 goog.require('ZeroClipboard');
 
@@ -60,7 +59,7 @@ goog.exportSymbol('main', function() {
 	});
 
 	goog.array.forEach(goog.dom.query('.tab-container .goog-tab-bar'), function(root) {
-		var tabbar = new org.koshinuke.ui.PaneTabBar('tab-pane', uri);
+		var tabbar = new org.koshinuke.ui.PaneTabBar(goog.dom.query('.tabpane')[0], uri);
 		tabbar.decorate(root);
 		PubSub.subscribe(PubSub.REPO_SELECT, tabbar.addTab, tabbar);
 		PubSub.subscribe(PubSub.RESOURCE_SELECT, tabbar.addTab, tabbar);
@@ -192,13 +191,19 @@ goog.exportSymbol('main', function() {
 
 	};
 	var vsm = new goog.dom.ViewportSizeMonitor();
-	var visCon = goog.dom.getElement('infovis');
-	var actHandle = renderBranchActivity(visCon, json);
-	var action = function() {
-		if(resizeGraph(actHandle, visCon.offsetWidth, visCon.offsetHeight) == false) {
-			delay.start();
+	var idg = goog.ui.IdGenerator.getInstance();
+	goog.array.forEach(goog.dom.query('.activity'), function(root) {
+		if(goog.string.isEmptySafe(root.id)) {
+			root.id = idg.getNextUniqueId();
 		}
-	};
-	var delay = new goog.async.Delay(action, 100);
-	goog.events.listen(vsm, goog.events.EventType.RESIZE, action);
+
+		var actHandle = renderBranchActivity(root, json);
+		var action = function() {
+			if(resizeGraph(actHandle, root.offsetWidth, root.offsetHeight) == false) {
+				delay.start();
+			}
+		};
+		var delay = new goog.async.Delay(action, 100);
+		goog.events.listen(vsm, goog.events.EventType.RESIZE, action);
+	});
 });
