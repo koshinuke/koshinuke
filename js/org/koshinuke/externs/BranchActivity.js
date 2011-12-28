@@ -5,7 +5,7 @@ function renderBranchActivity(target, json, configs) {
 		animate : true,
 		hoveredColor : '#9fd4ff',
 		orientation : 'vertical',
-		barsOffset : 3,
+		barsOffset : 1,
 		type : 'stacked',
 		showAggregates : false,
 		showLabels : false,
@@ -36,4 +36,11 @@ function resizeGraph(HANDLE, w, h) {
 		return true;
 	}
 	return false;
+};
+
+function disposeGraph(HANDLE) {
+	var chart = HANDLE.chart;
+	chart.canvas.clear();
+	var wrapper = chart.canvas.getElement();
+	wrapper.parentNode.removeChild(wrapper);
 };
