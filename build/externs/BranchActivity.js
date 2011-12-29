@@ -1,3 +1,3 @@
 function renderBranchActivity(target, json, configs) {};
-function resizeGraph(HANDLE, w, h) {};
+function resizeGraph(HANDLE) {};
 function disposeGraph(HANDLE) {};

@@ -1,0 +1,18 @@
+{namespace org.koshinuke.template.branchactivity}
+
+/**
+ * @param name
+ * @param author
+ * @param timestamp
+ * @param message
+ */
+{template .tmpl}
+<div class="branch-container">
+	<div class="metadata">
+		<div class="branch">{$name}</div>
+		<div class="user">{$author}</div>
+		<div class="calendar">{$timestamp}</div>
+		<div class="comment">{$message}</div>
+	</div>
+</div>
+{/template}

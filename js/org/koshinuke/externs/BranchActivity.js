@@ -28,10 +28,12 @@ function renderBranchActivity(target, json, configs) {
 	};
 };
 
-function resizeGraph(HANDLE, w, h) {
+function resizeGraph(HANDLE) {
 	var chart = HANDLE.chart;
 	if(chart.busy == false) {
-		chart.canvas.resize(w, h);
+		var wrapper = chart.canvas.getElement();
+		var p = wrapper.parentNode;
+		chart.canvas.resize(p.offsetWidth, p.offsetHeight);
 		chart.updateJSON(HANDLE.data);
 		return true;
 	}

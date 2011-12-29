@@ -13,9 +13,11 @@ goog.require('goog.ui.Tab');
 goog.require('org.koshinuke.model.BranchFacade');
 goog.require('org.koshinuke.model.TagFacade');
 goog.require('org.koshinuke.model.ResourceFacade');
+goog.require('org.koshinuke.model.HistoriesFacade');
 
-goog.require('org.koshinuke.ui.TreeGrid');
 goog.require('org.koshinuke.ui.CodeMirrorWrapper');
+goog.require('org.koshinuke.ui.Histories');
+goog.require('org.koshinuke.ui.TreeGrid');
 goog.require('org.koshinuke.ui.PaneTabRenderer');
 
 /** @constructor */
@@ -81,7 +83,9 @@ org.koshinuke.ui.HistoriesTab = function(parent, content, opt_renderer, opt_domH
 goog.inherits(org.koshinuke.ui.HistoriesTab, org.koshinuke.ui.PaneTab);
 /** @override */
 org.koshinuke.ui.HistoriesTab.prototype.loadPane = function(uri) {
-	// TODO 
+	var loader = new org.koshinuke.model.HistoriesFacade(uri);
+	this.pane = new org.koshinuke.ui.Histories(loader);
+	this.pane.setModel(this.getModel().node);
 };
 /** @override */
 org.koshinuke.ui.HistoriesTab.prototype.enterDocument = function() {
