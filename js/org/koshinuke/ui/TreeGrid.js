@@ -105,7 +105,6 @@ org.koshinuke.ui.TreeGrid.prototype.handlePathClick = function(e) {
 		var m = goog.object.clone(this.getModel());
 		m.label = goog.array.flatten(m.label, rm.path.split('/'));
 		m.context = org.koshinuke.ui.PaneTab.Factory.Resource;
-		m.name = rm.name;
 		m.node = rm;
 		org.koshinuke.PubSub.publish(org.koshinuke.PubSub.RESOURCE_SELECT, m);
 	}

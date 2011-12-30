@@ -19,6 +19,7 @@ org.koshinuke.PubSub.REPO_SELECT = "rep.s";
 org.koshinuke.PubSub.RESOURCE_SELECT = "res.s";
 org.koshinuke.PubSub.TAB_SELECT = "t.s";
 org.koshinuke.PubSub.TAB_UNSELECT = "t.u";
+org.koshinuke.PubSub.BRANCH_SELECT = "b.s";
 
 org.koshinuke.getExtension = function(path, nullvalue) {
 	if(path) {

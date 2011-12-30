@@ -31,17 +31,20 @@ goog.inherits(org.koshinuke.ui.PaneTab, goog.ui.Tab);
 org.koshinuke.ui.PaneTab.prototype.loadPane = goog.abstractMethod;
 
 org.koshinuke.ui.PaneTab.Factory = {
-	Branches : function(el, name) {
-		return new org.koshinuke.ui.BranchListTab(el, name);
+	Branches : function(el, model) {
+		return new org.koshinuke.ui.BranchListTab(el, model.name);
 	},
-	Tags : function(el, name) {
-		return new org.koshinuke.ui.TagListTab(el, name);
+	Tags : function(el, model) {
+		return new org.koshinuke.ui.TagListTab(el, model.name);
 	},
-	Histories : function(el, name) {
-		return new org.koshinuke.ui.HistoriesTab(el, name);
+	Histories : function(el, model) {
+		return new org.koshinuke.ui.HistoriesTab(el, model.name);
 	},
-	Resource : function(el, name) {
-		return new org.koshinuke.ui.ResourceTab(el, name);
+	Commits : function(el, model) {
+		return new org.koshinuke.ui.CommitsTab(el, model.branch.name);
+	},
+	Resource : function(el, model) {
+		return new org.koshinuke.ui.ResourceTab(el, model.node.name);
 	}
 };
 
@@ -75,7 +78,6 @@ org.koshinuke.ui.TagListTab.prototype.enterDocument = function() {
 	org.koshinuke.ui.TagListTab.superClass_.enterDocument.call(this);
 	goog.dom.classes.add(this.getElement(), 'tags');
 };
-
 /** @constructor */
 org.koshinuke.ui.HistoriesTab = function(parent, content, opt_renderer, opt_domHelper) {
 	org.koshinuke.ui.PaneTab.call(this, parent, content, opt_renderer, opt_domHelper);
@@ -85,13 +87,31 @@ goog.inherits(org.koshinuke.ui.HistoriesTab, org.koshinuke.ui.PaneTab);
 org.koshinuke.ui.HistoriesTab.prototype.loadPane = function(uri) {
 	var loader = new org.koshinuke.model.HistoriesFacade(uri);
 	this.pane = new org.koshinuke.ui.Histories(loader);
-	this.pane.setModel(this.getModel().node);
+	this.pane.setModel(this.getModel());
 };
 /** @override */
 org.koshinuke.ui.HistoriesTab.prototype.enterDocument = function() {
 	org.koshinuke.ui.HistoriesTab.superClass_.enterDocument.call(this);
 	goog.dom.classes.add(this.getElement(), 'histories');
 };
+
+/** @constructor */
+org.koshinuke.ui.CommitsTab = function(parent, content, opt_renderer, opt_domHelper) {
+	org.koshinuke.ui.PaneTab.call(this, parent, content, opt_renderer, opt_domHelper);
+};
+goog.inherits(org.koshinuke.ui.CommitsTab, org.koshinuke.ui.PaneTab);
+/** @override */
+org.koshinuke.ui.CommitsTab.prototype.loadPane = function(uri) {
+	//var loader = new org.koshinuke.model.HistoriesFacade(uri);
+	//this.pane = new org.koshinuke.ui.Histories(loader);
+	//this.pane.setModel(this.getModel());
+};
+/** @override */
+org.koshinuke.ui.CommitsTab.prototype.enterDocument = function() {
+	org.koshinuke.ui.HistoriesTab.superClass_.enterDocument.call(this);
+	goog.dom.classes.add(this.getElement(), 'histories');
+};
+
 
 /** @constructor */
 org.koshinuke.ui.ResourceTab = function(parent, content, opt_renderer, opt_domHelper) {

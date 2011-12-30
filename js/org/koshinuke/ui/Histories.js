@@ -51,17 +51,41 @@ org.koshinuke.ui.Histories.prototype.enterDocument = function() {
 				'color' : ["#CCC"],
 				'values' : h.activities
 			}));
+			con.model = h;
 		});
 		self.delay = new goog.async.Delay(self.resizeChart_, 100, self);
-		goog.events.listen(self.vsm, goog.events.EventType.RESIZE, self.resizeChart_, false, self);
+		self.resizeKey = goog.events.listen(self.vsm, goog.events.EventType.RESIZE, self.resizeChart_, false, self);
+		self.clickKey = goog.events.listen(list, goog.events.EventType.CLICK, self.handleClick_, false, self);
 	});
 };
+/** @private */
 org.koshinuke.ui.Histories.prototype.resizeChart_ = function() {
 	goog.array.forEach(this.charts, function(a) {
 		if(resizeGraph(a) == false) {
 			this.delay.start();
 		}
 	}, this);
+};
+/** @private */
+org.koshinuke.ui.Histories.prototype.handleClick_ = function(e) {
+	var element = e.target;
+	var md = 'metadata';
+	if(element.tagName != 'CANVAS') {
+		var branch;
+		if(goog.dom.classes.has(element.parentNode, md)) {
+			branch = element.parentNode.parentNode.model;
+		}
+		if(goog.dom.classes.has(element, md)) {
+			branch = element.parentNode.model;
+		}
+		if(branch) {
+			var m = goog.object.clone(this.getModel());
+			m.label = goog.array.flatten(m.label, branch.name);
+			m.context = org.koshinuke.ui.PaneTab.Factory.Commits;
+			m.branch = branch;
+			org.koshinuke.PubSub.publish(org.koshinuke.PubSub.BRANCH_SELECT, m);
+		}
+	}
 };
 /** @override */
 org.koshinuke.ui.Histories.prototype.exitDocument = function() {
@@ -75,6 +99,8 @@ org.koshinuke.ui.Histories.prototype.exitDocument = function() {
 		this.delay.dispose();
 		this.delay = null;
 	}
+	goog.events.unlistenByKey(this.resizeKey);
+	goog.events.unlistenByKey(this.clickKey);
 };
 
 org.koshinuke.ui.Histories.prototype.setVisible = function(state) {
@@ -82,7 +108,9 @@ org.koshinuke.ui.Histories.prototype.setVisible = function(state) {
 	if(el) {
 		goog.style.showElement(el, state);
 	}
-	this.resizeChart_();
+	if(state) {
+		this.resizeChart_();
+	}
 };
 /** @override */
 org.koshinuke.ui.Histories.prototype.disposeInternal = function() {

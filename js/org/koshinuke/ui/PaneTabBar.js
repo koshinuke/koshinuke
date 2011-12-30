@@ -37,7 +37,7 @@ org.koshinuke.ui.PaneTabBar.prototype.newPane = function(model) {
 	var ctx = model.context;
 	var tab;
 	if(goog.isFunction(ctx)) {
-		tab = ctx(this.paneWrapper, model.name);
+		tab = ctx(this.paneWrapper, model);
 		tab.setModel(model);
 		tab.loadPane(this.uri);
 	} else {

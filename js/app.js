@@ -38,7 +38,6 @@ goog.exportSymbol('main', function() {
 		ru.setSelectedIndex(0);
 		PubSub.subscribe(PubSub.REPO_SELECT, ru.setModel, ru);
 		PubSub.subscribe(PubSub.TAB_SELECT, ru.setModel, ru);
-		PubSub.subscribe(PubSub.RESOURCE_SELECT, ru.setModel, ru);
 	});
 
 	goog.array.forEach(goog.dom.query('.breadcrumbs'), function(root) {
@@ -47,14 +46,11 @@ goog.exportSymbol('main', function() {
 		});
 		b.decorate(root);
 		PubSub.subscribe(PubSub.TAB_SELECT, function(rm) {
-			var ary = goog.array.flatten(rm.label);
+			var ary = goog.array.flatten(rm.name, rm.label);
 			b.setModel(ary);
 		});
 		PubSub.subscribe(PubSub.TAB_UNSELECT, function(rm) {
 			b.setModel([]);
-		});
-		PubSub.subscribe(PubSub.RESOURCE_SELECT, function(m) {
-			b.setModel(m.label);
 		});
 	});
 
@@ -63,6 +59,7 @@ goog.exportSymbol('main', function() {
 		tabbar.decorate(root);
 		PubSub.subscribe(PubSub.REPO_SELECT, tabbar.addTab, tabbar);
 		PubSub.subscribe(PubSub.RESOURCE_SELECT, tabbar.addTab, tabbar);
+		PubSub.subscribe(PubSub.BRANCH_SELECT, tabbar.addTab, tabbar);
 		goog.events.listen(tabbar, goog.ui.Component.EventType.SELECT, function(e) {
 			PubSub.publish(PubSub.TAB_SELECT, e.target.getModel());
 		});
