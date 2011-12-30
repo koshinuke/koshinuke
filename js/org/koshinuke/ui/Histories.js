@@ -54,8 +54,8 @@ org.koshinuke.ui.Histories.prototype.enterDocument = function() {
 			con.model = h;
 		});
 		self.delay = new goog.async.Delay(self.resizeChart_, 100, self);
-		self.resizeKey = goog.events.listen(self.vsm, goog.events.EventType.RESIZE, self.resizeChart_, false, self);
-		self.clickKey = goog.events.listen(list, goog.events.EventType.CLICK, self.handleClick_, false, self);
+		self.getHandler().listen(self.vsm, goog.events.EventType.RESIZE, self.resizeChart_, false, self);
+		self.getHandler().listen(list, goog.events.EventType.CLICK, self.handleClick_, false, self);
 	});
 };
 /** @private */
@@ -99,8 +99,6 @@ org.koshinuke.ui.Histories.prototype.exitDocument = function() {
 		this.delay.dispose();
 		this.delay = null;
 	}
-	goog.events.unlistenByKey(this.resizeKey);
-	goog.events.unlistenByKey(this.clickKey);
 };
 
 org.koshinuke.ui.Histories.prototype.setVisible = function(state) {

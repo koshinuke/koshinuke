@@ -42,7 +42,7 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
 	var model = this.getModel();
 	var self = this;
 	this.loader.load(model, function(contentType, resourceModel) {
-		model.commit = resourceModel.commit;
+		model.node.commit = resourceModel.commit;
 		if(contentType && goog.string.startsWith(contentType, 'image')) {
 			// data schemeでサーバからリソースが返ってくる事を期待する。
 			// http://tools.ietf.org/html/rfc2397
@@ -105,8 +105,9 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.setUpCMTools_ = function(element) {
 			goog.dom.forms.setDisabled(commitBtn, true);
 			goog.dom.forms.setDisabled(commitMsg, true);
 			this.loader.send({
-				path : this.getModel().path,
-				commit : this.getModel().commit,
+				// TODO リポジトリ名が無いとどこにコミットして良いのか分からなくなる。
+				path : this.getModel().node.path,
+				commit : this.getModel().node.commit,
 				message : goog.dom.$F(commitMsg),
 				contents : this.cm.getValue()
 			}, function(contentType, resourceModel) {

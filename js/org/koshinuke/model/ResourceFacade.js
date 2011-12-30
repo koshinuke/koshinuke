@@ -14,8 +14,8 @@ org.koshinuke.model.ResourceFacade = function(uri) {
 
 org.koshinuke.model.ResourceFacade.prototype.toRequestUri = function(model) {
 	// TODO for mock
+	console.log(model);
 	var u = this.uri.resolve(new goog.Uri('/koshinuke/stub/resource.json'));
-	u.setParameterValue('rp', model.path);
 	return u;
 };
 /** @enum {string} */
@@ -54,7 +54,7 @@ org.koshinuke.model.ResourceFacade.prototype.handleResponse = function(model, fn
 		contents : goog.string.urlDecode(raw['contents'])
 	};
 	var ct = e.target.getResponseHeader('Content-Type');
-	var path = model.path;
+	var path = model.node.path;
 	if(!ct
 	// TODO Aptanaのサーバがあんまりなので回避措置
 	|| ct == 'text/html') {
@@ -71,7 +71,7 @@ org.koshinuke.model.ResourceFacade.prototype.handleResponse = function(model, fn
 
 org.koshinuke.model.ResourceFacade.prototype.send = function(model, fn) {
 	var sendmodel = {
-		"path" : model.path,
+		"path" : goog.string.urlEncode(model.path),
 		"commit" : model.commit,
 		"message" : goog.string.urlEncode(model.message),
 		"contents" : goog.string.urlEncode(model.contents)

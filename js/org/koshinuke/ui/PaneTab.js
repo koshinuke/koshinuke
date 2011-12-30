@@ -14,9 +14,11 @@ goog.require('org.koshinuke.model.BranchFacade');
 goog.require('org.koshinuke.model.TagFacade');
 goog.require('org.koshinuke.model.ResourceFacade');
 goog.require('org.koshinuke.model.HistoriesFacade');
+goog.require('org.koshinuke.model.CommitsFacade');
 
 goog.require('org.koshinuke.ui.CodeMirrorWrapper');
 goog.require('org.koshinuke.ui.Histories');
+goog.require('org.koshinuke.ui.Commits');
 goog.require('org.koshinuke.ui.TreeGrid');
 goog.require('org.koshinuke.ui.PaneTabRenderer');
 
@@ -102,9 +104,9 @@ org.koshinuke.ui.CommitsTab = function(parent, content, opt_renderer, opt_domHel
 goog.inherits(org.koshinuke.ui.CommitsTab, org.koshinuke.ui.PaneTab);
 /** @override */
 org.koshinuke.ui.CommitsTab.prototype.loadPane = function(uri) {
-	//var loader = new org.koshinuke.model.HistoriesFacade(uri);
-	//this.pane = new org.koshinuke.ui.Histories(loader);
-	//this.pane.setModel(this.getModel());
+	var loader = new org.koshinuke.model.CommitsFacade(uri);
+	this.pane = new org.koshinuke.ui.Commits(loader);
+	this.pane.setModel(this.getModel());
 };
 /** @override */
 org.koshinuke.ui.CommitsTab.prototype.enterDocument = function() {
@@ -122,7 +124,7 @@ goog.inherits(org.koshinuke.ui.ResourceTab, org.koshinuke.ui.PaneTab);
 org.koshinuke.ui.ResourceTab.prototype.loadPane = function(uri) {
 	var loader = new org.koshinuke.model.ResourceFacade(uri);
 	this.pane = new org.koshinuke.ui.CodeMirrorWrapper(loader);
-	this.pane.setModel(this.getModel().node);
+	this.pane.setModel(this.getModel());
 };
 /** @override */
 org.koshinuke.ui.ResourceTab.prototype.enterDocument = function() {

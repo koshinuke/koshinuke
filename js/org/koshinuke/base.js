@@ -47,7 +47,7 @@ org.koshinuke.findIcon = function(key) {
 org.koshinuke.hash = function(var_args) {
 	var md5 = new goog.crypt.Md5();
 	goog.array.forEach(arguments, function(a) {
-		md5.update(a);
+		md5.update(a.toString());
 	});
 	return goog.crypt.byteArrayToHex(md5.digest());
 };
