@@ -7,6 +7,8 @@ goog.require('goog.events');
 
 goog.require('goog.ui.Component');
 
+goog.require('org.koshinuke.template.commits');
+
 /** @constructor */
 org.koshinuke.ui.Commits = function(loader, opt_domHelper) {
 	goog.ui.Component.call(this, opt_domHelper);
@@ -22,17 +24,26 @@ org.koshinuke.ui.Commits.prototype.createDom = function() {
 	var element = goog.dom.createDom("div", null, this.loading);
 	this.decorateInternal(element);
 };
-
 /** @override */
 org.koshinuke.ui.Commits.prototype.enterDocument = function() {
 	org.koshinuke.ui.Commits.superClass_.enterDocument.call(this);
-	// TODO
+	var parent = this.getElement();
+	var model = this.getModel();
+	var self = this;
+	this.loader.load(model, function(commits) {
+		goog.dom.removeNode(self.loading);
+		goog.array.forEach(commits, function(a) {
+			var c = goog.soy.renderAsElement(org.koshinuke.template.commits.tmpl, a);
+			parent.appendChild(c);
+		});
+		// TODO 自動先読み処理。
+		//self.getHandler();
+	});
 };
-
 /** @override */
 org.koshinuke.ui.Commits.prototype.exitDocument = function() {
 	org.koshinuke.ui.Commits.superClass_.exitDocument.call(this);
-	// TODO
+	goog.dom.removeChildren(this.getElement());
 };
 
 org.koshinuke.ui.Commits.prototype.setVisible = function(state) {
@@ -41,7 +52,6 @@ org.koshinuke.ui.Commits.prototype.setVisible = function(state) {
 		goog.style.showElement(el, state);
 	}
 };
-
 /** @override */
 org.koshinuke.ui.Commits.prototype.disposeInternal = function() {
 	org.koshinuke.ui.Commits.superClass_.disposeInternal.call(this);

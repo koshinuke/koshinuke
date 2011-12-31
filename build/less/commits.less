@@ -1,0 +1,40 @@
+.commit {
+	.clearfix;
+	border: 1px solid #CCC;
+	#radius > .around;
+	margin-bottom: 1em;
+	
+	.author {
+		// TODO auther と timestampの間に出来る空間をmessageの文字列で綺麗に埋めたいが…
+		float: left;
+		margin: 0.5em 0.5em 0.5em 0.5em;
+		img {
+			#radius > .around;
+		}
+		.name {
+			display: block;
+		}
+	}
+	
+	.message {
+		padding: 0.5em 0.5em 0.2em 0;
+	}
+	.meta {
+		float: right;
+		padding: 0.2em 0.5em 0.5em;
+		.timestamp, .commitid {
+			text-align: center;
+			vertical-align: middle;
+		}
+		.timestamp {
+			margin-right: 0.5em;
+		}
+		.commitid {
+			text-align: left;
+			width: 7em;
+			img {
+				float: left;
+			}
+		}
+	}
+}

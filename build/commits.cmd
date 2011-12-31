@@ -1,0 +1,1 @@
+call soy.cmd commits.soy
