@@ -37,9 +37,9 @@
 		"author": "lanius"
 	}, {
 		"commit": "c5f60358752835d3bae376fda627f00f4f40ecdb",
-		"message": "initial%20commit.",
+		"message": "not%20initial%20commit.",
 		"timestamp": 1316872395,
-		"parent": [],
+		"parent": ["0f87e6bea240152b22146356e1ab123df2cdeb"],
 		"author": "lanius"
 	}
 ]

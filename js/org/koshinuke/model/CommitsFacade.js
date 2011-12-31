@@ -36,7 +36,7 @@ org.koshinuke.model.CommitsFacade.prototype.handleResponse_ = function(model, fn
 	}, []);
 
 	goog.array.sort(commits, function(l, r) {
-		return goog.array.defaultCompare(l.timestamp, r.timestamp);
+		return goog.array.defaultCompare(r.timestamp, l.timestamp);
 	});
 	fn(commits);
 };

@@ -13,6 +13,7 @@ goog.require('org.koshinuke.template.commits');
 org.koshinuke.ui.Commits = function(loader, opt_domHelper) {
 	goog.ui.Component.call(this, opt_domHelper);
 	this.loader = loader;
+	this.nowloading = false;
 };
 goog.inherits(org.koshinuke.ui.Commits, goog.ui.Component);
 
@@ -34,10 +35,50 @@ org.koshinuke.ui.Commits.prototype.enterDocument = function() {
 		goog.dom.removeNode(self.loading);
 		goog.array.forEach(commits, function(a) {
 			var c = goog.soy.renderAsElement(org.koshinuke.template.commits.tmpl, a);
+			c.model = a;
 			parent.appendChild(c);
 		});
-		// TODO 自動先読み処理。
-		//self.getHandler();
+	});
+	this.getHandler().listen(goog.dom.getWindow(), goog.events.EventType.SCROLL, this.autoPaging_, false, this);
+	this.getHandler().listen(goog.dom.getWindow(), goog.events.EventType.RESIZE, this.autoPaging_, false, this);
+};
+
+org.koshinuke.ui.Commits.prototype.autoPaging_ = function() {
+	if(this.nowloading == false) {
+		this.nowloading = true;
+		var element = this.getElement();
+		var last = goog.dom.getLastElementChild(element);
+		if(last && last.model) {
+			var current = last.model;
+			if(0 < current.parent.length) {
+				var prev = goog.dom.getPreviousElementSibling(last);
+				var py = goog.style.getPosition(prev).y;
+				var ey = goog.style.getPosition(element).y;
+				var sy = goog.dom.getDocumentScroll().y;
+				if((py - ey - sy) < 400) {
+					this.fetchMorePage_(current);
+					return;
+				}
+			}
+		}
+		this.nowloading = false;
+	}
+};
+org.koshinuke.ui.Commits.prototype.fetchMorePage_ = function(current) {
+	// TODO 出過ぎてる時に上の方にあるタグを消すべきか？
+	var m = goog.object.clone(this.getModel());
+	m.commit = current.commit;
+	var parent = this.getElement()
+	var self = this;
+	parent.appendChild(this.loading);
+	this.loader.load(m, function(commits) {
+		goog.dom.removeNode(self.loading);
+		goog.array.forEach(commits, function(a) {
+			var c = goog.soy.renderAsElement(org.koshinuke.template.commits.tmpl, a);
+			c.model = a;
+			parent.appendChild(c);
+		});
+		self.nowloading = false;
 	});
 };
 /** @override */
