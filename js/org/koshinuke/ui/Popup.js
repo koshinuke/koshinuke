@@ -39,4 +39,8 @@ org.koshinuke.ui.Popup.prototype.setVisible = function(value) {
 org.koshinuke.ui.Popup.prototype.disposeInternal = function() {
 	org.koshinuke.ui.Popup.superClass_.disposeInternal.call(this);
 	goog.dom.removeNode(this.getElement());
+	var pos = this.getPosition();
+	if(pos && pos.dispose) {
+		pos.dispose();
+	}
 };

@@ -12,8 +12,11 @@ org.koshinuke.positioning.GravityPosition = function(el, g, margin) {
 	this.gravity_ = g ? g : 'n';
 	this.margin_ = margin ? margin : 0;
 };
-
 goog.inherits(org.koshinuke.positioning.GravityPosition, goog.positioning.AbstractPosition);
+
+org.koshinuke.positioning.GravityPosition.prototype.setBaseEl = function(el) {
+	this.baseEl_ = el;
+}
 
 org.koshinuke.positioning.GravityPosition.prototype.reposition = function(element, popupCorner, opt_margin, opt_preferredSize) {
 	var size = goog.style.getSize(this.baseEl_);
@@ -55,4 +58,10 @@ org.koshinuke.positioning.GravityPosition.prototype.reposition = function(elemen
 			break;
 	}
 	goog.style.setPosition(element, tp.left, tp.top);
+};
+
+org.koshinuke.positioning.GravityPosition.prototype.dispose = function() {
+	this.baseEl_ = null;
+	this.gravity_ = null;
+	this.margin_ = null;
 };

@@ -8,6 +8,8 @@ goog.require('goog.events');
 goog.require('goog.ui.Component');
 
 goog.require('org.koshinuke.template.commits');
+goog.require('org.koshinuke.positioning.GravityPosition');
+goog.require('org.koshinuke.ui.Popup');
 
 /** @constructor */
 org.koshinuke.ui.Commits = function(loader, opt_domHelper) {
@@ -39,10 +41,29 @@ org.koshinuke.ui.Commits.prototype.enterDocument = function() {
 			parent.appendChild(c);
 		});
 	});
-	this.getHandler().listen(goog.dom.getWindow(), goog.events.EventType.SCROLL, this.autoPaging_, false, this);
-	this.getHandler().listen(goog.dom.getWindow(), goog.events.EventType.RESIZE, this.autoPaging_, false, this);
+	var h = this.getHandler();
+	h.listen(goog.dom.getWindow(), goog.events.EventType.SCROLL, this.autoPaging_, false, this);
+	h.listen(goog.dom.getWindow(), goog.events.EventType.RESIZE, this.autoPaging_, false, this);
+	
+	this.pos = new org.koshinuke.positioning.GravityPosition(document.body, 's', 1);
+	this.popup = new org.koshinuke.ui.Popup(this.pos, 'above');
+	this.popup.setText('View diff');
+	h.listen(parent, goog.events.EventType.MOUSEOVER, this.handleMouseOver_, false, this);
+	h.listen(parent, goog.events.EventType.MOUSEOUT, this.handleMouseOut_, false, this);
 };
-
+/** @private */
+org.koshinuke.ui.Commits.prototype.handleMouseOver_ = function(e) {
+	var target = e.target;
+	if(target.tagName == 'BUTTON') {
+		this.pos.setBaseEl(target);
+		this.popup.setVisible(true);
+	}
+};
+/** @private */
+org.koshinuke.ui.Commits.prototype.handleMouseOut_ = function(e) {
+	this.popup.setVisible(false);
+};
+/** @private */
 org.koshinuke.ui.Commits.prototype.autoPaging_ = function() {
 	if(this.nowloading == false) {
 		this.nowloading = true;
@@ -64,6 +85,7 @@ org.koshinuke.ui.Commits.prototype.autoPaging_ = function() {
 		this.nowloading = false;
 	}
 };
+/** @private */
 org.koshinuke.ui.Commits.prototype.fetchMorePage_ = function(current) {
 	// TODO 出過ぎてる時に上の方にあるタグを消すべきか？
 	var m = goog.object.clone(this.getModel());
@@ -85,6 +107,9 @@ org.koshinuke.ui.Commits.prototype.fetchMorePage_ = function(current) {
 org.koshinuke.ui.Commits.prototype.exitDocument = function() {
 	org.koshinuke.ui.Commits.superClass_.exitDocument.call(this);
 	goog.dom.removeChildren(this.getElement());
+	this.pos = null;
+	this.popup.dispose();
+	this.popup = null;
 };
 
 org.koshinuke.ui.Commits.prototype.setVisible = function(state) {

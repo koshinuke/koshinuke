@@ -65,7 +65,6 @@ org.koshinuke.ui.Clipboard.prototype.exitDocument = function() {
 	org.koshinuke.ui.Clipboard.superClass_.exitDocument.call(this);
 	this.clip.destroy();
 	this.clip = null;
-	goog.dom.removeNode(this.popup.getElement());
 	this.popup.dispose();
 	this.popup = null;
 };
