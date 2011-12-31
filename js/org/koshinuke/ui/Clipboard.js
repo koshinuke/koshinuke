@@ -5,12 +5,11 @@ goog.require('goog.dom');
 goog.require('goog.soy');
 
 goog.require('goog.ui.Component');
-goog.require('goog.ui.Popup');
 
 goog.require('ZeroClipboard');
 
 goog.require('org.koshinuke.positioning.GravityPosition');
-goog.require('org.koshinuke.template.tooltip');
+goog.require('org.koshinuke.ui.Popup');
 
 /** @constructor */
 org.koshinuke.ui.Clipboard = function(text, opt_domHelper) {
@@ -34,32 +33,13 @@ org.koshinuke.ui.Clipboard.prototype.setMessages = function(desc, follow) {
 org.koshinuke.ui.Clipboard.prototype.desc = "copy to clipboard";
 org.koshinuke.ui.Clipboard.prototype.follow = "copied !!"
 
-/** @constructor */
-org.koshinuke.ui.Clipboard.Popup = function(pos) {
-	goog.ui.Popup.call(this, this.makeEl_(), pos);
-};
-goog.inherits(org.koshinuke.ui.Clipboard.Popup, goog.ui.Popup);
-
-/** @private */
-org.koshinuke.ui.Clipboard.Popup.prototype.makeEl_ = function() {
-	var el = goog.soy.renderAsElement(org.koshinuke.template.tooltip.tmpl, {
-		dir : 'right'
-	});
-	goog.dom.appendChild(document.body, el);
-	return el;
-};
-org.koshinuke.ui.Clipboard.Popup.prototype.setText = function(txt) {
-	goog.array.forEach(goog.dom.query('.tooltip-inner', this.getElement()), function(a) {
-		goog.dom.setTextContent(a, txt);
-	});
-};
 /** @override */
 org.koshinuke.ui.Clipboard.prototype.enterDocument = function() {
 	org.koshinuke.ui.Clipboard.superClass_.enterDocument.call(this);
 	var element = this.getElement();
 	var clip = new ZeroClipboard.Client();
 	var img = goog.dom.query('.clip-container .copy', element)[0];
-	this.popup = new org.koshinuke.ui.Clipboard.Popup(new org.koshinuke.positioning.GravityPosition(img, 'w', 1));
+	this.popup = new org.koshinuke.ui.Popup(new org.koshinuke.positioning.GravityPosition(img, 'w', 1), 'right');
 
 	var self = this;
 	var popup = self.popup;
