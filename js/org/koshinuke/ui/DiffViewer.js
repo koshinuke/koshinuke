@@ -81,10 +81,13 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 			}, {
 				mode : 'text/x-diff',
 				value : a.patch,
-				matchBrackets : true,
-				lineNumbers : true,
+				matchBrackets : false,
+				lineNumbers : false,
 				readOnly : true
 			});
+			// file path is needless.
+			f.cm.removeLine(0);
+			f.cm.removeLine(0);
 		});
 	});
 	h.listen(this, goog.ui.Component.EventType.ACTION, function(e) {

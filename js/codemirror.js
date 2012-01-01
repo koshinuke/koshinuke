@@ -1,4 +1,4 @@
-// CodeMirror v2.18
+// CodeMirror v2.2
 goog.provide('CodeMirror');
 // All functions that need access to the editor's state live inside
 // the CodeMirror function. Below that, at the bottom of the file,
@@ -489,7 +489,7 @@ var CodeMirror = (function() {
       if (window.opera && e.keyCode == lastStoppedKey) {lastStoppedKey = null; e_preventDefault(e); return;}
       if (options.onKeyEvent && options.onKeyEvent(instance, addStop(e))) return;
       if (window.opera && !e.which && handleKeyBinding(e)) return;
-      if (options.electricChars && mode.electricChars) {
+      if (options.electricChars && mode.electricChars && options.smartIndent) {
         var ch = String.fromCharCode(e.charCode == null ? e.keyCode : e.charCode);
         if (mode.electricChars.indexOf(ch) > -1)
           setTimeout(operation(function() {indentLine(sel.to.line, "smart");}), 75);
@@ -758,6 +758,8 @@ var CodeMirror = (function() {
     function scrollEditorIntoView() {
       if (!cursor.getBoundingClientRect) return;
       var rect = cursor.getBoundingClientRect();
+      // IE returns bogus coordinates when the instance sits inside of an iframe and the cursor is hidden
+      if (ie && rect.top == rect.bottom) return;
       var winH = window.innerHeight || Math.max(document.body.offsetHeight, document.documentElement.offsetHeight);
       if (rect.top < 0 || rect.bottom > winH) cursor.scrollIntoView();
     }
@@ -1147,7 +1149,7 @@ var CodeMirror = (function() {
     function indentLine(n, how) {
       if (!how) how = "add";
       if (how == "smart") {
-        if (!mode.indent) how = "prev";
+        if (!mode.indent || !options.smartIndent) how = "prev";
         else var state = getStateBefore(n);
       }
 
@@ -1712,6 +1714,7 @@ var CodeMirror = (function() {
     theme: "default",
     indentUnit: 2,
     indentWithTabs: false,
+    smartIndent: true,
     tabSize: 4,
     keyMap: "default",
     extraKeys: null,
@@ -1846,7 +1849,7 @@ var CodeMirror = (function() {
     "Ctrl-Home": "goDocStart", "Alt-Up": "goDocStart", "Ctrl-End": "goDocEnd", "Ctrl-Down": "goDocEnd",
     "Ctrl-Left": "goWordLeft", "Ctrl-Right": "goWordRight", "Alt-Left": "goLineStart", "Alt-Right": "goLineEnd",
     "Ctrl-Backspace": "delWordLeft", "Ctrl-Delete": "delWordRight", "Ctrl-S": "save", "Ctrl-F": "find",
-    "Ctrl-G": "findNext", "Shift-Ctrl-G": "findPrev", "Ctrl-R": "replace", "Shift-Ctrl-R": "replaceAll",
+    "Ctrl-G": "findNext", "Shift-Ctrl-G": "findPrev", "Shift-Ctrl-F": "replace", "Shift-Ctrl-R": "replaceAll",
     fallthrough: "basic"
   };
   keyMap.macDefault = {

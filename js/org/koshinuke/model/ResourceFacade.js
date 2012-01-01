@@ -25,6 +25,7 @@ org.koshinuke.model.ResourceFacade.ExtensionToMIME = {
 	".diff" : "text/x-diff",
 	".js" : "text/javascript",
 	".json" : "application/json",
+	".less" : "text/less",
 	".md" : "text/x-markdown",
 	".php" : "application/x-httpd-php-open",
 	".py" : "text/x-python",
