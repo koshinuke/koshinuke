@@ -42,6 +42,8 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 	var self = this;
 	var h = this.getHandler();
 	this.loader.load(model, function(diff) {
+		model.commit.commit = diff.commit;
+		model.commit.parent = diff.parent;
 		var commits = goog.soy.renderAsElement(org.koshinuke.template.diffviewer.commit, model.commit);
 		parent.replaceChild(commits, self.loading);
 		goog.array.forEach(goog.dom.query('button', commits), function(a) {
@@ -94,6 +96,27 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 		// TODO view commit tree
 		console.log('view commit tree.');
 	});
+	h.listen(parent, goog.events.EventType.CLICK, function(e) {
+		var el = e.target;
+		if(goog.dom.classes.has(el, 'parent')) {
+			// TODO 親のコミットを辿る。現時点の実装は不完全な状態。
+			// コミットIDを指定した時に、当該コミットのメタデータも取れる様にしないと上手く動作しない。
+			var m = goog.object.clone(this.getModel());
+			var cid = m.commit.parent[0];
+			var tid = goog.dom.getTextContent(el);
+			goog.array.forEach(m.commit.parent, function(a) {
+				if(goog.string.startsWith(a, tid)) {
+					cid = a;
+				}
+			});
+			m.commit = {
+				commit : cid
+			};
+			m.label = [m.branch.name, cid];
+			m.context = org.koshinuke.ui.PaneTab.Factory.Diff;
+			org.koshinuke.PubSub.publish(org.koshinuke.PubSub.COMMIT_SELECT, m);
+		}
+	}, false, this);
 };
 /** @override */
 org.koshinuke.ui.DiffViewer.prototype.exitDocument = function() {

@@ -149,7 +149,7 @@ org.koshinuke.ui.DiffTab.prototype.loadPane = function(uri) {
 org.koshinuke.ui.DiffTab.prototype.enterDocument = function() {
 	org.koshinuke.ui.DiffTab.superClass_.enterDocument.call(this);
 	var m = this.getModel().commit;
-	goog.dom.classes.add(this.getElement(), m.parent.length < 2 ? 'normaltab' : 'mergetab');
+	goog.dom.classes.add(this.getElement(), 'difftab');
 };
 /** @protected */
 org.koshinuke.ui.PaneTab.prototype.internalLoadPane_ = function(loader, model, models) {
