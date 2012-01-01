@@ -5,6 +5,7 @@ goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
 
+goog.require('goog.ui.Button');
 goog.require('goog.ui.Component');
 
 goog.require('org.koshinuke.template.commits');
@@ -35,21 +36,25 @@ org.koshinuke.ui.Commits.prototype.enterDocument = function() {
 	var self = this;
 	this.loader.load(model, function(commits) {
 		goog.dom.removeNode(self.loading);
-		goog.array.forEach(commits, function(a) {
-			var c = goog.soy.renderAsElement(org.koshinuke.template.commits.tmpl, a);
-			c.model = a;
-			parent.appendChild(c);
-		});
+		self.setUpRow_(parent, commits);
 	});
 	var h = this.getHandler();
 	h.listen(goog.dom.getWindow(), goog.events.EventType.SCROLL, this.autoPaging_, false, this);
 	h.listen(goog.dom.getWindow(), goog.events.EventType.RESIZE, this.autoPaging_, false, this);
-	
+
 	this.pos = new org.koshinuke.positioning.GravityPosition(document.body, 's', 1);
 	this.popup = new org.koshinuke.ui.Popup(this.pos, 'above');
 	this.popup.setText('View diff');
 	h.listen(parent, goog.events.EventType.MOUSEOVER, this.handleMouseOver_, false, this);
 	h.listen(parent, goog.events.EventType.MOUSEOUT, this.handleMouseOut_, false, this);
+	h.listen(this, goog.ui.Component.EventType.ACTION, function(e) {
+		var el = org.koshinuke.findParentByClass(e.target.getElement(), 'commit');
+		var m = goog.object.clone(this.getModel());
+		m.label = goog.array.flatten(m.label, el.model.commit);
+		m.context = org.koshinuke.ui.PaneTab.Factory.Diff;
+		m.commit = el.model;
+		org.koshinuke.PubSub.publish(org.koshinuke.PubSub.COMMIT_SELECT, m);
+	}, false, self);
 };
 /** @private */
 org.koshinuke.ui.Commits.prototype.handleMouseOver_ = function(e) {
@@ -86,6 +91,20 @@ org.koshinuke.ui.Commits.prototype.autoPaging_ = function() {
 	}
 };
 /** @private */
+org.koshinuke.ui.Commits.prototype.setUpRow_ = function(parent, commits) {
+	goog.array.forEach(commits, function(a) {
+		var c = goog.soy.renderAsElement(org.koshinuke.template.commits.tmpl, a);
+		c.model = a;
+		parent.appendChild(c);
+
+		goog.array.forEach(goog.dom.query('button', c), function(e) {
+			var b = new goog.ui.Button();
+			b.decorate(e);
+			b.setParent(this);
+		}, this);
+	}, this);
+};
+/** @private */
 org.koshinuke.ui.Commits.prototype.fetchMorePage_ = function(current) {
 	// TODO 出過ぎてる時に上の方にあるタグを消すべきか？
 	var m = goog.object.clone(this.getModel());
@@ -95,11 +114,7 @@ org.koshinuke.ui.Commits.prototype.fetchMorePage_ = function(current) {
 	parent.appendChild(this.loading);
 	this.loader.load(m, function(commits) {
 		goog.dom.removeNode(self.loading);
-		goog.array.forEach(commits, function(a) {
-			var c = goog.soy.renderAsElement(org.koshinuke.template.commits.tmpl, a);
-			c.model = a;
-			parent.appendChild(c);
-		});
+		self.setUpRow_(parent, commits);
 		self.nowloading = false;
 	});
 };

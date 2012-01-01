@@ -60,6 +60,7 @@ goog.exportSymbol('main', function() {
 		PubSub.subscribe(PubSub.REPO_SELECT, tabbar.addTab, tabbar);
 		PubSub.subscribe(PubSub.RESOURCE_SELECT, tabbar.addTab, tabbar);
 		PubSub.subscribe(PubSub.BRANCH_SELECT, tabbar.addTab, tabbar);
+		PubSub.subscribe(PubSub.COMMIT_SELECT, tabbar.addTab, tabbar);
 		goog.events.listen(tabbar, goog.ui.Component.EventType.SELECT, function(e) {
 			PubSub.publish(PubSub.TAB_SELECT, e.target.getModel());
 		});

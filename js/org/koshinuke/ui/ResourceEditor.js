@@ -84,12 +84,13 @@ org.koshinuke.ui.ResourceEditor.prototype.setUpCMTools_ = function(element) {
 	}, this);
 	var commitBtn = goog.dom.query('button.commit', element)[0];
 	var commitMsg = goog.dom.query('.commit-message textarea', element)[0];
-	goog.events.listen(commitMsg, goog.events.EventType.KEYUP, function(e) {
+	var h = this.getHandler();
+	h.listen(commitMsg, goog.events.EventType.KEYUP, function(e) {
 		var val = goog.dom.$F(e.target);
 		goog.dom.forms.setDisabled(commitBtn, !val || goog.string.trim(val).length < 1);
 	});
 	var value = this.cm.getValue();
-	goog.events.listen(this, goog.ui.Component.EventType.ACTION, function(e) {
+	h.listen(this, goog.ui.Component.EventType.ACTION, function(e) {
 		var el = e.target.getElement();
 		if(goog.dom.classes.has(el, 'edit')) {
 			value = this.cm.getValue();

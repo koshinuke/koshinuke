@@ -5,6 +5,7 @@ goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('goog.events');
+goog.require('goog.soy');
 
 goog.require('goog.ui.Component');
 goog.require('goog.ui.IdGenerator');
@@ -113,6 +114,7 @@ org.koshinuke.ui.Histories.prototype.setVisible = function(state) {
 /** @override */
 org.koshinuke.ui.Histories.prototype.disposeInternal = function() {
 	org.koshinuke.ui.Histories.superClass_.disposeInternal.call(this);
+	this.loading = null;
 	this.loader = null;
 	this.vsm = null;
 };

@@ -1,7 +1,4 @@
 goog.provide('org.koshinuke.ui.PaneTab.Factory');
-goog.provide('org.koshinuke.ui.BranchListTab');
-goog.provide('org.koshinuke.ui.TagListTab');
-goog.provide('org.koshinuke.ui.ResourceTab');
 
 goog.require('goog.array');
 goog.require('goog.dom');
@@ -15,11 +12,14 @@ goog.require('org.koshinuke.model.TagFacade');
 goog.require('org.koshinuke.model.ResourceFacade');
 goog.require('org.koshinuke.model.HistoriesFacade');
 goog.require('org.koshinuke.model.CommitsFacade');
+goog.require('org.koshinuke.model.DiffFacade');
 
-goog.require('org.koshinuke.ui.ResourceEditor');
 goog.require('org.koshinuke.ui.Histories');
 goog.require('org.koshinuke.ui.Commits');
+goog.require('org.koshinuke.ui.DiffViewer');
 goog.require('org.koshinuke.ui.TreeGrid');
+goog.require('org.koshinuke.ui.ResourceEditor');
+
 goog.require('org.koshinuke.ui.PaneTabRenderer');
 
 /** @constructor */
@@ -47,6 +47,11 @@ org.koshinuke.ui.PaneTab.Factory = {
 	},
 	Resource : function(el, model) {
 		return new org.koshinuke.ui.ResourceTab(el, model.node.name);
+	},
+	Diff : function(el, model) {
+		var m = model.commit;
+		var cid = m.commit;
+		return new org.koshinuke.ui.DiffTab(el, cid.substring(0, 7));
 	}
 };
 
@@ -96,7 +101,6 @@ org.koshinuke.ui.HistoriesTab.prototype.enterDocument = function() {
 	org.koshinuke.ui.HistoriesTab.superClass_.enterDocument.call(this);
 	goog.dom.classes.add(this.getElement(), 'histories');
 };
-
 /** @constructor */
 org.koshinuke.ui.CommitsTab = function(parent, content, opt_renderer, opt_domHelper) {
 	org.koshinuke.ui.PaneTab.call(this, parent, content, opt_renderer, opt_domHelper);
@@ -113,8 +117,6 @@ org.koshinuke.ui.CommitsTab.prototype.enterDocument = function() {
 	org.koshinuke.ui.HistoriesTab.superClass_.enterDocument.call(this);
 	goog.dom.classes.add(this.getElement(), 'histories');
 };
-
-
 /** @constructor */
 org.koshinuke.ui.ResourceTab = function(parent, content, opt_renderer, opt_domHelper) {
 	org.koshinuke.ui.PaneTab.call(this, parent, content, opt_renderer, opt_domHelper);
@@ -131,6 +133,23 @@ org.koshinuke.ui.ResourceTab.prototype.enterDocument = function() {
 	org.koshinuke.ui.ResourceTab.superClass_.enterDocument.call(this);
 	var extension = org.koshinuke.getExtension(this.getModel().node.path);
 	goog.dom.classes.add(this.getElement(), org.koshinuke.findIcon(extension));
+};
+/** @constructor */
+org.koshinuke.ui.DiffTab = function(parent, content, opt_renderer, opt_domHelper) {
+	org.koshinuke.ui.PaneTab.call(this, parent, content, opt_renderer, opt_domHelper);
+};
+goog.inherits(org.koshinuke.ui.DiffTab, org.koshinuke.ui.PaneTab);
+/** @override */
+org.koshinuke.ui.DiffTab.prototype.loadPane = function(uri) {
+	var loader = new org.koshinuke.model.DiffFacade(uri);
+	this.pane = new org.koshinuke.ui.DiffViewer(loader);
+	this.pane.setModel(this.getModel());
+};
+/** @override */
+org.koshinuke.ui.DiffTab.prototype.enterDocument = function() {
+	org.koshinuke.ui.DiffTab.superClass_.enterDocument.call(this);
+	var m = this.getModel().commit;
+	goog.dom.classes.add(this.getElement(), m.parent.length < 2 ? 'normaltab' : 'mergetab');
 };
 /** @protected */
 org.koshinuke.ui.PaneTab.prototype.internalLoadPane_ = function(loader, model, models) {

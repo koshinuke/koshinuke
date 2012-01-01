@@ -3,6 +3,7 @@ goog.provide('org.koshinuke');
 goog.require('goog.array');
 goog.require('goog.crypt');
 goog.require('goog.crypt.Md5');
+goog.require('goog.dom.classes');
 goog.require('goog.pubsub.PubSub');
 
 org.koshinuke.activationHandler = function(item, isSelect) {
@@ -20,6 +21,7 @@ org.koshinuke.PubSub.RESOURCE_SELECT = "res.s";
 org.koshinuke.PubSub.TAB_SELECT = "t.s";
 org.koshinuke.PubSub.TAB_UNSELECT = "t.u";
 org.koshinuke.PubSub.BRANCH_SELECT = "b.s";
+org.koshinuke.PubSub.COMMIT_SELECT = "c.s";
 
 org.koshinuke.getExtension = function(path, nullvalue) {
 	if(path) {
@@ -51,18 +53,28 @@ org.koshinuke.hash = function(var_args) {
 	});
 	return goog.crypt.byteArrayToHex(md5.digest());
 };
-
-org.koshinuke.findParent = function(el, findfor) {
+org.koshinuke.findParentByPredicate = function(el, pred) {
 	var p;
 	do {
 		if( p = el.parentNode) {
-			if(p.tagName == findfor || p.tagName == 'BODY') {
+			if(pred(p) || p.tagName == 'BODY') {
 				return p;
 			}
 			el = p;
 		}
 	} while(p);
 	return el;
+};
+org.koshinuke.findParent = function(el, findfor) {
+	return org.koshinuke.findParentByPredicate(el, function(p) {
+		return p.tagName == findfor;
+	});
+};
+
+org.koshinuke.findParentByClass = function(el, findfor) {
+	return org.koshinuke.findParentByPredicate(el, function(p) {
+		return goog.dom.classes.has(p, findfor);
+	});
 };
 
 org.koshinuke.toDate = function(unixTime) {
