@@ -14,7 +14,7 @@ org.koshinuke.model.ResourceFacade = function(uri) {
 
 org.koshinuke.model.ResourceFacade.prototype.toRequestUri = function(model) {
 	// TODO for mock
-	console.log(model);
+	console.log('ResourceFacade', model);
 	var u = this.uri.resolve(new goog.Uri('/koshinuke/stub/resource.json'));
 	return u;
 };

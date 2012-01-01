@@ -16,7 +16,7 @@ goog.require('org.koshinuke.model.ResourceFacade');
 goog.require('org.koshinuke.model.HistoriesFacade');
 goog.require('org.koshinuke.model.CommitsFacade');
 
-goog.require('org.koshinuke.ui.CodeMirrorWrapper');
+goog.require('org.koshinuke.ui.ResourceEditor');
 goog.require('org.koshinuke.ui.Histories');
 goog.require('org.koshinuke.ui.Commits');
 goog.require('org.koshinuke.ui.TreeGrid');
@@ -123,7 +123,7 @@ goog.inherits(org.koshinuke.ui.ResourceTab, org.koshinuke.ui.PaneTab);
 /** @override */
 org.koshinuke.ui.ResourceTab.prototype.loadPane = function(uri) {
 	var loader = new org.koshinuke.model.ResourceFacade(uri);
-	this.pane = new org.koshinuke.ui.CodeMirrorWrapper(loader);
+	this.pane = new org.koshinuke.ui.ResourceEditor(loader);
 	this.pane.setModel(this.getModel());
 };
 /** @override */

@@ -1,4 +1,4 @@
-goog.provide('org.koshinuke.ui.CodeMirrorWrapper');
+goog.provide('org.koshinuke.ui.ResourceEditor');
 
 goog.require('goog.array');
 goog.require('goog.dom');
@@ -14,20 +14,20 @@ goog.require('CodeMirror');
 goog.require('CodeMirror.modes');
 
 goog.require('org.koshinuke');
-goog.require('org.koshinuke.template.codemirror');
+goog.require('org.koshinuke.template.resourceeditor');
 
 goog.require('org.koshinuke.ui.Clipboard');
 
 // TODO module化によるmodeの遅延ローディング
 /** @constructor */
-org.koshinuke.ui.CodeMirrorWrapper = function(loader, opt_domHelper) {
+org.koshinuke.ui.ResourceEditor = function(loader, opt_domHelper) {
 	goog.ui.Component.call(this, opt_domHelper);
 	this.loader = loader;
 };
-goog.inherits(org.koshinuke.ui.CodeMirrorWrapper, goog.ui.Component);
+goog.inherits(org.koshinuke.ui.ResourceEditor, goog.ui.Component);
 
 /** @override */
-org.koshinuke.ui.CodeMirrorWrapper.prototype.createDom = function() {
+org.koshinuke.ui.ResourceEditor.prototype.createDom = function() {
 	this.loading = goog.dom.createDom("div", {
 		'class' : 'loading_large'
 	});
@@ -36,8 +36,8 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.createDom = function() {
 };
 // git note
 /** @override */
-org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
-	org.koshinuke.ui.CodeMirrorWrapper.superClass_.enterDocument.call(this);
+org.koshinuke.ui.ResourceEditor.prototype.enterDocument = function() {
+	org.koshinuke.ui.ResourceEditor.superClass_.enterDocument.call(this);
 	var parent = this.getElement();
 	var model = this.getModel();
 	var self = this;
@@ -51,7 +51,7 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
 			});
 			parent.replaceChild(self.img, self.loading);
 		} else {
-			var toolsEl = goog.soy.renderAsElement(org.koshinuke.template.codemirror.tmpl, resourceModel);
+			var toolsEl = goog.soy.renderAsElement(org.koshinuke.template.resourceeditor.tmpl, resourceModel);
 			self.getElement().insertBefore(toolsEl, self.loading);
 			self.clip = new org.koshinuke.ui.Clipboard([resourceModel.contents, 'copy contents to clipboard', 'copied !!']);
 			self.clip.decorate(toolsEl);
@@ -76,7 +76,7 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.enterDocument = function() {
 	});
 };
 /** @private */
-org.koshinuke.ui.CodeMirrorWrapper.prototype.setUpCMTools_ = function(element) {
+org.koshinuke.ui.ResourceEditor.prototype.setUpCMTools_ = function(element) {
 	goog.array.forEach(goog.dom.query('button', element), function(a) {
 		var b = new goog.ui.Button();
 		b.decorate(a);
@@ -118,7 +118,7 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.setUpCMTools_ = function(element) {
 
 	}, false, this);
 };
-org.koshinuke.ui.CodeMirrorWrapper.prototype.toggleEdit_ = function(element, editable) {
+org.koshinuke.ui.ResourceEditor.prototype.toggleEdit_ = function(element, editable) {
 	this.cmOption.readOnly = editable == false;
 	this.cm.setOption("readOnly", this.cmOption.readOnly);
 	if(editable) {
@@ -134,8 +134,8 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.toggleEdit_ = function(element, edi
 	}, this);
 };
 /** @override */
-org.koshinuke.ui.CodeMirrorWrapper.prototype.exitDocument = function() {
-	org.koshinuke.ui.CodeMirrorWrapper.superClass_.exitDocument.call(this);
+org.koshinuke.ui.ResourceEditor.prototype.exitDocument = function() {
+	org.koshinuke.ui.ResourceEditor.superClass_.exitDocument.call(this);
 	if(this.img) {
 		goog.dom.removeNode(this.img);
 		this.img = null;
@@ -150,14 +150,14 @@ org.koshinuke.ui.CodeMirrorWrapper.prototype.exitDocument = function() {
 		this.clip = null;
 	}
 };
-org.koshinuke.ui.CodeMirrorWrapper.prototype.setVisible = function(state) {
+org.koshinuke.ui.ResourceEditor.prototype.setVisible = function(state) {
 	var el = this.getElement();
 	if(el) {
 		goog.style.showElement(el, state);
 	}
 };
 /** @override */
-org.koshinuke.ui.CodeMirrorWrapper.prototype.disposeInternal = function() {
-	org.koshinuke.ui.CodeMirrorWrapper.superClass_.disposeInternal.call(this);
+org.koshinuke.ui.ResourceEditor.prototype.disposeInternal = function() {
+	org.koshinuke.ui.ResourceEditor.superClass_.disposeInternal.call(this);
 	this.loader = null;
 };
