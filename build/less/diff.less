@@ -23,17 +23,16 @@
 			.meta {
 				border: 1px solid #CCC;
 				padding: 0.2em 0.2em 0.1em 0.2em;
-	
-				#gradient > .vertical(#f3f3f3, #eae5e3);
-				&:hover {
-					#gradient > .vertical(#eae5e3, #f3f3f3);
-				}
 				text-shadow: 1px 1px 0 white;
 			}
 			
 			&.collapse {
 				.meta {
 					#radius > .around;
+					#gradient > .vertical(#f3f3f3, #eae5e3);
+					&:hover {
+						#gradient > .vertical(#eae5e3, #f3f3f3);
+					}
 				}
 				.status {
 					.toggle_plus;
@@ -45,25 +44,28 @@
 			&.expand {
 				.meta {
 					#radius > .top;
+					border-bottom: none;
+					#gradient > .vertical(#eae5e3, #f3f3f3);
+					&:hover {
+						#gradient > .vertical(#f3f3f3, #eae5e3);
+					}
 				}
 				.status {
 					.toggle_minus;
 				}
 				.content {
-					border: 1px solid #CCC;
-					border-top: none;
 					#radius > .bottom;
 				}
 			}
 		}
 		.op {
-			float: left;
+			float: right;
 		}
 		.path {
 				vertical-align: top;
 		}
 		.status {
-			float: right;
+			float: left;
 		}
 	}
 }

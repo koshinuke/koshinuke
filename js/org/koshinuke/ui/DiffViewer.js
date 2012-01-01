@@ -7,6 +7,7 @@ goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('goog.events');
 goog.require('goog.soy');
 
+goog.require('goog.ui.Button');
 goog.require('goog.ui.Component');
 
 goog.require('CodeMirror');
@@ -39,10 +40,15 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 	var parent = this.getElement();
 	var model = this.getModel();
 	var self = this;
+	var h = this.getHandler();
 	this.loader.load(model, function(diff) {
-		console.log(model);
 		var commits = goog.soy.renderAsElement(org.koshinuke.template.diffviewer.commit, model.commit);
 		parent.replaceChild(commits, self.loading);
+		goog.array.forEach(goog.dom.query('button', commits), function(a) {
+			var b = new goog.ui.Button();
+			b.decorate(a);
+			b.setParent(self);
+		});
 		var files = goog.dom.createDom('div', {
 			'class' : 'files'
 		});
@@ -57,12 +63,39 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 				path : p
 			});
 			files.appendChild(f);
+			h.listen(goog.dom.query('.meta',f)[0], goog.events.EventType.CLICK, function(e) {
+				if(goog.dom.classes.has(f, 'collapse')) {
+					goog.dom.classes.addRemove(f, 'collapse', 'expand');
+					// TODO 理解不能だが、こうすると表示部分の高さが適切に設定される。
+					goog.Timer.callOnce(function() {
+						f.cm.refresh();
+						goog.Timer.callOnce(f.cm.refresh, 0, f.cm);
+					});
+				} else if(goog.dom.classes.has(f, 'expand')) {
+					goog.dom.classes.addRemove(f, 'expand', 'collapse');
+				}
+			}, false, self);
+			f.cm = CodeMirror(function(elt) {
+				var con = goog.dom.query('.content', f)[0];
+				con.appendChild(elt);
+			}, {
+				mode : 'text/x-diff',
+				value : a.patch,
+				matchBrackets : true,
+				lineNumbers : true,
+				readOnly : true
+			});
 		});
+	});
+	h.listen(this, goog.ui.Component.EventType.ACTION, function(e) {
+		// TODO view commit tree
+		console.log('view commit tree.');
 	});
 };
 /** @override */
 org.koshinuke.ui.DiffViewer.prototype.exitDocument = function() {
 	org.koshinuke.ui.DiffViewer.superClass_.exitDocument.call(this);
+	goog.dom.removeNode(this.getElement());
 };
 
 org.koshinuke.ui.DiffViewer.prototype.setVisible = function(state) {
