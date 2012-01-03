@@ -59,7 +59,9 @@ __    _          _       _   _       _
 		<div class="outer">
 			<div class="sidebar">
 				<div class="repo-list"></div>
-				<button class="new-repo">New Repository</button>
+				<button class="new-repo">
+					New Repository
+				</button>
 			</div>
 			<div class="contents">
 				<div class="topic repo-urls">
@@ -87,18 +89,22 @@ __    _          _       _   _       _
 				</div>
 			</div>
 		</div>
-		<div class="wiz-newrepo" style="display: none;">
+		<div class="newrepo" style="display: none;">
 			<div class="above goog-tab-bar">
-				<div class="goog-tab goog-tab-selected">Init Repository</div>
-				<div class="goog-tab">Clone Repository</div>
+				<div class="goog-tab goog-tab-selected">
+					Init Repository
+				</div>
+				<div class="goog-tab">
+					Clone Repository
+				</div>
 			</div>
 			<div class="tabpane">
-				<div class="init-repo">
-					<div class="main">
+				<div class="pane init-repo">
+					<div class="main form">
 						<fieldset>
 							<div class="input-pair">
 								<label for="repo-name">Name</label>
-								<input id="repo-name" type="text" size="40" placeholder="path/reponame"></input>
+								<input id="repo-name" type="text" size="40" placeholder="path/reponame" />
 								<span class="help-inline"></span>
 							</div>
 							<div class="input-pair">
@@ -108,33 +114,41 @@ __    _          _       _   _       _
 							</div>
 						</fieldset>
 						<div class="form-actions">
-							<button class="init disabled">Init Repository</button>
-							<button class="cancel">Cancel</button>
+							<button class="init" disabled>
+								Init Repository
+							</button>
+							<button class="cancel">
+								Cancel
+							</button>
 						</div>
 					</div>
 				</div>
-				<div class="clone-repo">
-					<div class="main">
+				<div class="pane clone-repo" style="display: none;">
+					<div class="main form">
 						<fieldset>
 							<div class="input-pair">
 								<label for="repo-uri">URI</label>
-								<input id="repo-uri" type="text" placeholder="user@example.com:user/reponame.git"></input>
+								<input id="repo-uri" type="text" placeholder="https://example.com/username/reponame.git"/>
 								<span class="help-inline"></span>
 							</div>
 							<div class="input-pair">
 								<label for="repo-username">Username</label>
-								<input id="repo-username" type="text" placeholder="username"></input>
+								<input id="repo-username" type="text" placeholder="username"/>
 								<span class="help-inline"></span>
 							</div>
 							<div class="input-pair">
 								<label for="repo-pass">Password</label>
-								<input id="repo-pass" type="password" placeholder="password"></input>
+								<input id="repo-pass" type="password" placeholder="password" />
 								<span class="help-inline"></span>
 							</div>
 						</fieldset>
 						<div class="form-actions">
-							<button class="clone disabled">Clone Repository</button>
-							<button class="cancel">Cancel</button>
+							<button class="clone" disabled>
+								Clone Repository
+							</button>
+							<button class="cancel">
+								Cancel
+							</button>
 						</div>
 					</div>
 				</div>
