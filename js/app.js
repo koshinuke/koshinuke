@@ -54,8 +54,8 @@ goog.exportSymbol('main', function() {
 		});
 	});
 
-	goog.array.forEach(goog.dom.query('.tab-container .goog-tab-bar'), function(root) {
-		var tabbar = new org.koshinuke.ui.PaneTabBar(goog.dom.query('.tabpane')[0], uri);
+	goog.array.forEach(goog.dom.query('.outer .goog-tab-bar'), function(root) {
+		var tabbar = new org.koshinuke.ui.PaneTabBar(goog.dom.getNextElementSibling(root), uri);
 		tabbar.decorate(root);
 		PubSub.subscribe(PubSub.REPO_SELECT, tabbar.addTab, tabbar);
 		PubSub.subscribe(PubSub.RESOURCE_SELECT, tabbar.addTab, tabbar);
