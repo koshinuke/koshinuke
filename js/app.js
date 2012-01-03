@@ -97,48 +97,12 @@ goog.exportSymbol('main', function() {
 			});
 		});
 	});
-	function slideElements(outEl, inEl, footer) {
-		var iSize = goog.style.getSize(inEl);
-		var imBox = goog.style.getMarginBox(inEl);
-		var bottom = iSize.height + imBox.top + imBox.bottom;
-		var vSize = goog.style.getSize(goog.style.getClientViewportElement());
-		var oSize = goog.style.getSize(outEl);
-		var oA = new goog.fx.dom.Slide(outEl, [0, 0], [oSize.width * -1, 0], 500, goog.fx.easing.easeOut);
-		var toAbs = function(e) {
-			goog.style.setStyle(e.target.element, {
-				'display' : 'block',
-				'position' : 'absolute'
-			});
-		}
-		var toBlk = function(e) {
-			e.target.element.style.cssText = '';
-		}
-		goog.events.listen(oA, goog.fx.Transition.EventType.BEGIN, toAbs)
-		goog.events.listen(oA, goog.fx.Transition.EventType.END, function(e) {
-			e.target.element.style.cssText = 'display: none;';
-			var comeBack = new goog.fx.dom.Slide(footer, [0, vSize.height], [0, bottom], 500);
-			goog.events.listen(comeBack, goog.fx.Transition.EventType.END, toBlk);
-			comeBack.play();
-		});
-		var iA = new goog.fx.dom.Slide(inEl, [oSize.width, 0], [0, 0], 500, goog.fx.easing.easeOut);
-		goog.events.listen(iA, goog.fx.Transition.EventType.BEGIN, toAbs);
-		goog.events.listen(iA, goog.fx.Transition.EventType.END, toBlk);
-		var getOut = new goog.fx.dom.Slide(footer, [0, 0], [0, vSize.height], 500, goog.fx.easing.easeOut);
-		goog.events.listen(getOut, goog.fx.Transition.EventType.BEGIN, toAbs);
-		getOut.play();
-		oA.play();
-		iA.play();
-	}
-
 
 	goog.array.forEach(goog.dom.query('button.new-repo'), function(root) {
 		var b = new goog.ui.Button();
 		b.decorate(root);
 		goog.events.listen(b, goog.ui.Component.EventType.ACTION, function(e) {
-			var outer = goog.dom.query('.outer')[0];
-			var newrepo = goog.dom.query('.newrepo')[0];
-			var f = goog.dom.query('footer')[0];
-			slideElements(outer, newrepo, f);
+			org.koshinuke.slideElements(goog.dom.query('.outer')[0], goog.dom.query('.newrepo')[0], goog.dom.query('footer')[0]);
 		});
 	});
 
@@ -168,10 +132,7 @@ goog.exportSymbol('main', function() {
 
 		goog.array.forEach(goog.dom.query('.newrepo .cancel'), function(el) {
 			action(el, function(e) {
-				var outer = goog.dom.query('.outer')[0];
-				var newrepo = goog.dom.query('.newrepo')[0];
-				var f = goog.dom.query('footer')[0];
-				slideElements(newrepo, outer, f);
+				org.koshinuke.slideElements(goog.dom.query('.newrepo')[0], goog.dom.query('.outer')[0], goog.dom.query('footer')[0]);
 			});
 		});
 		var initBtn = action(goog.dom.query('.newrepo .init')[0], function(e) {
@@ -219,7 +180,7 @@ goog.exportSymbol('main', function() {
 			}
 		});
 		goog.events.listen(goog.dom.getElement('repo-uri'), goog.events.EventType.INPUT, function(e) {
-			// TODO SSHのURLは通らない。
+			// TODO SSHのURIは通らない。通った所で、通信の為の鍵どうする？
 			var v = goog.dom.forms.getValue(e.target);
 			var p = e.target.parentNode;
 			var msg = goog.dom.query('.help-inline', p)[0];
