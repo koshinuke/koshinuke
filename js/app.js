@@ -1,12 +1,12 @@
 goog.provide('org.koshinuke.main');
 
 goog.require('goog.array');
-goog.require('goog.async.Delay');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.query');
 goog.require('goog.dom.ViewportSizeMonitor');
 
+goog.require('goog.async.Delay');
 goog.require('goog.fs.FileReader');
 goog.require('goog.events.FileDropHandler');
 

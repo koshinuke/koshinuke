@@ -1,10 +1,5 @@
 
-@import "reset.less";
-@import "css3.less";
-@import "mixin.less";
-@import "forms.less";
-
-@import "vars.less";
+@import "common.less";
 
 // components
 @import "popup.less";
@@ -19,22 +14,6 @@
 @import "histories.less";
 @import "commits.less";
 @import "diff.less";
-
-body {
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: small;
-}
-.codemirror {
-	font-size: medium;
-}
-
-div {
-	outline: none;
-}
-
-a {
-	text-decoration: none;
-}
 
 .outer {
 	width: 100%;
@@ -61,14 +40,3 @@ a {
 	width: 99%;
 }
 
-footer {
-	clear: both;
-
-	margin-top: 1em;
-	padding-top: 1em;
-	border-top: 1px solid @grayLight;
-	
-	font-size: x-small;
-	text-align: center;
-	width: 100%;
-}
