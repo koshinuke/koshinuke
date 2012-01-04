@@ -1,0 +1,1 @@
+call soy.cmd resourceeditor.soy

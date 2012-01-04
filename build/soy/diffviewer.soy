@@ -1,0 +1,45 @@
+{namespace org.koshinuke.template.diffviewer}
+
+/**
+ * @param author
+ * @param message
+ * @param timestamp
+ * @param parent
+ * @param commit
+ */
+{template .commit}
+<div class="commit">
+	<div class="author">
+		<img class="thumb large {$author}"/>
+		<span class="name">{$author}</span>
+	</div>
+	<div class="message">
+		<span>{$message}</span>
+	</div>
+	<div class="meta">
+		<span class="timestamp">{$timestamp}</span>
+		<span class="label">parents :</span><span class="parents">
+			{foreach $p in $parent}
+				{if not isFirst($p)}<span> + </span>{/if}
+				<span class="parent">{$p|truncate:7,false}</span>
+			{/foreach}
+		</span><span class="label">commit :</span><span class="commitid">{$commit}</span>
+		<button>Browse Code</button>
+	</div>
+</div>
+{/template}
+
+/**
+ * @param operation
+ * @param path
+ */
+{template .file}
+<div class="file collapse">
+	<div class="meta">
+		<img class="status"/>
+		<img class="op {$operation}" />
+		<span class="path">{$path}</span>
+	</div>
+	<div class="content"></div>
+</div>
+{/template}

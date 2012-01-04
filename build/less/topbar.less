@@ -1,0 +1,49 @@
+.topbar {
+	height: 2.5em;
+	min-width: 800px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 10000;
+	overflow: visible;
+	
+	#gradient > .vertical(#f3f3f3, #eae5e3);
+	
+	.brand {
+		font-family: kiloji_b;
+		float: left;
+		display: block;
+		font-size: 1.25em;
+		padding: 0.5em 1.25em;
+		
+		a {
+			color: black;
+			font-weight: bold;
+			&:visited {
+				color: black;
+			}
+		}
+	}
+}
+.nav {
+	display: block;
+	float: left;
+	margin-right: 0.6em;
+	outline: none;
+	.goog-tab {
+		display: block;
+		float: left;
+		&.goog-tab-selected {
+			#gradient > .horizontal(#eae5e3, #f3f3f3);
+		}
+		padding: 0.6em 0.6em;
+		line-height: 1.4em;
+		&:visited {
+			color: inherit;
+		}
+		&:hover {
+			#gradient > .vertical(#eae5e3, #f3f3f3);
+		}
+	}
+}

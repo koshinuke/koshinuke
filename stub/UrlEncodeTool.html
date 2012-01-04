@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<script type="application/javascript" src="../closure-library/closure/goog/base.js"></script>
+		<script type="application/javascript" src="../closure-library/third_party/closure/goog/base.js"></script>
+	</head>
+	<body>
+		<textarea id="raw" cols="80" rows="50"></textarea>
+		<textarea id="enc" cols="80" rows="50"></textarea>
+		<br>
+		<button id="encode">
+			encode
+		</button>
+		<button id="decode">
+			decode
+		</button>
+		<button id="clear">
+			clear
+		</button>
+	</body>
+	<script>
+		goog.require('goog.dom');
+		goog.require('goog.events');
+		goog.require('goog.string');
+
+	</script>
+	<script>
+		goog.events.listen(goog.dom.getElement('encode'), goog.events.EventType.CLICK, function(e) {
+			var inEl = goog.dom.getElement('raw');
+			var outEl = goog.dom.getElement('enc');
+			outEl.value = goog.string.urlEncode(inEl.value);
+		});
+		goog.events.listen(goog.dom.getElement('decode'), goog.events.EventType.CLICK, function(e) {
+			var inEl = goog.dom.getElement('enc');
+			var outEl = goog.dom.getElement('raw');
+			outEl.value = goog.string.urlDecode(inEl.value);
+		});
+		goog.events.listen(goog.dom.getElement('clear'), goog.events.EventType.CLICK, function(e) {
+			goog.dom.getElement('raw').value = "";
+			goog.dom.getElement('enc').value = "";
+		});
+
+	</script>
+</html>

@@ -1,0 +1,42 @@
+
+@import "common.less";
+
+// components
+@import "popup.less";
+@import "repo-list.less";
+@import "large-inputs.less";
+@import "repo-urls.less";
+@import "breadcrumbs.less";
+@import "tabs.less";
+@import "table.less";
+@import "codemirror.less";
+@import "topbar.less";
+@import "histories.less";
+@import "commits.less";
+@import "diff.less";
+
+.outer {
+	width: 100%;
+	min-width: 800px;
+	margin-top: 3em;
+}
+
+.sidebar, .contents {
+	float: left;
+	margin: 0 0 1% 1%;
+}
+
+.sidebar {
+	width: 10%;
+}
+
+.contents {
+	width: 88%;
+}
+
+.topic {
+	.clearfix;
+	margin-bottom: 0.5em;
+	width: 99%;
+}
+

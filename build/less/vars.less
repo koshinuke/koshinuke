@@ -1,0 +1,135 @@
+
+// Grays
+@black:             #000;
+@grayDark:          lighten(@black, 25%);
+@gray:              lighten(@black, 50%);
+@grayLight:         lighten(@black, 75%);
+@grayLighter:       lighten(@black, 90%);
+@white:             #fff;
+
+// Accent Colors
+@blue:              #049CDB;
+@blueDark:          #0064CD;
+@green:             #46a546;
+@red:               #9d261d;
+@yellow:            #ffc40d;
+@orange:            #f89406;
+@pink:              #c3325f;
+@purple:            #7a43b6;
+
+@font-face {
+	font-family: kiloji_b;
+	src: local('きろ字 - B'), url('images/kiloji_b.ttf') format('truetype');
+	font-weight: bold;
+}
+
+.loading_large {
+	content : url("images/loading_large.gif");
+}
+
+.icon(@url) {
+	margin-right: 0.2em;
+	content : url(@url);
+}
+
+.branches:before {
+	.icon("images/arrow_branch.png");
+}
+.tags:before {
+	.icon("images/tag_blue.png");
+}
+.histories:before {
+	.icon("images/film.png");
+}
+.graph:before {
+	.icon("images/chart_organisation.png");
+}
+.txt:before {
+	.icon("images/txt.png");
+}
+.loading:before {
+	.icon("images/loading.gif");
+}
+.branch:before {
+	.icon("images/arrow_right.png");
+}
+.tag:before {
+	.icon("images/tag_green.png");
+}
+.calendar:before {
+	.icon("images/calendar_view_day.png");
+}
+.comment:before {
+	.icon("images/comment.png");
+}
+.user:before {
+	.icon("images/user.png");
+}
+.folder:before {
+	.icon("images/dir.png");
+}
+.python:before {
+	.icon("images/python.png");
+}
+.html:before {
+	.icon("images/html.png");
+}
+.css:before {
+	.icon("images/css.png");
+}
+.js:before {
+	.icon("images/script.png");
+}
+.pic:before {
+	.icon("images/picture.png");
+}
+.java:before {
+	.icon("images/nanoduke.png");
+}
+
+// for commits.less
+.merge {
+	.icon("images/arrow_merge.png");
+}
+.normal {
+	.icon("images/arrow_up.png");
+}
+
+// for diff.less
+.difftab:before {
+	.icon("images/page_diff.png");
+}
+.add {
+	.icon("images/add.png");
+}
+.delete {
+	.icon("images/delete.png");
+}
+.modify {
+	.icon("images/edit.png");
+}
+.move {
+	.icon("images/move.png");
+}
+.toggle_minus() {
+	.icon("images/bullet_toggle_minus.png");
+}
+.toggle_plus() {
+	.icon("images/bullet_toggle_plus.png");
+}
+
+.copy {
+	display: block;
+	margin: 0.5em;
+	background: url(images/copy_button_set.png) no-repeat top left;
+	width: 14px;
+	height: 14px;
+	background-position: 0 -30px;
+	&.hover {
+		background-position: 0 -15px;
+	} 
+	&.active {
+		background-position: 0 0;
+	}
+}
+

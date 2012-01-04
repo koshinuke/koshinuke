@@ -1,0 +1,29 @@
+.icon(@url) {
+	content : url(@url);
+}
+.box(@size) {
+	width: @size;
+	height: @size;
+}
+.large(@url) {
+	.icon(@url);
+	.box(32px);
+}
+.small(@url) {
+	.icon(@url);
+	.box(16px);
+}
+
+.large.taichi {
+	.large("images/users/taichi.png");
+}
+.small.taichi {
+	.small("images/users/taichi.png");
+}
+
+.large.lanius {
+	.large("images/users/lanius.png");
+}
+.small.lanius {
+	.small("images/users/lanius.png");
+}

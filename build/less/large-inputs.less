@@ -1,0 +1,85 @@
+.new-repo, .admin {
+	width: 100%;
+}
+.newrepo, .admin {
+	width: 100%;
+	min-width: 800px;
+	margin-top: 3.5em;
+	.goog-tab-bar, .tabpane {
+		margin-left: 2em;
+	}	
+	.goog-tab {
+		font-size: 150%;
+		font-weight: bold;
+	}
+}
+.init-repo, .clone-repo, .profile, .login {
+	margin-top: 1em;
+	.main {
+		width: 90%;
+	}
+	label, input, textarea, button {
+		font-size: 120%;
+	}
+	label {
+		font-weight: bold;
+		width: 10%;
+		min-width: 8em;
+	}
+	input[type='text'],
+	input[type='file'],
+	input[type='password'],
+	 textarea {
+		width: 60%;
+	}
+	.help-inline {
+		margin-left: 0.5em;
+		width: 28%;
+	}
+	label:after {
+		margin-left: 1em;
+		content: ':';
+	}
+	.form-actions {
+		.clearfix;
+		width: 80%;
+	}
+	button {
+		float: right;
+		margin-left: 0.5em;
+	}
+	.cancel {
+		color: #A11034;
+	}
+	.decide {
+		color: green;
+	}
+}
+.img-container {
+	line-height: 1.5em;
+	font-size: 120%;
+	color: @grayLight;
+	.img-radio-pair {
+		display: inline;
+	}
+	.img-radio-pair {
+		float: left;
+		margin-right: 0.5em;
+		padding: 0.5em;
+		&.active {
+			#radius > .around;
+			border: 1px solid #CCC;
+		}
+	}
+	img {
+		&.small {
+			margin-right: 0.1em;
+			width: 16px;
+			height: 16px;
+		}
+		&.large {
+			width: 32px;
+			height: 32px;
+		}
+	}
+}

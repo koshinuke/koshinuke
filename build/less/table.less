@@ -1,0 +1,48 @@
+table {
+	//width: 100%;
+	thead tr th {
+		.user-select;
+	}
+	th, td {
+		text-align: left;
+		vertical-align: middle;
+		padding: 0.2em;
+	}
+	th {
+		font-weight: bold;
+		border-bottom: 2px solid #DDD;
+		&.timestamp, &.message {
+			min-width: 12em;
+		}
+	}
+	
+	&.gradient {
+		tbody {
+			tr td {
+				#gradient > .vertical(@white, #f9f9f9);
+			}
+			tr:hover td {
+				#gradient > .vertical(#f5f5f5, @white);
+			}
+		}
+	}
+	
+	&.treegrid {
+		tr.row {
+			&:hover {
+				background-color: whitesmoke;
+			}
+		}
+		td {
+			.path, .comment, .user {
+				.clickable;
+			}
+			.expand {
+				.icon("images/bullet_arrow_down.png");
+			}
+			.collapse {
+				.icon("images/bullet_arrow_right.png");
+			}
+		}
+	}
+}

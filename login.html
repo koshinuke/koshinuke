@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+	<head>
+		<title>KoshiNuke - Login</title>
+		<meta charset="utf-8">
+		<script type="application/javascript" src="closure-library/closure/goog/base.js"></script>
+		<script type="application/javascript" src="closure-library/third_party/closure/goog/base.js"></script>
+		<script type="application/javascript" src="js/org/koshinuke/deps.js"></script>
+		<script type="application/javascript" src="js/login.js"></script>
+		<!--
+		<script type="application/javascript" src="js/login-compiled.js"></script>
+		-->
+		<link rel="stylesheet/less" type="text/css" href="build/less/login.less">
+		<script type="application/javascript" src="js/less-1.1.5.min.js"></script>
+	</head>
+	<body>
+		<header>
+			<div class="topbar">
+				<div class="brand">
+					<a href="#" title="KoshiNuke">こしぬけ</a>
+				</div>
+			</div>
+		</header>
+		<div class="main" role="main">
+			<form class="login form">
+				<fieldset>
+					<div class="input-pair">
+						<label for="user-name">Username</label>
+						<input name="user-name" type="text" placeholder="username"/>
+						<span class="help-inline"></span>
+					</div>
+					<div class="input-pair">
+						<label for="user-pass">Password</label>
+						<input name="user-pass" type="password" placeholder="password"/>
+						<span class="help-inline"></span>
+					</div>
+				</fieldset>
+				<div class="form-actions">
+					<button class="login decide">
+						Login
+					</button>
+					<input type="checkbox" name="remember" value="checked"/><span class="remember">Remember Me.</span>
+				</div>
+			</form>
+		</div>
+		<footer>
+			KoshiNuke is licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>
+			- Site content is <a href="http://creativecommons.org/licenses/by/3.0/">CC-by</a>
+		</footer>
+		<script>
+			/*@cc_on @*/
+			/*@if (@_win32)
+			 document.write("<script id=__ie_onload defer src=javascript:void(0)><\/script>");
+			 var script = document.getElementById("__ie_onload");
+			 script.onreadystatechange = function() {
+			 if (this.readyState == "complete") {
+			 login();
+			 }
+			 };
+			 /*@end @*/
+			if(/WebKit/i.test(navigator.userAgent)) {
+				var _timer = setInterval(function() {
+					if(/loaded|complete/.test(document.readyState)) {
+						clearInterval(_timer);
+						login();
+					}
+				}, 10);
+			} else if(document.addEventListener) {
+				document.addEventListener("DOMContentLoaded", main, false);
+			}
+
+		</script>
+	</body>
+</html>

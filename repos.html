@@ -1,0 +1,230 @@
+<!--
+__    _          _       _   _       _
+| | / /         | |   (_) \ | |     | |
+| |/ /  ___  ___| |__  _|  \| |_   _| | __ ___
+|    \ / _ \/ __| '_ \| | . ` | | | | |/ // _ \
+| |\  \ (_) \__ \ | | | | |\  | |_| |   <|  __/
+\_| \_/\___/|___/_| |_|_\_| \_/\__,_|_|\_\\___|
+-->
+<html>
+	<head>
+		<title>KoshiNuke</title>
+		<meta charset="utf-8">
+		<link href="css/codemirror.css" rel="stylesheet">
+		<link href="css/diff.css" rel="stylesheet">
+		<script type="application/javascript" src="closure-library/closure/goog/base.js"></script>
+		<script type="application/javascript" src="closure-library/third_party/closure/goog/base.js"></script>
+		<script>
+			// name resolving hack
+			goog.require('goog.string.StringBuffer');
+			goog.require('goog.soy');
+
+		</script>
+		<script type="application/javascript" src="js/soyutils_usegoog.js"></script>
+		<script type="application/javascript" src="js/closure.ZeroClipboard.js"></script>
+		<script type="application/javascript" src="js/codemirror.js"></script>
+		<script type="application/javascript" src="js/codemirror.modes.js"></script>
+		<script type="application/javascript" src="js/org/koshinuke/deps.js"></script>
+		<script type="application/javascript" src="js/org/koshinuke/externs/BranchActivity.js"></script>
+		<script type="application/javascript" src="js/app.js"></script>
+		<!--
+		<script type="application/javascript" src="js/externs-compiled.js"></script>
+		<script type="application/javascript" src="js/koshinuke-compiled.js"></script>
+		-->
+		<link rel="stylesheet/less" type="text/css" href="build/less/repos.less">
+		<link rel="stylesheet/less" type="text/css" href="build/less/users.less">
+		<script type="application/javascript" src="js/less-1.1.5.min.js"></script>
+		<script type="application/javascript" src="js/jit-yc.js"></script>
+	</head>
+	<body>
+		<div class="topbar">
+			<div class="brand">
+				<a href="#" title="KoshiNuke">こしぬけ</a>
+			</div>
+			<div class="nav">
+				<div class="goog-tab home-tab" title="ダッシュボード">
+					Home
+				</div>
+				<div class="goog-tab status-tab" title="Twitterモドキ">
+					Status
+				</div>
+				<div class="goog-tab sandbox-tab" title="Gistモドキ ">
+					Sandbox
+				</div>
+				<div class="goog-tab admin-tab" title="鍵管理とか、そういうの。">
+					Administrations
+				</div>
+			</div>
+		</div>
+		<div class="outer">
+			<div class="sidebar">
+				<div class="repo-list"></div>
+				<button class="new-repo">
+					New Repository
+				</button>
+			</div>
+			<div class="contents">
+				<div class="topic repo-urls">
+					<div class="protocols">
+						<span class="begin ssh" href="username@koshinuke.org:koshinuke/org.koshinuke.git" desc="Read+Write">SSH</span>
+						<span class="middle https active" href="https://username@koshinuke.org/koshinuke/org.koshinuke.git" desc="Read+Write">HTTPS</span>
+						<span class="middle git" href="git://koshinuke.org/koshinuke/org.koshinuke.git" desc="Read-Only">Git</span>
+					</div>
+					<input type="text" class="url-box end" value="username@koshinuke.org:koshinuke/org.koshinuke.git" readonly="readonly"/>
+					<span class="clip-container"><span class="copy"></span></span>
+					<div class="desc-container">
+						<span>Read+Write</span>&nbsp;access
+					</div>
+				</div>
+				<div class="topic">
+					<ul class="breadcrumbs">
+						<li>
+							Branches
+						</li>
+					</ul>
+				</div>
+				<div class="topic">
+					<div class="above goog-tab-bar"></div>
+					<div class="tabpane"></div>
+				</div>
+			</div>
+		</div>
+		<div class="newrepo" style="display: none;">
+			<div class="above goog-tab-bar">
+				<div class="goog-tab goog-tab-selected">
+					Init Repository
+				</div>
+				<div class="goog-tab">
+					Clone Repository
+				</div>
+			</div>
+			<div class="tabpane">
+				<div class="pane init-repo">
+					<div class="main form">
+						<fieldset>
+							<div class="input-pair">
+								<label for="repo-name">Name</label>
+								<input id="repo-name" type="text" size="40" placeholder="path/reponame" />
+								<span class="help-inline"></span>
+							</div>
+							<div class="input-pair">
+								<label for="repo-readme">Readme</label>
+								<textarea id="repo-readme" cols="80" rows="10" placeholder="initial readme, project description or more..."></textarea>
+								<span class="help-inline"></span>
+							</div>
+						</fieldset>
+						<div class="form-actions">
+							<button class="init decide" disabled>
+								Init Repository
+							</button>
+							<button class="cancel">
+								Cancel
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="pane clone-repo" style="display: none;">
+					<div class="main form">
+						<fieldset>
+							<div class="input-pair">
+								<label for="repo-uri">URI</label>
+								<input id="repo-uri" type="text" placeholder="https://example.com/username/reponame.git"/>
+								<span class="help-inline"></span>
+							</div>
+							<div class="input-pair">
+								<label for="repo-username">Username</label>
+								<input id="repo-username" type="text" placeholder="username"/>
+								<span class="help-inline"></span>
+							</div>
+							<div class="input-pair">
+								<label for="repo-pass">Password</label>
+								<input id="repo-pass" type="password" placeholder="password" />
+								<span class="help-inline"></span>
+							</div>
+						</fieldset>
+						<div class="form-actions">
+							<button class="clone decide" disabled>
+								Clone Repository
+							</button>
+							<button class="cancel">
+								Cancel
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="admin" style="display: none;">
+			<div class="above goog-tab-bar">
+				<div class="goog-tab goog-tab-selected">
+					Profile
+				</div>
+			</div>
+			<div class="tabpane">
+				<div class="pane profile">
+					<div class="main form">
+						<fieldset>
+							<div class="input-pair">
+								<label for="user-name">Username</label>
+								<input id="user-name" type="text" placeholder="username"/>
+								<span class="help-inline"></span>
+							</div>
+							<div class="input-pair">
+								<label for="user-pass">Password</label>
+								<input id="user-pass" type="password" placeholder="password"/>
+								<span class="help-inline"></span>
+							</div>
+							<div class="input-images">
+								<div class="input-pair">
+									<label for="user-avatar">Avatar</label>
+									<input id="user-avatar" type="file" accept="image/*" placeholder="Drag &amp; Drop Image file here." />
+								</div>
+								<div class="input-pair">
+									<label>Files</label>
+									<div class="img-container">Drag &amp; Drop Image files here.</div>
+								</div>
+							</div>
+							<div class="input-pair">
+								<label for="ssh-key">SSH Key</label>
+								<textarea id="ssh-key" cols="80" rows="10" placeholder="ssh-rsa QAApZc1yc2EAANcDAQ..."></textarea>
+								<span class="help-inline"></span>
+							</div>
+						</fieldset>
+						<div class="form-actions">
+							<button class="updatep decide">
+								Update Profile
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer>
+			KoshiNuke is licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>
+			- Site content is <a href="http://creativecommons.org/licenses/by/3.0/">CC-by</a>
+		</footer>
+		<script>
+			/*@cc_on @*/
+			/*@if (@_win32)
+			 document.write("<script id=__ie_onload defer src=javascript:void(0)><\/script>");
+			 var script = document.getElementById("__ie_onload");
+			 script.onreadystatechange = function() {
+			 if (this.readyState == "complete") {
+			 main();
+			 }
+			 };
+			 /*@end @*/
+			if(/WebKit/i.test(navigator.userAgent)) {
+				var _timer = setInterval(function() {
+					if(/loaded|complete/.test(document.readyState)) {
+						clearInterval(_timer);
+						main();
+					}
+				}, 10);
+			} else if(document.addEventListener) {
+				document.addEventListener("DOMContentLoaded", main, false);
+			}
+
+		</script>
+	</body>
+</html>

@@ -1,0 +1,75 @@
+.diff {
+ .commit {
+		&:hover {
+			background-color: inherit;
+		}
+		.label, .parents {
+				margin-left: 0.5em;
+		}
+		.label, .parents > span {
+				text-align: center;
+				vertical-align: bottom;
+		}
+		.parent {
+				border-bottom: 1px dotted #CCC;
+				.clickable;
+		}
+		.label {
+			color: gray;
+		}
+	}
+	.files {
+		.file {
+			margin-bottom: 0.5em;
+			.meta {
+				border: 1px solid #CCC;
+				padding: 0.2em 0.2em 0.1em 0.2em;
+				text-shadow: 1px 1px 0 white;
+			}
+			
+			&.collapse {
+				.meta {
+					#radius > .around;
+					#gradient > .vertical(#f3f3f3, #eae5e3);
+					&:hover {
+						#gradient > .vertical(#eae5e3, #f3f3f3);
+					}
+				}
+				.status {
+					.toggle_plus;
+				}
+				.content {
+					display: none;
+				}
+			}
+			&.expand {
+				.meta {
+					#radius > .top;
+					border-bottom: none;
+					#gradient > .vertical(#eae5e3, #f3f3f3);
+					&:hover {
+						#gradient > .vertical(#f3f3f3, #eae5e3);
+					}
+				}
+				.status {
+					.toggle_minus;
+				}
+				.content {
+					#radius > .bottom;
+				}
+			}
+		}
+		.op {
+			float: right;
+		}
+		.path {
+				vertical-align: top;
+		}
+		.status {
+			float: left;
+		}
+	}
+	.CodeMirror-lines pre:hover {
+		background-color: whitesmoke;
+	}
+}

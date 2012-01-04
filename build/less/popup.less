@@ -1,0 +1,72 @@
+#popoverArrow {
+  .above(@arrowWidth: 0.3em) {
+    bottom: 0;
+    left: 50%;
+    margin-left: -@arrowWidth;
+    border-left: @arrowWidth solid transparent;
+    border-right: @arrowWidth solid transparent;
+    border-top: @arrowWidth solid @black;
+  }
+  .left(@arrowWidth: 0.3em) {
+    top: 50%;
+    right: 0;
+    margin-top: -@arrowWidth;
+    border-top: @arrowWidth solid transparent;
+    border-bottom: @arrowWidth solid transparent;
+    border-left: @arrowWidth solid @black;
+  }
+  .below(@arrowWidth: 0.3em) {
+    top: 0;
+    left: 50%;
+    margin-left: -@arrowWidth;
+    border-left: @arrowWidth solid transparent;
+    border-right: @arrowWidth solid transparent;
+    border-bottom: @arrowWidth solid @black;
+  }
+  .right(@arrowWidth: 0.3em) {
+    top: 50%;
+    left: 0;
+    margin-top: -@arrowWidth;
+    border-top: @arrowWidth solid transparent;
+    border-bottom: @arrowWidth solid transparent;
+    border-right: @arrowWidth solid @black;
+  }
+}
+
+.tooltip {
+	display: block;
+	position: absolute;
+	visibility: visible;
+	padding: 0.3em;
+	font-size: smaller;
+	z-index: 1000;
+	&.above .tooltip-arrow   { #popoverArrow > .above(); }
+	&.left .tooltip-arrow    { #popoverArrow > .left(); }
+	&.below .tooltip-arrow   { #popoverArrow > .below(); }
+	&.right .tooltip-arrow   { #popoverArrow > .right(); }
+}
+.tooltip-inner {
+	padding: 0.2em 0.5em;
+	background-color: black;
+	color: white;
+	text-align: center;
+	max-width: 200px;
+	text-decoration: none;
+	#radius > .around(4px);
+}
+.tooltip-arrow {
+	position: absolute;
+	width: 0;
+	height: 0;
+}
+
+.tip {
+    color: #111;
+    background-color: white;
+    border:1px solid #ccc;
+    .box-shadow(#555 2px 2px 8px);
+    .opacity(90);
+    font-size:smaller;
+    padding:0.3em;
+    #radius > .around(4px);
+}

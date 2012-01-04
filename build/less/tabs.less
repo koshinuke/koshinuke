@@ -1,0 +1,44 @@
+.above.goog-tab-bar {
+	border-bottom: 1px solid #ddd;
+	.clearfix;
+	margin-bottom: 0.5em;
+	.user-select;
+	
+	.goog-tab {
+		float: left;
+		padding: 0 0.5em 0 0.5em;
+		color: @gray;
+		position: relative;
+		margin-bottom: -1px;
+
+		line-height: 2.5em;
+		#radius > .top;
+		cursor: pointer;
+
+		&:hover {
+			background-color: @grayLighter;
+			border-bottom: 1px solid @grayLighter;
+		}
+		&.goog-tab-selected {
+			color: black;
+			cursor: default;
+			border: 1px solid #ddd;
+			border-bottom-color: transparent;
+			background-color: white;
+		}
+		.close {
+			font-weight: bold;
+			font-size: 0.3em;
+			vertical-align: top;
+			#radius > .around;
+			color: @gray;
+			padding: 0 0.3em 0.3em 0.3em;
+			margin-left: 0.5em;
+			&:hover {
+				background: #cc0000;
+				color: white;
+				cursor: pointer;
+			}
+		}
+	}
+}

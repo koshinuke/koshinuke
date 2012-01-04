@@ -1,0 +1,141 @@
+[
+	{
+		"host": "koshinuke.jp",
+		"path": "web/koshinuke",
+		"name": "koshinuke",
+		"branches": [
+			{
+				"path": "master",
+				"name": "master",
+				"timestamp": 1323880375,
+				"author": "lanius",
+				"message": "master master master"
+			}, {
+				"path": "develop",
+				"name": "develop",
+				"timestamp": 1323861375,
+				"author": "lanius",
+				"message": "develop develop develop"
+			}, {
+				"path": "release",
+				"name": "release",
+				"timestamp": 1323811375,
+				"author": "taichi",
+				"message": "release release release"
+			}
+		],
+		"tags": [
+			{
+				"path": "0.0.1",
+				"name": "0.0.1",
+				"timestamp": 1323880375,
+				"author": "lanius",
+				"message": "web/koshinuke 0.0.1"
+			}, {
+				"path": "0.0.2",
+				"name": "0.0.2",
+				"timestamp": 1323861375,
+				"author": "lanius",
+				"message": "web/koshinuke 0.0.2"
+			}, {
+				"path": "0.1.3",
+				"name": "0.1.3",
+				"timestamp": 1323811375,
+				"author": "taichi",
+				"message": "web/koshinuke 0.1.3"
+			}
+		]
+	}, {
+		"host": "koshinuke.com",
+		"path": "servers/koshinuke.java",
+		"name": "koshinuke.java",
+		"branches": [
+			{
+				"path": "master2",
+				"name": "master2",
+				"timestamp": 1323880375,
+				"author": "lanius",
+				"message": "master master master"
+			}, {
+				"path": "develop2",
+				"name": "develop2",
+				"timestamp": 1323861375,
+				"author": "lanius",
+				"message": "develop develop develop"
+			}, {
+				"path": "release2",
+				"name": "release2",
+				"timestamp": 1323811375,
+				"author": "taichi",
+				"message": "release release release"
+			}
+		],
+		"tags": [
+			{
+				"path": "0.0.1",
+				"name": "0.0.1",
+				"timestamp": 1323880375,
+				"author": "lanius",
+				"message": "koshinuke.java 0.0.1"
+			}, {
+				"path": "0.0.2",
+				"name": "0.0.2",
+				"timestamp": 1323861375,
+				"author": "lanius",
+				"message": "koshinuke.java 0.0.2"
+			}, {
+				"path": "0.1.3",
+				"name": "0.1.3",
+				"timestamp": 1323811375,
+				"author": "taichi",
+				"message": "koshinuke.java 0.1.3"
+			}
+		]
+	}, {
+		"host": "koshinuke.org",
+		"path": "servers/koshinuke.py",
+		"name": "koshinuke.py",
+		"branches": [
+			{
+				"path": "master3",
+				"name": "master3",
+				"timestamp": 1323880375,
+				"author": "lanius",
+				"message": "master master master"
+			}, {
+				"path": "develop3",
+				"name": "develop3",
+				"timestamp": 1323861375,
+				"author": "lanius",
+				"message": "develop develop develop"
+			}, {
+				"path": "release3",
+				"name": "release3",
+				"timestamp": 1323811375,
+				"author": "taichi",
+				"message": "release release release"
+			}
+		],
+		"tags": [
+			{
+				"path": "0.0.1",
+				"name": "0.0.1",
+				"timestamp": 1323880375,
+				"author": "lanius",
+				"message": "koshinuke.py 0.0.1"
+			}, {
+				"path": "0.0.2",
+				"name": "0.0.2",
+				"timestamp": 1323861375,
+				"author": "lanius",
+				"message": "koshinuke.py 0.0.2"
+			}, {
+				"path": "0.1.3",
+				"name": "0.1.3",
+				"timestamp": 1323811375,
+				"author": "taichi",
+				"message": "koshinuke.py 0.1.3"
+			}
+		]
+	}
+]
