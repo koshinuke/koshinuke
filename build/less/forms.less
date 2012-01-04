@@ -44,6 +44,19 @@ select:focus {
 	outline: 1px dotted #666; // Selet elements don't get box-shadow styles, so instead we do outline
 }
 
+input[type='file'] {
+  padding: initial;
+  border: initial;
+  line-height: initial;
+  .box-shadow(none);
+}
+
+input[type='radio'] {
+	width: auto;
+	height: auto;
+	cursor: pointer;
+}
+
 button {
 	#radius > .around;
 	padding: 0.3em 0.5em 0.3em 0.5em;

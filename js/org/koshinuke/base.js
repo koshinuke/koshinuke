@@ -118,3 +118,12 @@ org.koshinuke.slideElements = function(outEl, inEl, footer) {
 	oA.play();
 	iA.play();
 };
+
+// for debug.
+org.koshinuke.listenAll = function(src, types) {
+	if(goog.DEBUG) {
+		goog.object.forEach(types, function(type) {
+			goog.events.listen(src, type, goog.bind(console.log, console, type));
+		});
+	}
+};

@@ -7,6 +7,9 @@ goog.require('goog.dom.classes');
 goog.require('goog.dom.query');
 goog.require('goog.dom.ViewportSizeMonitor');
 
+goog.require('goog.fs.FileReader');
+goog.require('goog.events.FileDropHandler');
+
 goog.require('goog.fx');
 goog.require('goog.fx.dom');
 
@@ -34,6 +37,26 @@ goog.exportSymbol('main', function() {
 		var tabbar = new goog.ui.TabBar();
 		tabbar.decorate(root);
 		tabbar.setSelectedTabIndex(0);
+		var outer = goog.dom.query('.outer')[0];
+		var admin = goog.dom.query('.admin')[0];
+		var newrepo = goog.dom.query('.newrepo')[0];
+		var f = goog.dom.query('footer')[0];
+		goog.events.listen(tabbar, goog.ui.Component.EventType.SELECT, function(e) {
+			var el = e.target.getElement();
+			if(goog.dom.classes.has(el, 'admin-tab')) {
+				var out;
+				if(goog.style.isElementShown(outer)) {
+					out = outer;
+				} else {
+					out = newrepo;
+				}
+				org.koshinuke.slideElements(out, admin, f);
+			} else {
+				if(goog.style.isElementShown(admin)) {
+					org.koshinuke.slideElements(admin, outer, f);
+				}
+			}
+		});
 	});
 
 	goog.array.forEach(goog.dom.query('.repo-urls'), function(root) {
@@ -97,13 +120,14 @@ goog.exportSymbol('main', function() {
 			});
 		});
 	});
-
-	goog.array.forEach(goog.dom.query('button.new-repo'), function(root) {
+	var action = function(el, fn) {
 		var b = new goog.ui.Button();
-		b.decorate(root);
-		goog.events.listen(b, goog.ui.Component.EventType.ACTION, function(e) {
-			org.koshinuke.slideElements(goog.dom.query('.outer')[0], goog.dom.query('.newrepo')[0], goog.dom.query('footer')[0]);
-		});
+		b.decorate(el);
+		goog.events.listen(b, goog.ui.Component.EventType.ACTION, fn);
+		return b;
+	};
+	action(goog.dom.query('button.new-repo')[0], function(e) {
+		org.koshinuke.slideElements(goog.dom.query('.outer')[0], goog.dom.query('.newrepo')[0], goog.dom.query('footer')[0]);
 	});
 
 	goog.array.forEach(goog.dom.query('.newrepo .goog-tab-bar'), function(root) {
@@ -123,12 +147,6 @@ goog.exportSymbol('main', function() {
 			}
 		});
 		tabbar.setSelectedTabIndex(0);
-		var action = function(el, fn) {
-			var b = new goog.ui.Button();
-			b.decorate(el);
-			goog.events.listen(b, goog.ui.Component.EventType.ACTION, fn);
-			return b;
-		}
 
 		goog.array.forEach(goog.dom.query('.newrepo .cancel'), function(el) {
 			action(el, function(e) {
@@ -168,6 +186,18 @@ goog.exportSymbol('main', function() {
 			}
 			initBtn.setEnabled(false);
 		});
+		var rr = goog.dom.getElement('repo-readme');
+		goog.events.listen(new goog.events.FileDropHandler(rr, true), goog.events.FileDropHandler.EventType.DROP, function(e) {
+			goog.array.forEach(e.getBrowserEvent().dataTransfer.files, function(f) {
+				goog.fs.FileReader.readAsText(f, 'UTF-8').addCallback(function(txt) {
+					var stb = new soy.StringBuilder();
+					stb.append(goog.dom.forms.getValue(rr));
+					stb.append('\n');
+					stb.append(txt);
+					goog.dom.forms.setValue(rr, stb.toString());
+				});
+			});
+		});
 		var cloneBtn = action(goog.dom.query('.newrepo .clone')[0], function(e) {
 			var c = e.target;
 			if(c.isEnabled()) {
@@ -201,6 +231,67 @@ goog.exportSymbol('main', function() {
 				}
 			}
 			cloneBtn.setEnabled(false);
+		});
+	});
+	goog.array.forEach(goog.dom.query('.admin .goog-tab-bar'), function(root) {
+		var tabbar = new goog.ui.TabBar();
+		tabbar.decorate(root);
+		var con = goog.dom.query('.admin .img-container')[0];
+		var filesfn = function(files) {
+			goog.array.forEach(files, function(f) {
+				goog.fs.FileReader.readAsDataUrl(f).addCallbacks(function(dataUrl) {
+					var fc = con.firstChild;
+					if(fc.nodeType == goog.dom.NodeType.TEXT) {
+						goog.dom.removeNode(fc);
+					}
+					goog.dom.appendChild(con, goog.dom.createDom('div', 'img-radio-pair', goog.dom.createDom('input', {
+						'type' : 'radio',
+						'name' : 'uar',
+						'value' : dataUrl
+					}), goog.dom.createDom('img', {
+						'class' : 'small',
+						'title' : 'small icon',
+						'src' : dataUrl
+					}), goog.dom.createDom('img', {
+						'class' : 'large',
+						'title' : 'large icon',
+						'src' : dataUrl
+					})));
+				}, function(error) {
+					console.log("ERROR", error);
+				});
+			});
+		};
+		goog.events.listen(con, goog.events.EventType.CLICK, function(e) {
+			var el = e.target;
+			if(el.tagName == 'INPUT' && el['name'] == 'uar') {
+				goog.array.forEach(goog.dom.query('.admin .img-container .img-radio-pair'), function(a) {
+					goog.dom.classes.remove(a, 'active');
+				});
+				goog.dom.classes.add(el.parentNode, 'active');
+			}
+		});
+		goog.events.listen(goog.dom.getElement('user-avatar'), goog.events.EventType.CHANGE, function(e) {
+			filesfn(e.target.files);
+		});
+		var fdh = new goog.events.FileDropHandler(goog.dom.query('.input-images')[0], true);
+		goog.events.listen(fdh, goog.events.FileDropHandler.EventType.DROP, function(e) {
+			filesfn(e.getBrowserEvent().dataTransfer.files);
+		});
+		var updatep = action(goog.dom.query('.admin .updatep')[0], function(e) {
+			var c = e.target;
+			if(c.isEnabled()) {
+				c.setEnabled(false);
+				var un = goog.dom.forms.getValue(goog.dom.getElement('user-name'));
+				var img;
+				var rdo = goog.dom.query('.admin .img-container .img-radio-pair.active input[type="radio"]')[0];
+				if(rdo) {
+					img = goog.dom.forms.getValue(rdo);
+				}
+				var key = goog.dom.forms.getValue(goog.dom.getElement('ssh-key'));
+				// TODO submit…
+				console.log(un, img, key);
+			}
 		});
 	});
 });

@@ -42,17 +42,17 @@ __    _          _       _   _       _
 				<a href="#" title="KoshiNuke">こしぬけ</a>
 			</div>
 			<div class="nav">
-				<div class="goog-tab">
-					<a href="#home" title="ダッシュボード">Home</a>
+				<div class="goog-tab home-tab" title="ダッシュボード">
+					Home
 				</div>
-				<div class="goog-tab">
-					<a href="#status" title="Twitterモドキ">Status</a>
+				<div class="goog-tab status-tab" title="Twitterモドキ">
+					Status
 				</div>
-				<div class="goog-tab">
-					<a href="#sandbox" title="Gistモドキ ">Sandbox</a>
+				<div class="goog-tab sandbox-tab" title="Gistモドキ ">
+					Sandbox
 				</div>
-				<div class="goog-tab">
-					<a href="#admin" title="鍵管理とか、そういうの。">Administrations</a>
+				<div class="goog-tab admin-tab" title="鍵管理とか、そういうの。">
+					Administrations
 				</div>
 			</div>
 		</div>
@@ -114,7 +114,7 @@ __    _          _       _   _       _
 							</div>
 						</fieldset>
 						<div class="form-actions">
-							<button class="init" disabled>
+							<button class="init decide" disabled>
 								Init Repository
 							</button>
 							<button class="cancel">
@@ -143,11 +143,56 @@ __    _          _       _   _       _
 							</div>
 						</fieldset>
 						<div class="form-actions">
-							<button class="clone" disabled>
+							<button class="clone decide" disabled>
 								Clone Repository
 							</button>
 							<button class="cancel">
 								Cancel
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="admin" style="display: none;">
+			<div class="above goog-tab-bar">
+				<div class="goog-tab goog-tab-selected">
+					Profile
+				</div>
+			</div>
+			<div class="tabpane">
+				<div class="pane profile">
+					<div class="main form">
+						<fieldset>
+							<div class="input-pair">
+								<label for="user-name">Username</label>
+								<input id="user-name" type="text" placeholder="username"/>
+								<span class="help-inline"></span>
+							</div>
+							<div class="input-pair">
+								<label for="user-pass">Password</label>
+								<input id="user-pass" type="password" placeholder="password"/>
+								<span class="help-inline"></span>
+							</div>
+							<div class="input-images">
+								<div class="input-pair">
+									<label for="user-avatar">Avatar</label>
+									<input id="user-avatar" type="file" accept="image/*" placeholder="Drag &amp; Drop Image file here." />
+								</div>
+								<div class="input-pair">
+									<label>Files</label>
+									<div class="img-container">Drag &amp; Drop Image files here.</div>
+								</div>
+							</div>
+							<div class="input-pair">
+								<label for="ssh-key">SSH Key</label>
+								<textarea id="ssh-key" cols="80" rows="10" placeholder="ssh-rsa QAApZc1yc2EAANcDAQ..."></textarea>
+								<span class="help-inline"></span>
+							</div>
+						</fieldset>
+						<div class="form-actions">
+							<button class="updatep decide">
+								Update Profile
 							</button>
 						</div>
 					</div>
