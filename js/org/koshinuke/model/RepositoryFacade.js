@@ -23,5 +23,9 @@ org.koshinuke.model.RepositoryFacade.prototype.load = function(every, fin) {
 			every(r);
 		});
 		fin();
-	}, 'GET', null, {"X-Requested-With": "XMLHttpRequest"});
+	}, 'GET', null, {
+		"X-Requested-With": "XMLHttpRequest",
+		"Cache-Control": "no-cache",
+		"Pragma": "no-cache"
+	});
 };
