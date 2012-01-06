@@ -29,7 +29,8 @@ goog.inherits(org.koshinuke.model.BranchFacade, org.koshinuke.model.TreeGridFaca
 /** @override */
 org.koshinuke.model.BranchFacade.prototype.toRequestUri = function(model) {
 	// TODO for mockup
-	return this.uri.resolve(new goog.Uri('/koshinuke/stub/' + model.path + '.json'));
+	//return this.uri.resolve(new goog.Uri('/koshinuke/stub/' + model.path + '.json'));
+	return this.uri.resolve(new goog.Uri("/" + model.path + "/tree/" + model.node.path));
 };
 
 /** @constructor */
@@ -41,7 +42,8 @@ goog.inherits(org.koshinuke.model.TagFacade, org.koshinuke.model.TreeGridFacade)
 /** @override */
 org.koshinuke.model.TagFacade.prototype.toRequestUri = function(model) {
 	// TODO for mockup
-	return this.uri.resolve(new goog.Uri('/koshinuke/stub/' + model.path + '.json'));
+	//return this.uri.resolve(new goog.Uri('/koshinuke/stub/' + model.path + '.json'));
+	return this.uri.resolve(new goog.Uri("/" + model.path + "/tree/" + model.node.path));
 };
 
 org.koshinuke.model.TreeGridFacade.prototype.emitLoaded = function(kids, cursor, model) {
@@ -61,7 +63,7 @@ org.koshinuke.model.TreeGridFacade.prototype.emitLoaded = function(kids, cursor,
 org.koshinuke.model.TreeGridFacade.prototype.load = function(model,fn) {
 	var psuedo = new org.koshinuke.ui.TreeGrid.Psuedo(model.path);
 	org.koshinuke.model.TreeGridFacade.setUpForSort(psuedo);
-	var parent = model.getParent();
+	var parent = model.node.getParent();
 	var index = parent.indexOfChild(model) + 1;
 	parent.addChildAt(psuedo, index, true);
 
