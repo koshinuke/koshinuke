@@ -111,7 +111,7 @@ goog.exportSymbol('main', function() {
 			PubSub.publish(PubSub.REPO_SELECT, {
 				context : e.context,
 				label : e.label,
-				user : "taichi", // TODO from cookie?
+				user : goog.dom.forms.getValue(goog.dom.getElement('un')),
 				host : t.host,
 				path : t.path,
 				name : t.name,
