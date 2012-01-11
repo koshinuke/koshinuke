@@ -12,7 +12,8 @@ org.koshinuke.model.RepositoryFacade = function(uri) {
 };
 org.koshinuke.model.RepositoryFacade.prototype.toRequestUri = function() {
 	// TODO for mockup
-	return this.uri.resolve(new goog.Uri('/koshinuke/stub/repo_list.json'));
+	//return this.uri.resolve(new goog.Uri('/koshinuke/stub/repo_list.json'));
+	return this.uri.resolve(new goog.Uri("/"));
 };
 org.koshinuke.model.RepositoryFacade.prototype.load = function(every, fin) {
 	goog.net.XhrIo.send(this.toRequestUri().toString(), function(e) {
@@ -22,5 +23,9 @@ org.koshinuke.model.RepositoryFacade.prototype.load = function(every, fin) {
 			every(r);
 		});
 		fin();
+	}, 'GET', null, {
+		"X-Requested-With": "XMLHttpRequest",
+		"Cache-Control": "no-cache",
+		"Pragma": "no-cache"
 	});
 };

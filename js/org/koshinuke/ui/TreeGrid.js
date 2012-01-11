@@ -172,7 +172,9 @@ org.koshinuke.ui.TreeGrid.prototype.handleBeforeExpand_ = function(e) {
 			});
 		} else {
 			var index = self.indexOfChild(model) + 1;
-			this.facade.load(model, function(kids) {
+			var m = goog.object.clone(this.getModel());
+			m.node = e.rowEl.model;
+			this.facade.load(m, function(kids) {
 				goog.array.forEach(kids, function(a, i) {
 					// TODO 子要素のうち最新のtimestamp,message, authorを拾って設定する
 					self.facade.emitLoaded(kids, i, a);

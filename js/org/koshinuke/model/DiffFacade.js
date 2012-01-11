@@ -15,7 +15,8 @@ org.koshinuke.model.DiffFacade = function(uri) {
 org.koshinuke.model.DiffFacade.prototype.toRequestUri = function(model) {
 	// TODO for mockup
 	console.log('DiffFacade', model, model.commit);
-	return this.uri.resolve(new goog.Uri('/koshinuke/stub/diff.json'));
+	//return this.uri.resolve(new goog.Uri('/koshinuke/stub/diff.json'));
+	return this.uri.resolve(new goog.Uri("/" + model.path + "/commit/" + model.commit.commit));
 };
 org.koshinuke.model.DiffFacade.prototype.load = function(model, fn) {
 	goog.net.XhrIo.send(this.toRequestUri(model), goog.partial(this.handleResponse_, model, fn));
