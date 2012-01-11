@@ -31,7 +31,7 @@ goog.require('org.koshinuke.ui.PaneTabBar');
 goog.exportSymbol('main', function() {
 	var PubSub = org.koshinuke.PubSub;
 	var uri = new goog.Uri(window.location.href);
-	ZeroClipboard.setMoviePath('flash/ZeroClipboard.swf');
+	ZeroClipboard.setMoviePath('static/flash/ZeroClipboard.swf');
 
 	goog.array.forEach(goog.dom.query('.nav'), function(root) {
 		var tabbar = new goog.ui.TabBar();
