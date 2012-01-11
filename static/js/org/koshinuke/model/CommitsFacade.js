@@ -16,7 +16,7 @@ org.koshinuke.model.CommitsFacade.prototype.toRequestUri = function(model) {
 	// TODO for mockup
 	console.log('CommitsFacade', model, model.commit);
 	//return this.uri.resolve(new goog.Uri('/koshinuke/stub/commits.json'));
-	return this.uri.resolve(new goog.Uri("/" + model.path + "/commits/" + model.branch.path));
+	return this.uri.resolve(new goog.Uri("/dynamic/" + model.path + "/commits/" + model.branch.path));
 };
 org.koshinuke.model.CommitsFacade.prototype.load = function(model, fn) {
 	goog.net.XhrIo.send(this.toRequestUri(model), goog.partial(this.handleResponse_, model, fn));

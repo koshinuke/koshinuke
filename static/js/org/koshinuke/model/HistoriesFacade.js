@@ -16,7 +16,7 @@ org.koshinuke.model.HistoriesFacade.prototype.toRequestUri = function(model) {
 	// TODO for mockup
 	console.log('HistoriesFacade', model);
 	//return this.uri.resolve(new goog.Uri('/koshinuke/stub/histories.json'));
-	return this.uri.resolve(new goog.Uri("/" + model.path + "/history"));
+	return this.uri.resolve(new goog.Uri("/dynamic/" + model.path + "/history"));
 };
 
 org.koshinuke.model.HistoriesFacade.prototype.load = function(model, fn) {

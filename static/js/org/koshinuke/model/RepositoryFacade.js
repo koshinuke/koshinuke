@@ -13,7 +13,7 @@ org.koshinuke.model.RepositoryFacade = function(uri) {
 org.koshinuke.model.RepositoryFacade.prototype.toRequestUri = function() {
 	// TODO for mockup
 	//return this.uri.resolve(new goog.Uri('/koshinuke/stub/repo_list.json'));
-	return this.uri.resolve(new goog.Uri("/"));
+	return this.uri.resolve(new goog.Uri("/dynamic"));
 };
 org.koshinuke.model.RepositoryFacade.prototype.load = function(every, fin) {
 	goog.net.XhrIo.send(this.toRequestUri().toString(), function(e) {
