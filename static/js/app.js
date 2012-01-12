@@ -99,13 +99,18 @@ goog.exportSymbol('main', function() {
 	goog.array.forEach(goog.dom.query('.repo-list'), function(root) {
 		var tabbar = new goog.ui.TabBar(goog.ui.TabBar.Location.START);
 		tabbar.decorate(root);
-		var rl = new org.koshinuke.model.RepositoryFacade(uri);
-		rl.load(function(repo) {
-			tabbar.addChild(repo, true);
-		}, function() {
+		PubSub.subscribe(PubSub.REPO_LIST_RECEIVED, function(json) {
+			tabbar.removeChildren(true);
+			goog.array.forEach(json, function(a) {
+				var r = new org.koshinuke.ui.Repository();
+				r.setJson(a);
+				tabbar.addChild(r, true);
+			});
 			tabbar.setSelectedTabIndex(0);
 			tabbar.getSelectedTab().setSelectedTabIndex(0);
 		});
+		var rl = new org.koshinuke.model.RepositoryFacade(uri);
+		rl.load();
 		goog.events.listen(tabbar, org.koshinuke.ui.Repository.EventType.REPO_CONTEXT_SELECTED, function(e) {
 			var t = e.target;
 			PubSub.publish(PubSub.REPO_SELECT, {
@@ -123,7 +128,9 @@ goog.exportSymbol('main', function() {
 	var action = function(el, fn) {
 		var b = new goog.ui.Button();
 		b.decorate(el);
-		goog.events.listen(b, goog.ui.Component.EventType.ACTION, fn);
+		goog.events.listen(b, goog.ui.Component.EventType.ACTION, function(e) {
+			fn(e);
+		});
 		return b;
 	};
 	action(goog.dom.query('button.new-repo')[0], function(e) {
@@ -148,6 +155,11 @@ goog.exportSymbol('main', function() {
 		});
 		tabbar.setSelectedTabIndex(0);
 
+		goog.array.forEach(goog.dom.query('.newrepo form.main'), function(el) {
+			goog.events.listen(el, goog.events.EventType.SUBMIT, function(e) {
+				e.preventDefault();
+			});
+		});
 		goog.array.forEach(goog.dom.query('.newrepo .cancel'), function(el) {
 			action(el, function(e) {
 				org.koshinuke.slideElements(goog.dom.query('.newrepo')[0], goog.dom.query('.outer')[0], goog.dom.query('footer')[0]);
@@ -157,10 +169,8 @@ goog.exportSymbol('main', function() {
 			var c = e.target;
 			if(c.isEnabled()) {
 				c.setEnabled(false);
-				var name = goog.dom.forms.getValue(goog.dom.getElement('repo-name'));
-				var readme = goog.dom.forms.getValue(goog.dom.getElement('repo-readme'));
-				// TODO submit...
-				console.log(name, readme);
+				var facade = new org.koshinuke.model.RepositoryFacade(uri);
+				facade.init(goog.dom.query(".init-repo form.main")[0])
 			}
 		});
 		goog.events.listen(goog.dom.getElement('repo-name'), goog.events.EventType.INPUT, function(e) {
