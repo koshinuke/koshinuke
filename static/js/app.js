@@ -107,7 +107,10 @@ goog.exportSymbol('main', function() {
 				tabbar.addChild(r, true);
 			});
 			tabbar.setSelectedTabIndex(0);
-			tabbar.getSelectedTab().setSelectedTabIndex(0);
+			var parent = tabbar.getSelectedTab();
+			if(parent) {
+				parent.setSelectedTabIndex(0);
+			}
 		});
 		var rl = new org.koshinuke.model.RepositoryFacade(uri);
 		rl.load();
