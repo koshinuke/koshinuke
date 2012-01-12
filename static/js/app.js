@@ -180,7 +180,7 @@ goog.exportSymbol('main', function() {
 			if(v && 0 < v.length) {
 				if(v.match(/^[^@'"<>:\*\?\\\(\)\s]+$/i)) {
 					var ary = v.split('/');
-					if(ary.length < 3) {
+					if(ary.length == 2) {
 						goog.dom.classes.remove(p, 'error');
 						goog.dom.setTextContent(msg, '');
 						initBtn.setEnabled(true);
