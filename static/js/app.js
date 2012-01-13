@@ -201,7 +201,7 @@ goog.exportSymbol('main', function() {
 						return;
 					} else {
 						goog.dom.classes.add(p, 'error');
-						goog.dom.setTextContent(msg, 'name must contains 1 or less path separator.');
+						goog.dom.setTextContent(msg, 'name must contains 1 path separator.');
 					}
 				} else {
 					goog.dom.classes.add(p, 'error');
