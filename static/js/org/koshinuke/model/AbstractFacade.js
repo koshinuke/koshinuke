@@ -1,7 +1,9 @@
 goog.provide('org.koshinuke.model.AbstractFacade');
 
+goog.require('goog.dom');
 goog.require('goog.dom.forms');
 goog.require('goog.net.XhrIo');
+goog.require('goog.object');
 goog.require('goog.Uri');
 
 /** @constructor */
@@ -10,9 +12,10 @@ org.koshinuke.model.AbstractFacade = function(uri) {
 };
 /** @const */
 org.koshinuke.model.AbstractFacade.Headers = {
-	"X-Requested-With" : "XMLHttpRequest",
 	"Cache-Control" : "no-cache",
-	"Pragma" : "no-cache"
+	"Pragma" : "no-cache",
+	"X-Requested-With" : "XMLHttpRequest",
+	"Accept" : "application/json"
 };
 
 org.koshinuke.model.AbstractFacade.prototype.toRequestUri = function(path) {
@@ -26,7 +29,9 @@ org.koshinuke.model.AbstractFacade.prototype.get = function(path, pubSubKey) {
 };
 
 org.koshinuke.model.AbstractFacade.prototype.post = function(path, pubSubKey, formEl) {
+	var h = goog.object.clone(org.koshinuke.model.AbstractFacade.Headers);
+	h["X-KoshiNuke"] = goog.dom.forms.getValue(goog.dom.getElement('ct'));
 	goog.net.XhrIo.send(this.toRequestUri(path).toString(), function(e) {
 		org.koshinuke.PubSub.publish(pubSubKey, e.target.getResponseJson());
-	}, 'POST', goog.dom.forms.getFormDataString(formEl), org.koshinuke.model.AbstractFacade.Headers);
+	}, 'POST', goog.dom.forms.getFormDataString(formEl), h);
 };

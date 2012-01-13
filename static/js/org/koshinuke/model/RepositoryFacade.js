@@ -1,9 +1,5 @@
 goog.provide('org.koshinuke.model.RepositoryFacade');
 
-goog.require('goog.dom.forms');
-goog.require('goog.net.XhrIo');
-goog.require('goog.Uri');
-
 goog.require('org.koshinuke.model.AbstractFacade');
 
 /** @constructor */

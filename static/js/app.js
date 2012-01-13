@@ -95,21 +95,25 @@ goog.exportSymbol('main', function() {
 			PubSub.publish(PubSub.TAB_UNSELECT, e.target.getModel());
 		});
 	});
-
+	var slideToInit = goog.partial(org.koshinuke.slideElements, goog.dom.query('.outer')[0], goog.dom.query('.newrepo')[0], goog.dom.query('footer')[0])
 	goog.array.forEach(goog.dom.query('.repo-list'), function(root) {
 		var tabbar = new goog.ui.TabBar(goog.ui.TabBar.Location.START);
 		tabbar.decorate(root);
 		PubSub.subscribe(PubSub.REPO_LIST_RECEIVED, function(json) {
-			tabbar.removeChildren(true);
-			goog.array.forEach(json, function(a) {
-				var r = new org.koshinuke.ui.Repository();
-				r.setJson(a);
-				tabbar.addChild(r, true);
-			});
-			tabbar.setSelectedTabIndex(0);
-			var parent = tabbar.getSelectedTab();
-			if(parent) {
-				parent.setSelectedTabIndex(0);
+			if(json.length < 1) {
+				slideToInit();
+			} else {
+				tabbar.removeChildren(true);
+				goog.array.forEach(json, function(a) {
+					var r = new org.koshinuke.ui.Repository();
+					r.setJson(a);
+					tabbar.addChild(r, true);
+				});
+				tabbar.setSelectedTabIndex(0);
+				var parent = tabbar.getSelectedTab();
+				if(parent) {
+					parent.setSelectedTabIndex(0);
+				}
 			}
 		});
 		var rl = new org.koshinuke.model.RepositoryFacade(uri);
@@ -136,9 +140,7 @@ goog.exportSymbol('main', function() {
 		});
 		return b;
 	};
-	action(goog.dom.query('button.new-repo')[0], function(e) {
-		org.koshinuke.slideElements(goog.dom.query('.outer')[0], goog.dom.query('.newrepo')[0], goog.dom.query('footer')[0]);
-	});
+	action(goog.dom.query('button.new-repo')[0], slideToInit);
 
 	goog.array.forEach(goog.dom.query('.newrepo .goog-tab-bar'), function(root) {
 		var tabbar = new goog.ui.TabBar();
@@ -163,10 +165,10 @@ goog.exportSymbol('main', function() {
 				e.preventDefault();
 			});
 		});
-		goog.array.forEach(goog.dom.query('.newrepo .cancel'), function(el) {
-			action(el, function(e) {
-				org.koshinuke.slideElements(goog.dom.query('.newrepo')[0], goog.dom.query('.outer')[0], goog.dom.query('footer')[0]);
-			});
+		var slideToRepo = goog.partial(org.koshinuke.slideElements, goog.dom.query('.newrepo')[0], goog.dom.query('.outer')[0], goog.dom.query('footer')[0]);
+		var cancels = goog.dom.query('.newrepo .cancel');
+		goog.array.forEach(cancels, function(el) {
+			action(el, slideToRepo);
 		});
 		var initBtn = action(goog.dom.query('.newrepo .init')[0], function(e) {
 			var c = e.target;
@@ -175,6 +177,15 @@ goog.exportSymbol('main', function() {
 				var facade = new org.koshinuke.model.RepositoryFacade(uri);
 				facade.init(goog.dom.query(".init-repo form.main")[0])
 			}
+		});
+		PubSub.subscribe(PubSub.REPO_LIST_RECEIVED, function(json) {
+			if(0 < json.length) {
+				initBtn.setEnabled(true);
+				slideToRepo();
+			}
+			goog.array.forEach(cancels, function(el) {
+				goog.style.showElement(el, 0 < json.length);
+			});
 		});
 		goog.events.listen(goog.dom.getElement('repo-name'), goog.events.EventType.INPUT, function(e) {
 			var v = goog.dom.forms.getValue(e.target);
