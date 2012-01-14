@@ -8,7 +8,11 @@ this project is mockup.
 
 if you want to execute this project,
 
-svn co http://closure-library.googlecode.com/svn/trunk/ closure-library
+`svn co http://closure-library.googlecode.com/svn/trunk/ closure-library`
+
+project site is here.
+
+    http://koshinuke.github.com
 
 
 icons from 
