@@ -17,6 +17,7 @@ org.koshinuke.activationHandler = function(item, isSelect) {
 
 org.koshinuke.PubSub = new goog.pubsub.PubSub();
 org.koshinuke.PubSub.REPO_LIST_RECEIVED = "rep.l.r";
+org.koshinuke.PubSub.REPO_INIT_RESULT = "rep.i.r";
 org.koshinuke.PubSub.REPO_SELECT = "rep.s";
 org.koshinuke.PubSub.RESOURCE_SELECT = "res.s";
 org.koshinuke.PubSub.TAB_SELECT = "t.s";

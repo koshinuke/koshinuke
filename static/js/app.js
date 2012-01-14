@@ -5,6 +5,7 @@ goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.query');
 goog.require('goog.dom.ViewportSizeMonitor');
+goog.require('goog.string');
 
 goog.require('goog.async.Delay');
 goog.require('goog.fs.FileReader');
@@ -178,18 +179,20 @@ goog.exportSymbol('main', function() {
 				facade.init(goog.dom.query(".init-repo form.main")[0])
 			}
 		});
-		PubSub.subscribe(PubSub.REPO_LIST_RECEIVED, function(json) {
+		PubSub.subscribe(PubSub.REPO_INIT_RESULT, function(json) {
 			if(0 < json.length) {
 				initBtn.setEnabled(true);
 				slideToRepo();
+				PubSub.publish(PubSub.REPO_LIST_RECEIVED, json);
 			}
 			goog.array.forEach(cancels, function(el) {
 				goog.style.showElement(el, 0 < json.length);
 			});
 		});
-		goog.events.listen(goog.dom.getElement('repo-name'), goog.events.EventType.INPUT, function(e) {
-			var v = goog.dom.forms.getValue(e.target);
-			var p = e.target.parentNode;
+		var rn = goog.dom.getElement('repo-name');
+		var rnVerify = function() {
+			var v = goog.dom.forms.getValue(rn);
+			var p = rn.parentNode;
 			var msg = goog.dom.query('.help-inline', p)[0];
 			if(v && 0 < v.length) {
 				if(v.match(/^[^@'"<>:\*\?\\\(\)\s]+$/i)) {
@@ -197,8 +200,7 @@ goog.exportSymbol('main', function() {
 					if(ary.length == 2) {
 						goog.dom.classes.remove(p, 'error');
 						goog.dom.setTextContent(msg, '');
-						initBtn.setEnabled(true);
-						return;
+						return true;
 					} else {
 						goog.dom.classes.add(p, 'error');
 						goog.dom.setTextContent(msg, 'name must contains 1 path separator.');
@@ -208,9 +210,19 @@ goog.exportSymbol('main', function() {
 					goog.dom.setTextContent(msg, 'name contains invalid charactors');
 				}
 			}
-			initBtn.setEnabled(false);
-		});
+			return false;
+		};
 		var rr = goog.dom.getElement('repo-readme');
+		var rrVerify = function() {
+			var v = goog.string.trim(goog.dom.forms.getValue(rr) || '');
+			return 0 < v.length;
+		};
+		var handleInitButton = function() {
+			initBtn.setEnabled(rnVerify() && rrVerify());
+		};
+		goog.events.listen(rn, goog.events.EventType.INPUT, handleInitButton);
+		goog.events.listen(rr, goog.events.EventType.KEYUP, handleInitButton);
+
 		goog.events.listen(new goog.events.FileDropHandler(rr, true), goog.events.FileDropHandler.EventType.DROP, function(e) {
 			goog.array.forEach(e.getBrowserEvent().dataTransfer.files, function(f) {
 				goog.fs.FileReader.readAsText(f, 'UTF-8').addCallback(function(txt) {

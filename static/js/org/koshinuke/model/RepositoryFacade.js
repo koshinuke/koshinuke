@@ -13,5 +13,5 @@ org.koshinuke.model.RepositoryFacade.prototype.load = function() {
 };
 
 org.koshinuke.model.RepositoryFacade.prototype.init = function(formEl) {
-	this.post("", org.koshinuke.PubSub.REPO_LIST_RECEIVED, formEl);
+	this.post("", org.koshinuke.PubSub.REPO_INIT_RESULT, formEl);
 };
