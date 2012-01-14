@@ -161,7 +161,8 @@ goog.exportSymbol('main', function() {
 		});
 		tabbar.setSelectedTabIndex(0);
 
-		goog.array.forEach(goog.dom.query('.newrepo form.main'), function(el) {
+		var newrepoform = goog.dom.query('.newrepo form.main')[0];
+		goog.array.forEach(newrepoform, function(el) {
 			goog.events.listen(el, goog.events.EventType.SUBMIT, function(e) {
 				e.preventDefault();
 			});
@@ -176,12 +177,13 @@ goog.exportSymbol('main', function() {
 			if(c.isEnabled()) {
 				c.setEnabled(false);
 				var facade = new org.koshinuke.model.RepositoryFacade(uri);
-				facade.init(goog.dom.query(".init-repo form.main")[0])
+				facade.init(newrepoform);
 			}
 		});
 		PubSub.subscribe(PubSub.REPO_INIT_RESULT, function(json) {
 			if(0 < json.length) {
 				initBtn.setEnabled(true);
+				newrepoform.reset();
 				slideToRepo();
 				PubSub.publish(PubSub.REPO_LIST_RECEIVED, json);
 			}
