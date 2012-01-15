@@ -7,8 +7,7 @@ goog.require('goog.events');
 
 goog.require('goog.ui.Tab');
 
-goog.require('org.koshinuke.model.BranchFacade');
-goog.require('org.koshinuke.model.TagFacade');
+goog.require('org.koshinuke.model.TreeGridFacade');
 goog.require('org.koshinuke.model.ResourceFacade');
 goog.require('org.koshinuke.model.HistoriesFacade');
 goog.require('org.koshinuke.model.CommitsFacade');
@@ -62,7 +61,7 @@ org.koshinuke.ui.BranchListTab = function(parent, content, opt_renderer, opt_dom
 goog.inherits(org.koshinuke.ui.BranchListTab, org.koshinuke.ui.PaneTab);
 /** @override */
 org.koshinuke.ui.BranchListTab.prototype.loadPane = function(uri) {
-	var loader = new org.koshinuke.model.BranchFacade(uri);
+	var loader = new org.koshinuke.model.TreeGridFacade(uri);
 	this.internalLoadPane_(loader, this.getModel(), this.getModel().branches);
 };
 /** @override */
@@ -77,7 +76,7 @@ org.koshinuke.ui.TagListTab = function(parent, content, opt_renderer, opt_domHel
 goog.inherits(org.koshinuke.ui.TagListTab, org.koshinuke.ui.PaneTab);
 /** @override */
 org.koshinuke.ui.TagListTab.prototype.loadPane = function(uri) {
-	var loader = new org.koshinuke.model.TagFacade(uri);
+	var loader = new org.koshinuke.model.TreeGridFacade(uri);
 	this.internalLoadPane_(loader, this.getModel(), this.getModel().tags);
 };
 /** @override */

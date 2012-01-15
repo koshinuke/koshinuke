@@ -1,6 +1,4 @@
 goog.provide('org.koshinuke.model.TreeGridFacade');
-goog.provide('org.koshinuke.model.BranchFacade');
-goog.provide('org.koshinuke.model.TagFacade');
 
 goog.require('goog.array');
 goog.require('goog.i18n.DateTimeFormat');
@@ -9,42 +7,16 @@ goog.require('goog.net.XhrIo');
 goog.require('goog.Uri');
 
 goog.require('org.koshinuke');
+goog.require('org.koshinuke.model.AbstractFacade');
 goog.require('org.koshinuke.ui.TreeGrid.Node');
 goog.require('org.koshinuke.ui.TreeGrid.Leaf');
 goog.require('org.koshinuke.ui.TreeGrid.Psuedo');
 
 /** @constructor */
-org.koshinuke.model.TreeGridFacade = function(uri, opt_comparator) {
+org.koshinuke.model.TreeGridFacade = function(uri) {
 	this.uri = uri;
-	this.comparator = opt_comparator || org.koshinuke.model.TreeGridFacade.defaultCompare;
 };
-org.koshinuke.model.TreeGridFacade.prototype.toRequestUri = goog.abstractMethod;
-
-/** @constructor */
-org.koshinuke.model.BranchFacade = function(uri, opt_comparator) {
-	org.koshinuke.model.TreeGridFacade.call(this, uri, opt_comparator);
-};
-goog.inherits(org.koshinuke.model.BranchFacade, org.koshinuke.model.TreeGridFacade);
-
-/** @override */
-org.koshinuke.model.BranchFacade.prototype.toRequestUri = function(model) {
-	// TODO for mockup
-	//return this.uri.resolve(new goog.Uri('/koshinuke/stub/' + model.path + '.json'));
-	return this.uri.resolve(new goog.Uri("/dynamic/" + model.path + "/tree/" + model.node.path));
-};
-
-/** @constructor */
-org.koshinuke.model.TagFacade = function(uri, opt_comparator) {
-	org.koshinuke.model.TreeGridFacade.call(this, uri, opt_comparator);
-};
-goog.inherits(org.koshinuke.model.TagFacade, org.koshinuke.model.TreeGridFacade);
-
-/** @override */
-org.koshinuke.model.TagFacade.prototype.toRequestUri = function(model) {
-	// TODO for mockup
-	//return this.uri.resolve(new goog.Uri('/koshinuke/stub/' + model.path + '.json'));
-	return this.uri.resolve(new goog.Uri("/dynamic/" + model.path + "/tree/" + model.node.path));
-};
+goog.inherits(org.koshinuke.model.TreeGridFacade, org.koshinuke.model.AbstractFacade);
 
 org.koshinuke.model.TreeGridFacade.prototype.emitLoaded = function(kids, cursor, model) {
 	var kL = kids.length;
@@ -60,7 +32,7 @@ org.koshinuke.model.TreeGridFacade.prototype.emitLoaded = function(kids, cursor,
 	}
 	model.loadedOffset = i;
 };
-org.koshinuke.model.TreeGridFacade.prototype.load = function(model,fn) {
+org.koshinuke.model.TreeGridFacade.prototype.load = function(model, fn) {
 	var psuedo = new org.koshinuke.ui.TreeGrid.Psuedo(model.path);
 	org.koshinuke.model.TreeGridFacade.setUpForSort(psuedo);
 	var parent = model.node.getParent();
@@ -69,7 +41,7 @@ org.koshinuke.model.TreeGridFacade.prototype.load = function(model,fn) {
 
 	var self = this;
 	// TODO エラー処理, Timeout, ServerError, エラー時のリトライ用Node？
-	goog.net.XhrIo.send(this.toRequestUri(model).toString(), function(e) {
+	goog.net.XhrIo.send(this.toRequestUri("/" + model.path + "/tree/" + model.node.path), function(e) {
 		var raw = e.target.getResponseJson();
 		parent.removeChild(psuedo, true);
 		var kids = [];
@@ -78,7 +50,7 @@ org.koshinuke.model.TreeGridFacade.prototype.load = function(model,fn) {
 			org.koshinuke.model.TreeGridFacade.setUpForSort(m);
 			kids.push(m);
 		});
-		goog.array.sort(kids, self.comparator);
+		goog.array.sort(kids, self.compare);
 		goog.array.forEach(kids, org.koshinuke.model.TreeGridFacade.tearDownForSort);
 		fn(kids);
 	});
@@ -97,7 +69,7 @@ org.koshinuke.model.TreeGridFacade.pathElementCompare = function(l, r, i) {
 org.koshinuke.model.TreeGridFacade.levelCompare = function(l, r) {
 	return goog.array.defaultCompare(l.level, r.level);
 };
-org.koshinuke.model.TreeGridFacade.defaultCompare = function(l, r) {
+org.koshinuke.model.TreeGridFacade.prototype.compare = function(l, r) {
 	var minL = Math.min(l.level, r.level);
 	for(var i = 0; i < minL; i++) {
 		var diff = org.koshinuke.model.TreeGridFacade.pathElementCompare(l, r, i);

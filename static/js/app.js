@@ -162,11 +162,6 @@ goog.exportSymbol('main', function() {
 		tabbar.setSelectedTabIndex(0);
 
 		var newrepoform = goog.dom.query('.newrepo form.main')[0];
-		goog.array.forEach(newrepoform, function(el) {
-			goog.events.listen(el, goog.events.EventType.SUBMIT, function(e) {
-				e.preventDefault();
-			});
-		});
 		var slideToRepo = goog.partial(org.koshinuke.slideElements, goog.dom.query('.newrepo')[0], goog.dom.query('.outer')[0], goog.dom.query('footer')[0]);
 		var cancels = goog.dom.query('.newrepo .cancel');
 		goog.array.forEach(cancels, function(el) {
