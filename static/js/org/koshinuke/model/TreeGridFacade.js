@@ -33,10 +33,10 @@ org.koshinuke.model.TreeGridFacade.prototype.emitLoaded = function(kids, cursor,
 	model.loadedOffset = i;
 };
 org.koshinuke.model.TreeGridFacade.prototype.load = function(model, fn) {
-	var psuedo = new org.koshinuke.ui.TreeGrid.Psuedo(model.path);
+	var psuedo = new org.koshinuke.ui.TreeGrid.Psuedo(model.node.path);
 	org.koshinuke.model.TreeGridFacade.setUpForSort(psuedo);
 	var parent = model.node.getParent();
-	var index = parent.indexOfChild(model) + 1;
+	var index = parent.indexOfChild(model.node) + 1;
 	parent.addChildAt(psuedo, index, true);
 
 	var self = this;
