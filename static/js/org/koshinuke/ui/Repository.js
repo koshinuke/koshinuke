@@ -35,21 +35,48 @@ org.koshinuke.ui.Repository.prototype.setJson = function(json) {
 	this.host = json['host'];
 	this.path = goog.string.urlDecode(json['path']);
 	this.name = goog.string.urlDecode(json['name']);
-	var f = function(rawJson, type) {
-		var ary = [];
+	var makeRoots = function(rawJson, type) {
+		var roots = [];
 		if(rawJson) {
-			goog.array.forEach(rawJson, function(a) {
-				a['type'] = type;
-				var n = org.koshinuke.ui.TreeGrid.Node.newFromJson(a);
-				n.icon = type;
-				n.visible = true;
-				ary.push(n);
+			var set = new goog.structs.Set();
+			var makePathArray = function(path) {
+				var result = [];
+				goog.array.reduce(path.split('/'), function(prev, now) {
+					if(now) {
+						if(prev) {
+							prev = prev + '/' + now;
+						} else {
+							prev = now;
+						}
+						result.push({
+							path: prev,
+							name: now
+						});
+					}
+					return prev;
+				}, "");
+				return result;
+			};
+			goog.array.forEach(rawJson, function(root) {
+				goog.array.forEach(makePathArray(goog.string.urlDecode(root['path'])), function(a) {
+					if(set.contains(a.path) == false) {
+						set.add(a.path);
+						var newone = goog.object.clone(root);
+						newone['path'] = a.path;
+						newone['name'] = a.name;
+						newone['type'] = type;
+						var n = org.koshinuke.ui.TreeGrid.Node.newFromJson(newone);
+						n.icon = type;
+						n.visible = true;
+						roots.push(n);
+					}
+				});
 			});
 		}
-		return ary;
-	}
-	this.branches = f(json['branches'], "branch");
-	this.tags = f(json['tags'], "tag");
+		return roots;
+	};
+	this.branches = makeRoots(json['branches'], "branch");
+	this.tags = makeRoots(json['tags'], "tag");
 };
 /** @override */
 org.koshinuke.ui.Repository.prototype.enterDocument = function() {

@@ -48,19 +48,27 @@
 		</table>
 		<table id="tg" class="treegrid"></table>
 		<script>
+			function setUpForSort(m) {
+				m.ary = m.path.split('/');
+				m.level = m.ary.length - 1;
+			}
+			function compareModel(l, r) {
+				var comp = new org.koshinuke.model.TreeGridFacade();
+				return comp.compare(l, r);
+			}
 			function testTreeGridLoaderCompare() {
 				var model = function(t, p) {
 					var m = {
 						type : t,
 						path : p,
 					};
-					org.koshinuke.model.TreeGridFacade.setUpForSort(m);
+					setUpForSort(m);
 					return m;
 				};
 				var tree = goog.partial(model, 'tree');
 				var blob = goog.partial(model, 'blob');
 				var assertCompare = function(expected, l, r) {
-					var actual = org.koshinuke.model.TreeGridFacade.defaultCompare(l, r);
+					var actual = compareModel(l, r);
 					assertEquals(expected, actual);
 				};
 				var assertSwap = function(l, r) {
@@ -129,12 +137,12 @@
 					type : "blob"
 				}];
 				var trace = function(l, r) {
-					var result = org.koshinuke.model.TreeGridFacade.defaultCompare(l, r);
+					var result = compareModel(l, r);
 					console.log(l.type, ':', l.path, '-', r.type, ':', r.path, '=', result);
 					return result;
 				}
 				for(var x = 0; x < 5; x++) {
-					goog.array.forEach(data, org.koshinuke.model.TreeGridFacade.setUpForSort);
+					goog.array.forEach(data, setUpForSort);
 					goog.array.shuffle(data);
 					console.log(data);
 					goog.array.sort(data, trace);
@@ -144,7 +152,6 @@
 						assertEquals(a, data[i].path);
 					});
 				}
-				goog.array.forEach(data, org.koshinuke.model.TreeGridFacade.tearDownForSort);
 			}
 
 			function testSortModelMore() {
@@ -252,7 +259,7 @@
 					a.ary = ary;
 				});
 				var trace = function(l, r) {
-					var result = org.koshinuke.model.TreeGridFacade.defaultCompare(l, r);
+					var result = compareModel(l, r);
 					console.log(l.type, ':', l.path, '-', r.type, ':', r.path, '=', result);
 					return result;
 				}

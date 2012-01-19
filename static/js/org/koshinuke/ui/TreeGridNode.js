@@ -57,8 +57,8 @@ org.koshinuke.ui.TreeGrid.Node.newFromJson = function(json) {
 org.koshinuke.ui.TreeGrid.Node.prototype.setJsonShared_ = function(json) {
 	// TODO more abstraction
 	this.type = json['type'];
-	this.path = goog.string.urlDecode(json['path']);
-	this.name = goog.string.urlDecode(json['name']);
+	this.path = json['path'];
+	this.name = json['name'];
 };
 org.koshinuke.ui.TreeGrid.Node.prototype.setJson = function(json) {
 	this.children = json['children'];
