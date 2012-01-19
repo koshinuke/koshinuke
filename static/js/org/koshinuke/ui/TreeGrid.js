@@ -176,9 +176,32 @@ org.koshinuke.ui.TreeGrid.prototype.handleBeforeExpand_ = function(e) {
 			m.node = e.rowEl.model;
 			this.facade.load(m, function(kids) {
 				goog.array.forEach(kids, function(a, i) {
-					// TODO 子要素のうち最新のtimestamp,message, authorを拾って設定する
 					self.facade.emitLoaded(kids, i, a);
 					self.addChildAt(a, index + i, true);
+				});
+				var next = 0;
+				var kids = self.getChildCount();
+				self.forEachChild(function(child) {
+					next++;
+					var need = false;
+					if(child.type == 'tree' || child.type == 'branch' || child.type == 'tag') {
+						for(var i = next; i < kids; i++) {
+							var node = self.getChildAt(i);
+							if(goog.string.startsWith(node.path, child.path) == false) {
+								break;
+							}
+							if(child.rowtimestamp < node.rowtimestamp) {
+								need = true;
+								child.rowtimestamp = node.rowtimestamp;
+								child.timestamp = node.timestamp;
+								child.message = node.message;
+								child.author = node.author;
+							}
+						}
+					}
+					if(need) {
+						child.updateElement();
+					}
 				});
 				model.isLoaded = true;
 				self.dispatchEvent({

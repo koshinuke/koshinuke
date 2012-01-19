@@ -42,7 +42,7 @@ org.koshinuke.ui.TreeGrid.Node.newFromJson = function(json) {
 	var type = json['type'];
 	if(type == 'tree') {
 		m = new org.koshinuke.ui.TreeGrid.Node();
-	} else if (type == 'branch' || type == 'tag') {
+	} else if(type == 'branch' || type == 'tag') {
 		m = new org.koshinuke.ui.TreeGrid.Node();
 		m.hasChild = true;
 		m.setJsonDetail_(json);
@@ -71,6 +71,7 @@ org.koshinuke.ui.TreeGrid.Node.prototype.tearDownForSort = function() {
 	delete this.ary;
 };
 org.koshinuke.ui.TreeGrid.Node.prototype.setJsonDetail_ = function(json) {
+	this.rowtimestamp = Number(json['timestamp']);
 	this.timestamp = org.koshinuke.toDateString(json['timestamp']);
 	this.message = goog.string.urlDecode(json['message']);
 	this.author = goog.string.urlDecode(json['author']);
@@ -104,6 +105,7 @@ org.koshinuke.ui.TreeGrid.Node.prototype.loadedOffset = 0;
 
 org.koshinuke.ui.TreeGrid.Node.prototype.icon = "folder";
 org.koshinuke.ui.TreeGrid.Leaf.prototype.icon = "txt";
+org.koshinuke.ui.TreeGrid.Node.prototype.rowtimestamp = 0;
 org.koshinuke.ui.TreeGrid.Node.prototype.timestamp = "";
 org.koshinuke.ui.TreeGrid.Node.prototype.message = "";
 org.koshinuke.ui.TreeGrid.Node.prototype.author = "";
@@ -129,6 +131,13 @@ org.koshinuke.ui.TreeGrid.Node.prototype.enterDocument = function() {
 	if(el) {
 		el.model = this;
 	}
+};
+org.koshinuke.ui.TreeGrid.Node.prototype.updateElement = function() {
+	var oldEl = this.getElement();
+	this.createDom();
+	var newEl = this.getElement();
+	newEl.model = this;
+	goog.dom.replaceNode(newEl, oldEl);
 };
 /** @override */
 org.koshinuke.ui.TreeGrid.Node.prototype.exitDocument = function() {
