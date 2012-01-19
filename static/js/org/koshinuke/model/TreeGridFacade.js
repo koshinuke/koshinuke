@@ -34,7 +34,6 @@ org.koshinuke.model.TreeGridFacade.prototype.emitLoaded = function(kids, cursor,
 };
 org.koshinuke.model.TreeGridFacade.prototype.load = function(model, fn) {
 	var psuedo = new org.koshinuke.ui.TreeGrid.Psuedo(model.node.path);
-	org.koshinuke.model.TreeGridFacade.setUpForSort(psuedo);
 	var parent = model.node.getParent();
 	var index = parent.indexOfChild(model.node) + 1;
 	parent.addChildAt(psuedo, index, true);
@@ -47,22 +46,16 @@ org.koshinuke.model.TreeGridFacade.prototype.load = function(model, fn) {
 		var kids = [];
 		goog.array.forEach(raw, function(a) {
 			var m = org.koshinuke.ui.TreeGrid.Node.newFromJson(a);
-			org.koshinuke.model.TreeGridFacade.setUpForSort(m);
 			kids.push(m);
 		});
 		goog.array.sort(kids, self.compare);
-		goog.array.forEach(kids, org.koshinuke.model.TreeGridFacade.tearDownForSort);
+		goog.array.forEach(kids, function(a){
+			a.tearDownForSort();
+		});
 		fn(kids);
 	});
 };
-org.koshinuke.model.TreeGridFacade.setUpForSort = function(model) {
-	var ary = model.path.split('/');
-	model.ary = ary;
-	model.level = ary.length - 1;
-};
-org.koshinuke.model.TreeGridFacade.tearDownForSort = function(model) {
-	delete model.ary;
-};
+
 org.koshinuke.model.TreeGridFacade.pathElementCompare = function(l, r, i) {
 	return goog.array.defaultCompare(l.ary[i], r.ary[i]);
 };

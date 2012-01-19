@@ -27,14 +27,14 @@ org.koshinuke.ui.Repository.EventType = {
 
 org.koshinuke.ui.Repository.prototype.tabbar = false;
 org.koshinuke.ui.Repository.prototype.listenerKey = null;
-org.koshinuke.ui.Repository.prototype.host = "hhoosstt";
-org.koshinuke.ui.Repository.prototype.path = "ppaatthh";
-org.koshinuke.ui.Repository.prototype.name = "reponame";
+org.koshinuke.ui.Repository.prototype.host = "";
+org.koshinuke.ui.Repository.prototype.path = "";
+org.koshinuke.ui.Repository.prototype.name = "";
 
 org.koshinuke.ui.Repository.prototype.setJson = function(json) {
 	this.host = json['host'];
-	this.path = json['path'];
-	this.name = json['name'];
+	this.path = goog.string.urlDecode(json['path']);
+	this.name = goog.string.urlDecode(json['name']);
 	var f = function(rawJson, type) {
 		var ary = [];
 		if(rawJson) {

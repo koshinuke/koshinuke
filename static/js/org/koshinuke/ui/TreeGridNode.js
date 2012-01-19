@@ -28,6 +28,7 @@ goog.inherits(org.koshinuke.ui.TreeGrid.Leaf, org.koshinuke.ui.TreeGrid.Node);
 org.koshinuke.ui.TreeGrid.Psuedo = function(parentPath, opt_domHelper) {
 	org.koshinuke.ui.TreeGrid.Leaf.call(this, opt_domHelper);
 	this.path = parentPath + '/psuedo';
+	this.setUpForSort();
 };
 goog.inherits(org.koshinuke.ui.TreeGrid.Psuedo, org.koshinuke.ui.TreeGrid.Leaf);
 
@@ -50,6 +51,7 @@ org.koshinuke.ui.TreeGrid.Node.newFromJson = function(json) {
 	}
 	m.setJsonShared_(json);
 	m.setJson(json);
+	m.setUpForSort();
 	return m;
 };
 org.koshinuke.ui.TreeGrid.Node.prototype.setJsonShared_ = function(json) {
@@ -60,6 +62,13 @@ org.koshinuke.ui.TreeGrid.Node.prototype.setJsonShared_ = function(json) {
 };
 org.koshinuke.ui.TreeGrid.Node.prototype.setJson = function(json) {
 	this.children = json['children'];
+};
+org.koshinuke.ui.TreeGrid.Node.prototype.setUpForSort = function() {
+	this.ary = this.path.split('/');
+	this.level = this.ary.length - 1;
+};
+org.koshinuke.ui.TreeGrid.Node.prototype.tearDownForSort = function() {
+	delete this.ary;
 };
 org.koshinuke.ui.TreeGrid.Node.prototype.setJsonDetail_ = function(json) {
 	this.timestamp = org.koshinuke.toDateString(json['timestamp']);
@@ -73,10 +82,10 @@ org.koshinuke.ui.TreeGrid.Leaf.prototype.setJson = function(json) {
 };
 
 org.koshinuke.ui.TreeGrid.Node.prototype.indent = 0;
-org.koshinuke.ui.TreeGrid.Node.prototype.type = "tttyyypppeee";
-org.koshinuke.ui.TreeGrid.Node.prototype.path = "aaa/bbb/ccc";
+org.koshinuke.ui.TreeGrid.Node.prototype.type = "";
+org.koshinuke.ui.TreeGrid.Node.prototype.path = "";
 org.koshinuke.ui.TreeGrid.Node.prototype.level = 0;
-org.koshinuke.ui.TreeGrid.Node.prototype.name = "nnn.nnn";
+org.koshinuke.ui.TreeGrid.Node.prototype.name = "";
 org.koshinuke.ui.TreeGrid.Node.prototype.visible = false;
 org.koshinuke.ui.TreeGrid.Node.prototype.setVisible = function(state) {
 	this.visible = state;
@@ -95,9 +104,9 @@ org.koshinuke.ui.TreeGrid.Node.prototype.loadedOffset = 0;
 
 org.koshinuke.ui.TreeGrid.Node.prototype.icon = "folder";
 org.koshinuke.ui.TreeGrid.Leaf.prototype.icon = "txt";
-org.koshinuke.ui.TreeGrid.Node.prototype.timestamp = "1970-01-01 00:00:00";
-org.koshinuke.ui.TreeGrid.Node.prototype.message = "mmeessaaggee";
-org.koshinuke.ui.TreeGrid.Node.prototype.author = "aauutthhoorr";
+org.koshinuke.ui.TreeGrid.Node.prototype.timestamp = "";
+org.koshinuke.ui.TreeGrid.Node.prototype.message = "";
+org.koshinuke.ui.TreeGrid.Node.prototype.author = "";
 
 /** @override */
 org.koshinuke.ui.TreeGrid.Node.prototype.createDom = function() {
