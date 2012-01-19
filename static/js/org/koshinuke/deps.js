@@ -5,7 +5,7 @@ goog.addDependency("../../../js/org/koshinuke/model/CommitsFacade.js", ['org.kos
 goog.addDependency("../../../js/org/koshinuke/model/DiffFacade.js", ['org.koshinuke.model.DiffFacade'], ['goog.array', 'goog.net.XhrIo', 'goog.Uri', 'goog.string', 'org.koshinuke']);
 goog.addDependency("../../../js/org/koshinuke/model/HistoriesFacade.js", ['org.koshinuke.model.HistoriesFacade'], ['goog.array', 'goog.net.XhrIo', 'goog.Uri', 'goog.string', 'org.koshinuke']);
 goog.addDependency("../../../js/org/koshinuke/model/RepositoryFacade.js", ['org.koshinuke.model.RepositoryFacade'], ['org.koshinuke.model.AbstractFacade']);
-goog.addDependency("../../../js/org/koshinuke/model/ResourceFacade.js", ['org.koshinuke.model.ResourceFacade'], ['goog.array', 'goog.net.XhrIo', 'goog.string', 'goog.Uri', 'org.koshinuke']);
+goog.addDependency("../../../js/org/koshinuke/model/ResourceFacade.js", ['org.koshinuke.model.ResourceFacade'], ['goog.array', 'goog.net.XhrIo', 'goog.string', 'goog.Uri', 'org.koshinuke', 'org.koshinuke.model.AbstractFacade']);
 goog.addDependency("../../../js/org/koshinuke/model/TreeGridFacade.js", ['org.koshinuke.model.TreeGridFacade'], ['goog.array', 'goog.i18n.DateTimeFormat', 'goog.string', 'goog.net.XhrIo', 'goog.Uri', 'org.koshinuke', 'org.koshinuke.model.AbstractFacade', 'org.koshinuke.ui.TreeGrid.Node', 'org.koshinuke.ui.TreeGrid.Leaf', 'org.koshinuke.ui.TreeGrid.Psuedo']);
 goog.addDependency("../../../js/org/koshinuke/positioning/gravityposition.js", ['org.koshinuke.positioning.GravityPosition'], ['goog.positioning.AbstractPosition']);
 goog.addDependency("../../../js/org/koshinuke/template/branchactivity.js", ['org.koshinuke.template.branchactivity'], ['soy', 'soy.StringBuilder']);

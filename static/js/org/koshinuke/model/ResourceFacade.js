@@ -6,19 +6,14 @@ goog.require('goog.string');
 goog.require('goog.Uri');
 
 goog.require('org.koshinuke');
+goog.require('org.koshinuke.model.AbstractFacade');
 
 /** @constructor */
 org.koshinuke.model.ResourceFacade = function(uri) {
-	this.uri = uri;
+	org.koshinuke.model.AbstractFacade.call(this, uri);
 };
+goog.inherits(org.koshinuke.model.ResourceFacade, org.koshinuke.model.AbstractFacade);
 
-org.koshinuke.model.ResourceFacade.prototype.toRequestUri = function(model) {
-	// TODO for mock
-	console.log('ResourceFacade', model);
-	//var u = this.uri.resolve(new goog.Uri('/koshinuke/stub/resource.json'));
-	var u = this.uri.resolve(new goog.Uri("/dynamic/" + model.path + "/blob/" + model.node.path));
-	return u;
-};
 /** @enum {string} */
 org.koshinuke.model.ResourceFacade.ExtensionToMIME = {
 	".coffee" : "text/x-coffeescript",
@@ -34,15 +29,23 @@ org.koshinuke.model.ResourceFacade.ExtensionToMIME = {
 	".rb" : "text/x-ruby",
 	".xml" : "application/xml",
 	".html" : "text/html",
-	".yml" : "text/x-yaml"
+	".yml" : "text/x-yaml",
+	".jpg" : "image/jpeg",
+	".gif" : "image/gif",
+	".png" : "image/png",
+	".ico" : "image/ico"
 };
 org.koshinuke.model.ResourceFacade.extToMIME = function(path) {
 	var ext = org.koshinuke.getExtension(path, "");
 	return org.koshinuke.model.ResourceFacade.ExtensionToMIME[ext.toLowerCase()];
 };
 
+org.koshinuke.model.ResourceFacade.prototype.relativePath = function(model) {
+	return "/" + model.path + "/blob/" + model.node.path;
+};
+
 org.koshinuke.model.ResourceFacade.prototype.load = function(model, fn) {
-	goog.net.XhrIo.send(this.toRequestUri(model), goog.partial(this.handleResponse, model, fn));
+	goog.net.XhrIo.send(this.toRequestUri(this.relativePath(model)), goog.partial(this.handleResponse, model, fn), null, org.koshinuke.model.AbstractFacade.Headers);
 };
 
 org.koshinuke.model.ResourceFacade.prototype.handleResponse = function(model, fn, e) {
@@ -55,19 +58,7 @@ org.koshinuke.model.ResourceFacade.prototype.handleResponse = function(model, fn
 		message : goog.string.urlDecode(raw['message']),
 		contents : goog.string.urlDecode(raw['contents'])
 	};
-	var ct = e.target.getResponseHeader('Content-Type');
-	var path = model.node.path;
-	if(!ct
-	// TODO Aptanaのサーバがあんまりなので回避措置
-	|| ct == 'text/html') {
-		var re = new RegExp('\\.(jpe?g|gif|png|ico)$', 'i');
-		var match = re.exec(path);
-		if(match) {
-			ct = "image/" + match[1];
-		} else {
-			ct = org.koshinuke.model.ResourceFacade.extToMIME(path);
-		}
-	}
+	var ct = org.koshinuke.model.ResourceFacade.extToMIME(model.node.path);
 	fn(ct, resourceModel);
 };
 
@@ -78,9 +69,8 @@ org.koshinuke.model.ResourceFacade.prototype.send = function(model, fn) {
 		"message" : goog.string.urlEncode(model.message),
 		"contents" : goog.string.urlEncode(model.contents)
 	};
+	var h = goog.object.clone(org.koshinuke.model.AbstractFacade.Headers);
+	h["X-KoshiNuke"] = goog.dom.forms.getValue(goog.dom.getElement('ct'));
 	var json = goog.json.serialize(sendmodel);
-	goog.net.XhrIo.send(this.toRequestUri(model), goog.partial(this.handleResponse, model, fn), "POST", json, {
-		// TODO CSRFトークンを投げる。
-		"X-KOSHINUKE" : true
-	});
+	goog.net.XhrIo.send(this.toRequestUri(this.relativePath(model)), goog.partial(this.handleResponse, model, fn), "POST", json, h);
 };
