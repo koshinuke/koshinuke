@@ -33,6 +33,7 @@ org.koshinuke.model.ResourceFacade.ExtensionToMIME = {
 	".jpg" : "image/jpeg",
 	".gif" : "image/gif",
 	".png" : "image/png",
+	".bmp" : "image/bmp",
 	".ico" : "image/ico"
 };
 org.koshinuke.model.ResourceFacade.extToMIME = function(path) {
@@ -51,7 +52,7 @@ org.koshinuke.model.ResourceFacade.prototype.load = function(model, fn) {
 org.koshinuke.model.ResourceFacade.prototype.handleResponse = function(model, fn, e) {
 	// TODO error handling.
 	var raw = e.target.getResponseJson();
-	var resourceModel = {
+	var rm = {
 		commit : raw['commit'],
 		timestamp : org.koshinuke.toDateString(raw['timestamp']),
 		author : raw['author'],
@@ -59,7 +60,7 @@ org.koshinuke.model.ResourceFacade.prototype.handleResponse = function(model, fn
 		contents : raw['contents']
 	};
 	var ct = org.koshinuke.model.ResourceFacade.extToMIME(model.node.path);
-	fn(ct, resourceModel);
+	fn(ct, rm);
 };
 
 org.koshinuke.model.ResourceFacade.prototype.send = function(model, fn) {
@@ -69,8 +70,7 @@ org.koshinuke.model.ResourceFacade.prototype.send = function(model, fn) {
 		"message" : model.message,
 		"contents" : model.contents
 	};
-	var h = goog.object.clone(org.koshinuke.model.AbstractFacade.Headers);
-	h["X-KoshiNuke"] = goog.dom.forms.getValue(goog.dom.getElement('ct'));
+	var h = this.makeHeader();
 	var json = goog.json.serialize(sendmodel);
 	goog.net.XhrIo.send(this.toRequestUri(this.relativePath(model)), goog.partial(this.handleResponse, model, fn), "POST", json, h);
 };

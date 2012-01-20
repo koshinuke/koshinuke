@@ -28,10 +28,14 @@ org.koshinuke.model.AbstractFacade.prototype.get = function(path, pubSubKey) {
 	}, 'GET', null, org.koshinuke.model.AbstractFacade.Headers);
 };
 
-org.koshinuke.model.AbstractFacade.prototype.post = function(path, pubSubKey, formEl) {
+org.koshinuke.model.AbstractFacade.prototype.makeHeader = function() {
 	var h = goog.object.clone(org.koshinuke.model.AbstractFacade.Headers);
 	h["X-KoshiNuke"] = goog.dom.forms.getValue(goog.dom.getElement('ct'));
+	return h;
+};
+
+org.koshinuke.model.AbstractFacade.prototype.post = function(path, pubSubKey, formEl) {
 	goog.net.XhrIo.send(this.toRequestUri(path).toString(), function(e) {
 		org.koshinuke.PubSub.publish(pubSubKey, e.target.getResponseJson());
-	}, 'POST', goog.dom.forms.getFormDataString(formEl), h);
+	}, 'POST', goog.dom.forms.getFormDataString(formEl), this.makeHeader());
 };
