@@ -53,7 +53,7 @@ org.koshinuke.model.ResourceFacade.prototype.handleResponse = function(model, fn
 	// TODO error handling.
 	var raw = e.target.getResponseJson();
 	var rm = {
-		commit : raw['commit'],
+		objectid : raw['objectid'],
 		timestamp : org.koshinuke.toDateString(raw['timestamp']),
 		author : raw['author'],
 		message : raw['message'],
@@ -65,8 +65,7 @@ org.koshinuke.model.ResourceFacade.prototype.handleResponse = function(model, fn
 
 org.koshinuke.model.ResourceFacade.prototype.send = function(model, fn) {
 	var sendmodel = {
-		"path" : model.path,
-		"commit" : model.commit,
+		"objectid" : model.objectid,
 		"message" : model.message,
 		"contents" : model.contents
 	};

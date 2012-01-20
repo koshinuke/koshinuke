@@ -42,7 +42,7 @@ org.koshinuke.ui.ResourceEditor.prototype.enterDocument = function() {
 	var model = this.getModel();
 	var self = this;
 	this.loader.load(model, function(contentType, resourceModel) {
-		model.node.commit = resourceModel.commit;
+		model.node.objectid = resourceModel.objectid;
 		if(contentType && goog.string.startsWith(contentType, 'image')) {
 			// data schemeでサーバからリソースが返ってくる事を期待する。
 			// http://tools.ietf.org/html/rfc2397
@@ -86,7 +86,7 @@ org.koshinuke.ui.ResourceEditor.prototype.setUpCMTools_ = function(element) {
 	var commitMsg = goog.dom.query('.commit-message textarea', element)[0];
 	var h = this.getHandler();
 	h.listen(commitMsg, goog.events.EventType.KEYUP, function(e) {
-		var val = goog.dom.$F(e.target);
+		var val = goog.dom.getValue(e.target);
 		goog.dom.forms.setDisabled(commitBtn, !val || goog.string.trim(val).length < 1);
 	});
 	var value = this.cm.getValue();
@@ -106,11 +106,13 @@ org.koshinuke.ui.ResourceEditor.prototype.setUpCMTools_ = function(element) {
 			goog.dom.forms.setDisabled(commitBtn, true);
 			goog.dom.forms.setDisabled(commitMsg, true);
 			this.loader.send({
-				// TODO リポジトリ名が無いとどこにコミットして良いのか分からなくなる。
-				path : this.getModel().node.path,
-				commit : this.getModel().node.commit,
-				message : goog.dom.$F(commitMsg),
-				contents : this.cm.getValue()
+				path : this.getModel().path,
+				objectid : this.getModel().node.objectid,
+				message : goog.dom.forms.getValue(commitMsg),
+				contents : this.cm.getValue(),
+				node : {
+					path : this.getModel().node.path
+				}
 			}, function(contentType, resourceModel) {
 				goog.dom.forms.setValue(commitMsg, '');
 				this.toggleEdit_(element, false);
