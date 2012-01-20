@@ -63,13 +63,16 @@ org.koshinuke.model.ResourceFacade.prototype.handleResponse = function(model, fn
 	fn(ct, rm);
 };
 
-org.koshinuke.model.ResourceFacade.prototype.send = function(model, fn) {
+org.koshinuke.model.ResourceFacade.prototype.send = function(model) {
 	var sendmodel = {
 		"objectid" : model.objectid,
 		"message" : model.message,
 		"contents" : model.contents
 	};
 	var h = this.makeHeader();
+	h['Content-Type'] = "application/json";
 	var json = goog.json.serialize(sendmodel);
-	goog.net.XhrIo.send(this.toRequestUri(this.relativePath(model)), goog.partial(this.handleResponse, model, fn), "POST", json, h);
+	goog.net.XhrIo.send(this.toRequestUri(this.relativePath(model)), goog.partial(this.handleResponse, model, function(ct, rm) {
+		org.koshinuke.PubSub.publish(org.koshinuke.PubSub.MODIFY_SUCCESS, ct, rm, model);
+	}), "POST", json, h);
 };

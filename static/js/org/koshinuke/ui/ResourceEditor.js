@@ -86,7 +86,7 @@ org.koshinuke.ui.ResourceEditor.prototype.setUpCMTools_ = function(element) {
 	var commitMsg = goog.dom.query('.commit-message textarea', element)[0];
 	var h = this.getHandler();
 	h.listen(commitMsg, goog.events.EventType.KEYUP, function(e) {
-		var val = goog.dom.getValue(e.target);
+		var val = goog.dom.forms.getValue(e.target);
 		goog.dom.forms.setDisabled(commitBtn, !val || goog.string.trim(val).length < 1);
 	});
 	var value = this.cm.getValue();
@@ -113,13 +113,15 @@ org.koshinuke.ui.ResourceEditor.prototype.setUpCMTools_ = function(element) {
 				node : {
 					path : this.getModel().node.path
 				}
-			}, function(contentType, resourceModel) {
-				goog.dom.forms.setValue(commitMsg, '');
-				this.toggleEdit_(element, false);
 			});
 		}
-
 	}, false, this);
+	this.psKey = org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.MODIFY_SUCCESS, function(ct, rm, send) {
+		if(send.path == this.getModel().path && send.node.path == this.getModel().node.path) {
+			goog.dom.forms.setValue(commitMsg, '');
+			this.toggleEdit_(element, false);
+		}
+	}, this);
 };
 org.koshinuke.ui.ResourceEditor.prototype.toggleEdit_ = function(element, editable) {
 	this.cmOption.readOnly = editable == false;
@@ -151,6 +153,10 @@ org.koshinuke.ui.ResourceEditor.prototype.exitDocument = function() {
 		this.clip.exitDocument();
 		this.clip.dispose();
 		this.clip = null;
+	}
+	if(this.psKey) {
+		org.koshinuke.PubSub.unsubscribeByKey(this.psKey);
+		this.psKey = null;
 	}
 };
 org.koshinuke.ui.ResourceEditor.prototype.setVisible = function(state) {
