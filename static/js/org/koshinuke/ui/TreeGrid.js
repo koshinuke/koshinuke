@@ -171,7 +171,7 @@ org.koshinuke.ui.TreeGrid.prototype.handleBeforeExpand_ = function(e) {
 				return true;
 			});
 		} else {
-			var index = self.indexOfChild(model) + 1;
+			var index = this.indexOfChild(model) + 1;
 			var m = goog.object.clone(this.getModel());
 			m.node = e.rowEl.model;
 			this.facade.load(m, function(kids) {
@@ -190,9 +190,9 @@ org.koshinuke.ui.TreeGrid.prototype.handleBeforeExpand_ = function(e) {
 							if(goog.string.startsWith(node.path, child.path) == false) {
 								break;
 							}
-							if(child.rowtimestamp < node.rowtimestamp) {
+							if(child.rawtimestamp < node.rawtimestamp) {
 								need = true;
-								child.rowtimestamp = node.rowtimestamp;
+								child.rawtimestamp = node.rawtimestamp;
 								child.timestamp = node.timestamp;
 								child.message = node.message;
 								child.author = node.author;
@@ -210,6 +210,43 @@ org.koshinuke.ui.TreeGrid.prototype.handleBeforeExpand_ = function(e) {
 				});
 			});
 		}
+	}
+};
+/** @override */
+org.koshinuke.ui.TreeGrid.prototype.enterDocument = function() {
+	org.koshinuke.ui.TreeGrid.superClass_.enterDocument.call(this);
+	this.psKey = org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.MODIFY_SUCCESS, function(ct, rm, send) {
+		var s = send.node.path
+		var parent = s.substring(0, s.lastIndexOf('/'));
+		var candidate = [];
+		this.forEachChild(function(child) {
+			if(child.path == parent) {
+				child.isLoaded = false;
+				var el = goog.dom.query("td .expand", child.getElement())[0];
+				if(el) {
+					this.setState_(el, org.koshinuke.ui.TreeGrid.Node.State.EXPAND, org.koshinuke.ui.TreeGrid.Node.State.COLLAPSE);
+				}
+				child.rawtimestamp = rm.rawtimestamp;
+				child.timestamp = rm.timestamp;
+				child.message = rm.message;
+				child.author = rm.author;
+				child.updateElement();
+			}
+			if(parent.length < child.path.length && goog.string.startsWith(child.path, parent)) {
+				candidate.push(child);
+			}
+		}, this);
+		goog.array.forEach(candidate, function(c) {
+			this.removeChild(c, true);
+		}, this);
+	}, this);
+};
+/** @override */
+org.koshinuke.ui.TreeGrid.prototype.exitDocument = function() {
+	org.koshinuke.ui.TreeGrid.superClass_.exitDocument.call(this);
+	if(this.psKey) {
+		org.koshinuke.PubSub.unsubscribeByKey(this.psKey);
+		this.psKey = null;
 	}
 };
 org.koshinuke.ui.TreeGrid.prototype.setVisible = function(state) {

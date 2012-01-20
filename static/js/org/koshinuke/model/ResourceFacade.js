@@ -54,6 +54,7 @@ org.koshinuke.model.ResourceFacade.prototype.handleResponse = function(model, fn
 	var raw = e.target.getResponseJson();
 	var rm = {
 		objectid : raw['objectid'],
+		rawtimestamp : Number(raw['timestamp']),
 		timestamp : org.koshinuke.toDateString(raw['timestamp']),
 		author : raw['author'],
 		message : raw['message'],

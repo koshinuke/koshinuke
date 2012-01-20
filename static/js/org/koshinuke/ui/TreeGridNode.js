@@ -71,7 +71,7 @@ org.koshinuke.ui.TreeGrid.Node.prototype.tearDownForSort = function() {
 	delete this.ary;
 };
 org.koshinuke.ui.TreeGrid.Node.prototype.setJsonDetail_ = function(json) {
-	this.rowtimestamp = Number(json['timestamp']);
+	this.rawtimestamp = Number(json['timestamp']);
 	this.timestamp = org.koshinuke.toDateString(json['timestamp']);
 	this.message = json['message'];
 	this.author = json['author'];
@@ -105,7 +105,7 @@ org.koshinuke.ui.TreeGrid.Node.prototype.loadedOffset = 0;
 
 org.koshinuke.ui.TreeGrid.Node.prototype.icon = "folder";
 org.koshinuke.ui.TreeGrid.Leaf.prototype.icon = "txt";
-org.koshinuke.ui.TreeGrid.Node.prototype.rowtimestamp = 0;
+org.koshinuke.ui.TreeGrid.Node.prototype.rawtimestamp = 0;
 org.koshinuke.ui.TreeGrid.Node.prototype.timestamp = "";
 org.koshinuke.ui.TreeGrid.Node.prototype.message = "";
 org.koshinuke.ui.TreeGrid.Node.prototype.author = "";

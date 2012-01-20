@@ -10,6 +10,8 @@ goog.require('goog.style');
 goog.require('goog.ui.Button');
 goog.require('goog.ui.Component');
 
+goog.require('soy');
+
 goog.require('CodeMirror');
 goog.require('CodeMirror.modes');
 
@@ -120,6 +122,9 @@ org.koshinuke.ui.ResourceEditor.prototype.setUpCMTools_ = function(element) {
 		if(send.path == this.getModel().path && send.node.path == this.getModel().node.path) {
 			goog.dom.forms.setValue(commitMsg, '');
 			this.toggleEdit_(element, false);
+			goog.dom.setTextContent(goog.dom.query(".log.username", element)[0], soy.$$escapeHtml(rm.author));
+			goog.dom.setTextContent(goog.dom.query(".log.timestamp", element)[0], rm.timestamp);
+			goog.dom.setTextContent(goog.dom.query(".log.comment", element)[0], soy.$$escapeHtml(rm.message));
 		}
 	}, this);
 };
