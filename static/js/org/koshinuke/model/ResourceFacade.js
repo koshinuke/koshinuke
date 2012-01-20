@@ -54,9 +54,9 @@ org.koshinuke.model.ResourceFacade.prototype.handleResponse = function(model, fn
 	var resourceModel = {
 		commit : raw['commit'],
 		timestamp : org.koshinuke.toDateString(raw['timestamp']),
-		author : goog.string.urlDecode(raw['author']),
-		message : goog.string.urlDecode(raw['message']),
-		contents : goog.string.urlDecode(raw['contents'])
+		author : raw['author'],
+		message : raw['message'],
+		contents : raw['contents']
 	};
 	var ct = org.koshinuke.model.ResourceFacade.extToMIME(model.node.path);
 	fn(ct, resourceModel);
@@ -64,10 +64,10 @@ org.koshinuke.model.ResourceFacade.prototype.handleResponse = function(model, fn
 
 org.koshinuke.model.ResourceFacade.prototype.send = function(model, fn) {
 	var sendmodel = {
-		"path" : goog.string.urlEncode(model.path),
+		"path" : model.path,
 		"commit" : model.commit,
-		"message" : goog.string.urlEncode(model.message),
-		"contents" : goog.string.urlEncode(model.contents)
+		"message" : model.message,
+		"contents" : model.contents
 	};
 	var h = goog.object.clone(org.koshinuke.model.AbstractFacade.Headers);
 	h["X-KoshiNuke"] = goog.dom.forms.getValue(goog.dom.getElement('ct'));

@@ -28,8 +28,8 @@ org.koshinuke.model.CommitsFacade.prototype.handleResponse_ = function(model, fn
 		var m = {
 			commit : v['commit'],
 			timestamp : org.koshinuke.toDateString(v['timestamp']),
-			author : goog.string.urlDecode(v['author']),
-			message : goog.string.urlDecode(v['message']),
+			author : v['author'],
+			message : v['message'],
 			parent : v['parent']
 		};
 		r.push(m);

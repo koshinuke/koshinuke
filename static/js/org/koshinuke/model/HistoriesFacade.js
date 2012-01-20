@@ -28,11 +28,11 @@ org.koshinuke.model.HistoriesFacade.prototype.handleResponse_ = function(model, 
 	var dtf = new goog.i18n.DateTimeFormat('MM/dd');
 	var histories = goog.array.reduce(raw, function(r, v) {
 		var m = {
-			name : goog.string.urlDecode(v['name']),
-			path : goog.string.urlDecode(v['path']),
+			name : v['name'],
+			path : v['path'],
 			timestamp : org.koshinuke.toDateString(v['timestamp']),
-			author : goog.string.urlDecode(v['author']),
-			message : goog.string.urlDecode(v['message']),
+			author : v['author'],
+			message : v['message'],
 			activities : goog.array.reduce(v['activities'], function(cs, a) {
 				// externs/BranchActivity に引き渡す為、圧縮されない様にメンバ定義する。
 				cs.push({

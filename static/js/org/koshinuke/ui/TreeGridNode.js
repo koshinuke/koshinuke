@@ -73,8 +73,8 @@ org.koshinuke.ui.TreeGrid.Node.prototype.tearDownForSort = function() {
 org.koshinuke.ui.TreeGrid.Node.prototype.setJsonDetail_ = function(json) {
 	this.rowtimestamp = Number(json['timestamp']);
 	this.timestamp = org.koshinuke.toDateString(json['timestamp']);
-	this.message = goog.string.urlDecode(json['message']);
-	this.author = goog.string.urlDecode(json['author']);
+	this.message = json['message'];
+	this.author = json['author'];
 };
 org.koshinuke.ui.TreeGrid.Leaf.prototype.setJson = function(json) {
 	var ext = org.koshinuke.getExtension(json['path'], this.icon);

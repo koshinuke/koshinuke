@@ -33,8 +33,8 @@ org.koshinuke.ui.Repository.prototype.name = "";
 
 org.koshinuke.ui.Repository.prototype.setJson = function(json) {
 	this.host = json['host'];
-	this.path = goog.string.urlDecode(json['path']);
-	this.name = goog.string.urlDecode(json['name']);
+	this.path = json['path'];
+	this.name = json['name'];
 	var makeRoots = function(rawJson, type) {
 		var roots = [];
 		if(rawJson) {
@@ -58,7 +58,7 @@ org.koshinuke.ui.Repository.prototype.setJson = function(json) {
 				return result;
 			};
 			goog.array.forEach(rawJson, function(root) {
-				goog.array.forEach(makePathArray(goog.string.urlDecode(root['path'])), function(a) {
+				goog.array.forEach(makePathArray(root['path']), function(a) {
 					if(set.contains(a.path) == false) {
 						set.add(a.path);
 						var newone = goog.object.clone(root);

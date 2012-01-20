@@ -45,8 +45,6 @@ org.koshinuke.model.TreeGridFacade.prototype.load = function(model, fn) {
 		parent.removeChild(psuedo, true);
 		var kids = [];
 		goog.array.forEach(raw, function(a) {
-			a['path'] = goog.string.urlDecode(a['path']);
-			a['name'] = goog.string.urlDecode(a['name']);
 			var m = org.koshinuke.ui.TreeGrid.Node.newFromJson(a);
 			kids.push(m);
 		});

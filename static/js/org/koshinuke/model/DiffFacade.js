@@ -30,10 +30,10 @@ org.koshinuke.model.DiffFacade.prototype.handleResponse_ = function(model, fn, e
 		diff : goog.array.reduce(raw['diff'], function(r, v) {
 			var m = {
 				operation : v['operation'],
-				b_path : goog.string.urlDecode(v['b_path']),
-				a_path : goog.string.urlDecode(v['a_path']),
-				patch : goog.string.urlDecode(v['patch']),
-				content : goog.string.urlDecode(v['content'])
+				b_path : v['b_path'],
+				a_path : v['a_path'],
+				patch : v['patch'],
+				content : v['content']
 			};
 			r.push(m);
 			return r;
