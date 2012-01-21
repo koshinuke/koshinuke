@@ -43,23 +43,23 @@ org.koshinuke.ui.ResourceEditor.prototype.enterDocument = function() {
 	var parent = this.getElement();
 	var model = this.getModel();
 	var self = this;
-	this.loader.load(model, function(contentType, resourceModel) {
-		model.node.objectid = resourceModel.objectid;
-		if(contentType && goog.string.startsWith(contentType, 'image')) {
+	this.loader.load(model, function(rm) {
+		model.node.objectid = rm.objectid;
+		if(rm.contenttype && goog.string.startsWith(rm.contenttype, 'image')) {
 			// data schemeでサーバからリソースが返ってくる事を期待する。
 			// http://tools.ietf.org/html/rfc2397
 			self.img = goog.dom.createDom("img", {
-				"src" : resourceModel.contents
+				"src" : rm.contents
 			});
 			parent.replaceChild(self.img, self.loading);
 		} else {
-			var toolsEl = goog.soy.renderAsElement(org.koshinuke.template.resourceeditor.tmpl, resourceModel);
+			var toolsEl = goog.soy.renderAsElement(org.koshinuke.template.resourceeditor.tmpl, rm);
 			self.getElement().insertBefore(toolsEl, self.loading);
-			self.clip = new org.koshinuke.ui.Clipboard([resourceModel.contents, 'copy contents to clipboard', 'copied !!']);
+			self.clip = new org.koshinuke.ui.Clipboard([rm.contents, 'copy contents to clipboard', 'copied !!']);
 			self.clip.decorate(toolsEl);
 			self.cmOption = {
-				mode : contentType,
-				value : resourceModel.contents,
+				mode : rm.contenttype,
+				value : rm.contents,
 				matchBrackets : true,
 				lineNumbers : true,
 				readOnly : true,
@@ -90,7 +90,8 @@ org.koshinuke.ui.ResourceEditor.prototype.setUpCMTools_ = function(element) {
 	h.listen(commitMsg, goog.events.EventType.KEYUP, function(e) {
 		var val = goog.dom.forms.getValue(e.target);
 		goog.dom.forms.setDisabled(commitBtn, !val || goog.string.trim(val).length < 1);
-	});
+		this.clip.setCopyContents(this.cm.getValue());
+	}, false, this);
 	var value = this.cm.getValue();
 	h.listen(this, goog.ui.Component.EventType.ACTION, function(e) {
 		var el = e.target.getElement();
@@ -118,7 +119,7 @@ org.koshinuke.ui.ResourceEditor.prototype.setUpCMTools_ = function(element) {
 			});
 		}
 	}, false, this);
-	this.psKey = org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.MODIFY_SUCCESS, function(ct, rm, send) {
+	this.psKey = org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.MODIFY_SUCCESS, function(send, rm) {
 		if(send.path == this.getModel().path && send.node.path == this.getModel().node.path) {
 			goog.dom.forms.setValue(commitMsg, '');
 			this.toggleEdit_(element, false);

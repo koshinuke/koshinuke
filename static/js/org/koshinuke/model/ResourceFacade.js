@@ -52,16 +52,15 @@ org.koshinuke.model.ResourceFacade.prototype.load = function(model, fn) {
 org.koshinuke.model.ResourceFacade.prototype.handleResponse = function(model, fn, e) {
 	// TODO error handling.
 	var raw = e.target.getResponseJson();
-	var rm = {
+	fn({
+		contenttype : org.koshinuke.model.ResourceFacade.extToMIME(model.node.path),
 		objectid : raw['objectid'],
 		rawtimestamp : Number(raw['timestamp']),
 		timestamp : org.koshinuke.toDateString(raw['timestamp']),
 		author : raw['author'],
 		message : raw['message'],
 		contents : raw['contents']
-	};
-	var ct = org.koshinuke.model.ResourceFacade.extToMIME(model.node.path);
-	fn(ct, rm);
+	});
 };
 
 org.koshinuke.model.ResourceFacade.prototype.send = function(model) {
@@ -73,7 +72,7 @@ org.koshinuke.model.ResourceFacade.prototype.send = function(model) {
 	var h = this.makeHeader();
 	h['Content-Type'] = "application/json";
 	var json = goog.json.serialize(sendmodel);
-	goog.net.XhrIo.send(this.toRequestUri(this.relativePath(model)), goog.partial(this.handleResponse, model, function(ct, rm) {
-		org.koshinuke.PubSub.publish(org.koshinuke.PubSub.MODIFY_SUCCESS, ct, rm, model);
+	goog.net.XhrIo.send(this.toRequestUri(this.relativePath(model)), goog.partial(this.handleResponse, model, function(rm) {
+		org.koshinuke.PubSub.publish(org.koshinuke.PubSub.MODIFY_SUCCESS, model, rm);
 	}), "POST", json, h);
 };

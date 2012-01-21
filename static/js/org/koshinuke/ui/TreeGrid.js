@@ -215,30 +215,32 @@ org.koshinuke.ui.TreeGrid.prototype.handleBeforeExpand_ = function(e) {
 /** @override */
 org.koshinuke.ui.TreeGrid.prototype.enterDocument = function() {
 	org.koshinuke.ui.TreeGrid.superClass_.enterDocument.call(this);
-	this.psKey = org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.MODIFY_SUCCESS, function(ct, rm, send) {
-		var s = send.node.path
-		var parent = s.substring(0, s.lastIndexOf('/'));
-		var candidate = [];
-		this.forEachChild(function(child) {
-			if(child.path == parent) {
-				child.isLoaded = false;
-				var el = goog.dom.query("td .expand", child.getElement())[0];
-				if(el) {
-					this.setState_(el, org.koshinuke.ui.TreeGrid.Node.State.EXPAND, org.koshinuke.ui.TreeGrid.Node.State.COLLAPSE);
+	this.psKey = org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.MODIFY_SUCCESS, function(send, rm) {
+		if(this.getModel().path == send.path) {
+			var s = send.node.path
+			var parent = s.substring(0, s.lastIndexOf('/'));
+			var candidate = [];
+			this.forEachChild(function(child) {
+				if(child.path == parent) {
+					child.isLoaded = false;
+					var el = goog.dom.query("td .expand", child.getElement())[0];
+					if(el) {
+						this.setState_(el, org.koshinuke.ui.TreeGrid.Node.State.EXPAND, org.koshinuke.ui.TreeGrid.Node.State.COLLAPSE);
+					}
+					child.rawtimestamp = rm.rawtimestamp;
+					child.timestamp = rm.timestamp;
+					child.message = rm.message;
+					child.author = rm.author;
+					child.updateElement();
 				}
-				child.rawtimestamp = rm.rawtimestamp;
-				child.timestamp = rm.timestamp;
-				child.message = rm.message;
-				child.author = rm.author;
-				child.updateElement();
-			}
-			if(parent.length < child.path.length && goog.string.startsWith(child.path, parent)) {
-				candidate.push(child);
-			}
-		}, this);
-		goog.array.forEach(candidate, function(c) {
-			this.removeChild(c, true);
-		}, this);
+				if(parent.length < child.path.length && goog.string.startsWith(child.path, parent)) {
+					candidate.push(child);
+				}
+			}, this);
+			goog.array.forEach(candidate, function(c) {
+				this.removeChild(c, true);
+			}, this);
+		}
 	}, this);
 };
 /** @override */
