@@ -34,10 +34,11 @@ org.koshinuke.model.ResourceFacade.ExtensionToMIME = {
 	".gif" : "image/gif",
 	".png" : "image/png",
 	".bmp" : "image/bmp",
-	".ico" : "image/ico"
+	".ico" : "image/ico",
+	".txt" : "text/plain"
 };
 org.koshinuke.model.ResourceFacade.extToMIME = function(path) {
-	var ext = org.koshinuke.getExtension(path, "");
+	var ext = org.koshinuke.getExtension(path, ".txt");
 	return org.koshinuke.model.ResourceFacade.ExtensionToMIME[ext.toLowerCase()];
 };
 
