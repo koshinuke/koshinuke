@@ -10,7 +10,7 @@ goog.require('goog.Uri');
 org.koshinuke.model.AbstractFacade = function(uri) {
 	this.uri = uri;
 };
-/** @const */
+
 org.koshinuke.model.AbstractFacade.Headers = {
 	"Cache-Control" : "no-cache",
 	"Pragma" : "no-cache",
@@ -19,7 +19,7 @@ org.koshinuke.model.AbstractFacade.Headers = {
 };
 
 org.koshinuke.model.AbstractFacade.prototype.toRequestUri = function(path) {
-	return this.uri.resolve(new goog.Uri("/dynamic" + path));
+	return this.uri.resolve(new goog.Uri("/dynamic/" + path));
 };
 
 org.koshinuke.model.AbstractFacade.prototype.get = function(path, pubSubKey) {

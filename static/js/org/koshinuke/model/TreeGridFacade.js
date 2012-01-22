@@ -1,20 +1,16 @@
 goog.provide('org.koshinuke.model.TreeGridFacade');
 
 goog.require('goog.array');
-goog.require('goog.i18n.DateTimeFormat');
 goog.require('goog.string');
 goog.require('goog.net.XhrIo');
-goog.require('goog.Uri');
 
 goog.require('org.koshinuke');
 goog.require('org.koshinuke.model.AbstractFacade');
 goog.require('org.koshinuke.ui.TreeGrid.Node');
-goog.require('org.koshinuke.ui.TreeGrid.Leaf');
-goog.require('org.koshinuke.ui.TreeGrid.Psuedo');
 
 /** @constructor */
 org.koshinuke.model.TreeGridFacade = function(uri) {
-	this.uri = uri;
+	org.koshinuke.model.AbstractFacade.call(this, uri);
 };
 goog.inherits(org.koshinuke.model.TreeGridFacade, org.koshinuke.model.AbstractFacade);
 
@@ -40,7 +36,7 @@ org.koshinuke.model.TreeGridFacade.prototype.load = function(model, fn) {
 
 	var self = this;
 	// TODO エラー処理, Timeout, ServerError, エラー時のリトライ用Node？
-	goog.net.XhrIo.send(this.toRequestUri("/" + model.path + "/tree/" + model.node.path), function(e) {
+	goog.net.XhrIo.send(this.toRequestUri(model.path + "/tree/" + model.node.path), function(e) {
 		var raw = e.target.getResponseJson();
 		parent.removeChild(psuedo, true);
 		var kids = [];
@@ -49,11 +45,11 @@ org.koshinuke.model.TreeGridFacade.prototype.load = function(model, fn) {
 			kids.push(m);
 		});
 		goog.array.sort(kids, self.compare);
-		goog.array.forEach(kids, function(a){
+		goog.array.forEach(kids, function(a) {
 			a.tearDownForSort();
 		});
 		fn(kids);
-	});
+	}, null, org.koshinuke.model.AbstractFacade.Headers);
 };
 
 org.koshinuke.model.TreeGridFacade.pathElementCompare = function(l, r, i) {

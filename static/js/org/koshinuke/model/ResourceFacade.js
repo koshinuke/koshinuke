@@ -2,8 +2,6 @@ goog.provide('org.koshinuke.model.ResourceFacade');
 
 goog.require('goog.array');
 goog.require('goog.net.XhrIo');
-goog.require('goog.string');
-goog.require('goog.Uri');
 
 goog.require('org.koshinuke');
 goog.require('org.koshinuke.model.AbstractFacade');
@@ -43,7 +41,7 @@ org.koshinuke.model.ResourceFacade.extToMIME = function(path) {
 };
 
 org.koshinuke.model.ResourceFacade.prototype.relativePath = function(model) {
-	return "/" + model.path + "/blob/" + model.node.path;
+	return model.path + "/blob/" + model.node.path;
 };
 
 org.koshinuke.model.ResourceFacade.prototype.load = function(model, fn) {

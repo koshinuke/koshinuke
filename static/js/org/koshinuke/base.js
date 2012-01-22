@@ -4,6 +4,7 @@ goog.require('goog.array');
 goog.require('goog.crypt');
 goog.require('goog.crypt.Md5');
 goog.require('goog.dom.classes');
+goog.require('goog.i18n.DateTimeFormat');
 goog.require('goog.pubsub.PubSub');
 
 org.koshinuke.activationHandler = function(item, isSelect) {
