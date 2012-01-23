@@ -13,7 +13,11 @@ org.koshinuke.model.CommitsFacade = function(uri) {
 goog.inherits(org.koshinuke.model.CommitsFacade, org.koshinuke.model.AbstractFacade);
 
 org.koshinuke.model.CommitsFacade.prototype.load = function(model, fn) {
-	goog.net.XhrIo.send(this.toRequestUri(model.path + "/commits/" + model.branch.path), function(e) {
+	var requestUri = this.toRequestUri(model.path + "/commits/" + model.branch.path);
+	if(model.offset) {
+		model.setParameterValue('offset', model.offset);
+	}
+	goog.net.XhrIo.send(requestUri, function(e) {
 		var raw = e.target.getResponseJson();
 		var commits = goog.array.reduce(raw, function(r, v) {
 			var m = {

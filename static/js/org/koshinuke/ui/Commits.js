@@ -108,7 +108,7 @@ org.koshinuke.ui.Commits.prototype.setUpRow_ = function(parent, commits) {
 org.koshinuke.ui.Commits.prototype.fetchMorePage_ = function(current) {
 	// TODO 出過ぎてる時に上の方にあるタグを消すべきか？
 	var m = goog.object.clone(this.getModel());
-	m.commit = current.commit;
+	m.offset = current.commit;
 	var parent = this.getElement()
 	var self = this;
 	parent.appendChild(this.loading);
