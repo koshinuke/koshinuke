@@ -76,7 +76,7 @@ org.koshinuke.ui.Commits.prototype.autoPaging_ = function() {
 		var last = goog.dom.getLastElementChild(element);
 		if(goog.style.isElementShown(element) && last && last.model) {
 			var current = last.model;
-			if(0 < current.parent.length) {
+			if(0 < current.parents.length) {
 				var prev = goog.dom.getPreviousElementSibling(last);
 				var py = goog.style.getPosition(prev).y;
 				var ey = goog.style.getPosition(element).y;

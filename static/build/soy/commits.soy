@@ -4,7 +4,7 @@
  * @param author
  * @param message
  * @param timestamp
- * @param parent
+ * @param parents
  * @param commit
  */
 {template .tmpl}
@@ -18,7 +18,7 @@
 	</div>
 	<div class="meta">
 		<span class="timestamp">{$timestamp}</span>
-		<button class="commitid"><img class="{if $parent.length < 2}normal{else}merge{/if}"/>{$commit|truncate:10}</button>
+		<button class="commitid"><img class="{if $parents.length < 2}normal{else}merge{/if}"/>{$commit|truncate:10}</button>
 	</div>
 </div>
 {/template}

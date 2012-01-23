@@ -25,7 +25,7 @@ org.koshinuke.model.CommitsFacade.prototype.load = function(model, fn) {
 				timestamp : org.koshinuke.toDateString(v['timestamp']),
 				author : v['author'],
 				message : v['message'],
-				parent : v['parent']
+				parents : v['parents']
 			};
 			r.push(m);
 			return r;
