@@ -14,6 +14,13 @@ goog.inherits(org.koshinuke.model.ResourceFacade, org.koshinuke.model.AbstractFa
 
 /** @enum {string} */
 org.koshinuke.model.ResourceFacade.ExtensionToMIME = {
+	".h" : "text/x-csrc",
+	".c" : "text/x-csrc",
+	".hpp" : "text/x-c++src",
+	".cpp" : "text/x-c++src",
+	".cs" : "text/x-csharp",
+	".java" : "text/x-java",
+	".groovy": "text/x-groovy",
 	".coffee" : "text/x-coffeescript",
 	".css" : "text/css",
 	".diff" : "text/x-diff",
@@ -28,6 +35,7 @@ org.koshinuke.model.ResourceFacade.ExtensionToMIME = {
 	".xml" : "application/xml",
 	".html" : "text/html",
 	".yml" : "text/x-yaml",
+	".yaml" : "text/x-yaml",
 	".jpg" : "image/jpeg",
 	".gif" : "image/gif",
 	".png" : "image/png",
@@ -37,7 +45,11 @@ org.koshinuke.model.ResourceFacade.ExtensionToMIME = {
 };
 org.koshinuke.model.ResourceFacade.extToMIME = function(path) {
 	var ext = org.koshinuke.getExtension(path, ".txt");
-	return org.koshinuke.model.ResourceFacade.ExtensionToMIME[ext.toLowerCase()];
+	var mime = org.koshinuke.model.ResourceFacade.ExtensionToMIME[ext.toLowerCase()];
+	if(mime) {
+		return mime;
+	}
+	return "text/plain";
 };
 
 org.koshinuke.model.ResourceFacade.prototype.relativePath = function(model) {
