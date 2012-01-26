@@ -59,7 +59,7 @@ org.koshinuke.ui.ResourceEditor.prototype.enterDocument = function() {
 			self.clip.decorate(toolsEl);
 			self.cmOption = {
 				mode : rm.contenttype,
-				value : rm.contents,
+				value : rm.content,
 				matchBrackets : true,
 				lineNumbers : true,
 				readOnly : true,
@@ -112,7 +112,7 @@ org.koshinuke.ui.ResourceEditor.prototype.setUpCMTools_ = function(element) {
 				path : this.getModel().path,
 				objectid : this.getModel().node.objectid,
 				message : goog.dom.forms.getValue(commitMsg),
-				contents : this.cm.getValue(),
+				content : this.cm.getValue(),
 				node : {
 					path : this.getModel().node.path
 				}
