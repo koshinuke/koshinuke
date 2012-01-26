@@ -36,7 +36,7 @@ org.koshinuke.model.HistoriesFacade.prototype.load = function(model, fn) {
 			return r;
 		}, []);
 		goog.array.sort(histories, function(l, r) {
-			return goog.array.defaultCompare(l.timestamp, r.timestamp);
+			return goog.array.defaultCompare(r.timestamp, l.timestamp);
 		});
 		fn(histories);
 	}, null, org.koshinuke.model.AbstractFacade.Headers);
