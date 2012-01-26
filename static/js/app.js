@@ -6,6 +6,7 @@ goog.require('goog.dom.classes');
 goog.require('goog.dom.query');
 goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('goog.string');
+goog.require('goog.style');
 
 goog.require('goog.async.Delay');
 goog.require('goog.fs.FileReader');

@@ -28,7 +28,7 @@ goog.provide('diff_match_patch');
  * Class containing the diff, match and patch methods.
  * @constructor
  */
-function diff_match_patch() {
+diff_match_patch = function() {
 
   // Defaults.
   // Redefine these in your program to override the defaults.
@@ -2113,7 +2113,7 @@ diff_match_patch.prototype.patch_fromText = function(textline) {
       } else if (sign == '@') {
         // Start of next patch.
         break;
-      } else if (sign === '') {
+      } else if (sign === '' || sign === '\\') {
         // Blank line?  Whatever.
       } else {
         // WTF?
@@ -2191,7 +2191,7 @@ diff_match_patch.patch_obj.prototype.toString = function() {
 // In a browser, 'this' will be 'window'.
 // Users of node.js should 'require' the uncompressed version since Google's
 // JS compiler may break the following exports for non-browser environments.
-this['diff_match_patch'] = diff_match_patch;
-this['DIFF_DELETE'] = DIFF_DELETE;
-this['DIFF_INSERT'] = DIFF_INSERT;
-this['DIFF_EQUAL'] = DIFF_EQUAL;
+// this['diff_match_patch'] = diff_match_patch;
+// this['DIFF_DELETE'] = DIFF_DELETE;
+// this['DIFF_INSERT'] = DIFF_INSERT;
+// this['DIFF_EQUAL'] = DIFF_EQUAL;

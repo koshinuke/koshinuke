@@ -25,6 +25,9 @@
 				border: 1px solid #CCC;
 				padding: 0.2em 0.2em 0.1em 0.2em;
 				text-shadow: 1px 1px 0 white;
+				&:hover {
+					cursor: pointer;
+				}
 			}
 			
 			&.collapse {
@@ -38,7 +41,7 @@
 				.status {
 					.toggle_plus;
 				}
-				.content {
+				.diffs {
 					display: none;
 				}
 			}
@@ -54,7 +57,7 @@
 				.status {
 					.toggle_minus;
 				}
-				.content {
+				.diffs {
 					#radius > .bottom;
 				}
 			}
@@ -71,5 +74,39 @@
 	}
 	.CodeMirror-lines pre:hover {
 		background-color: whitesmoke;
+	}
+	.diffmodes {
+		.clearfix;
+		border: 1px solid #CCC;
+		padding: 0.3em 0.4em;
+		text-shadow: 1px 1px 0 white;
+		background-color: whiteSmoke;
+		.goog-tab {
+			padding: 0.2em 0.5em 0.2em 0.5em;
+			float: left;
+			#radius > .around;
+			&:hover {
+				color: #0A8ECC;
+				cursor: pointer;
+			}
+			&.goog-tab-selected {
+				color: inherit;
+				background-color: @grayLighter;
+				cursor: default;
+			}
+		}
+	}
+	.content {
+		border: 1px solid #CCC;
+		border-top: none;
+		.codemirror {
+			border: none;
+		}
+		.patch {
+		}
+		.inline {
+		}
+		.sbs {
+		}
 	}
 }

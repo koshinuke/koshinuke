@@ -97,6 +97,9 @@ difflib = {
 		return dict.hasOwnProperty(key) ? dict[key] : defaultValue;
 	},	
 	
+	/**
+	 * @constructor
+	 */
 	SequenceMatcher: function (a, b, isjunk) {
 		this.set_seqs = function (a, b) {
 			this.set_seq1(a);

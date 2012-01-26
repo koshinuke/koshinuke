@@ -23,6 +23,6 @@ org.koshinuke.template.diffviewer.commit = function(opt_data, opt_sb) {
 
 org.koshinuke.template.diffviewer.file = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('<div class="file collapse"><div class="meta"><img class="status"/><img class="op ', soy.$$escapeHtml(opt_data.operation), '" /><span class="path">', soy.$$escapeHtml(opt_data.path), '</span></div><div class="content"></div></div>');
+  output.append('<div class="file collapse"><div class="meta"><img class="status"/><img class="op ', soy.$$escapeHtml(opt_data.operation), '" title="', soy.$$escapeHtml(opt_data.operation), '" /><span class="path">', soy.$$escapeHtml(opt_data.path), '</span></div><div class="diffs"><div class="diffmodes goog-tab-bar"><div class="patch goog-tab">patch</div><div class="inline goog-tab">inline</div><div class="sbs goog-tab">side by side</div></div><div class="content"><div class="patch"></div><div class="inline" style="display: none;"></div><div class="sbs" style="display: none;"></div></div></div></div>');
   return opt_sb ? '' : output.toString();
 };

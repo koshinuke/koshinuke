@@ -6,12 +6,17 @@ goog.require('goog.dom.classes');
 goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('goog.events');
 goog.require('goog.soy');
+goog.require('goog.style');
 
 goog.require('goog.ui.Button');
 goog.require('goog.ui.Component');
+goog.require('goog.ui.TabBar');
 
 goog.require('CodeMirror');
 goog.require('CodeMirror.modes');
+goog.require('diff_match_patch');
+goog.require('difflib');
+goog.require('diffview');
 
 goog.require('org.koshinuke');
 goog.require('org.koshinuke.template.diffviewer');
@@ -21,6 +26,7 @@ org.koshinuke.ui.DiffViewer = function(loader, opt_domHelper) {
 	goog.ui.Component.call(this, opt_domHelper);
 	this.loader = loader;
 	this.vsm = goog.dom.ViewportSizeMonitor.getInstanceForWindow();
+	this.selectors = [];
 };
 goog.inherits(org.koshinuke.ui.DiffViewer, goog.ui.Component);
 
@@ -81,7 +87,7 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 			var pathconv = org.koshinuke.ui.DiffViewer.OperationToPath[a.operation];
 			var p = a.newpath;
 			if(pathconv) {
-				p = pathconv(a.oldpath, a.newpath);				
+				p = pathconv(a.oldpath, a.newpath);
 			}
 			var f = goog.soy.renderAsElement(org.koshinuke.template.diffviewer.file, {
 				operation : a.operation,
@@ -101,7 +107,7 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 				}
 			}, false, self);
 			f.cm = CodeMirror(function(elt) {
-				var con = goog.dom.query('.content', f)[0];
+				var con = goog.dom.query('.content .patch', f)[0];
 				con.appendChild(elt);
 			}, {
 				mode : 'text/x-diff',
@@ -110,6 +116,63 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 				lineNumbers : false,
 				readOnly : true
 			});
+			var tabbar = new goog.ui.TabBar();
+			tabbar.decorate(goog.dom.query('.diffmodes', f)[0]);
+			tabbar.setSelectedTabIndex(0);
+			var handlePane = function(el, visible, fn) {
+				var q = '.content .';
+				var type = 'patch';
+				if(goog.dom.classes.has(el, 'patch')) {
+					type = 'patch';
+				} else if(goog.dom.classes.has(el, 'inline')) {
+					type = 'inline';
+				} else if(goog.dom.classes.has(el, 'sbs')) {
+					type = 'sbs';
+				}
+				q += type;
+				goog.array.forEach(goog.dom.query(q, f), function(pane) {
+					if(fn) {
+						var kids = goog.dom.getChildren(pane);
+						if(kids == null || kids.length < 1) {
+							fn(type);
+						}
+					}
+					goog.style.showElement(pane, visible);
+				});
+			}
+			var oldcontent = a.content;
+			var newcontent;
+			var patching = function() {
+				if(!newcontent) {
+					var dmp = new diff_match_patch();
+					var patches = dmp.patch_fromText(a.patch);
+					var result = dmp.patch_apply(patches, oldcontent);
+					newcontent = result[0];
+				}
+				console.log(newcontent);
+			};
+			var fns = {
+				'patch' : function() {
+					// do nothing.
+				},
+				'inline' : function() {
+					patching();
+				},
+				'sbs' : function() {
+					patching();
+				}
+			};
+			goog.events.listen(tabbar, goog.ui.Component.EventType.SELECT, function(e) {
+				handlePane(e.target.getElement(), true, function(type) {
+					if(fns[type]) {
+						fns[type]();
+					}
+				});
+			});
+			goog.events.listen(tabbar, goog.ui.Component.EventType.UNSELECT, function(e) {
+				handlePane(e.target.getElement(), false);
+			});
+			self.selectors.push(tabbar);
 		});
 	});
 	h.listen(this, goog.ui.Component.EventType.ACTION, function(e) {
@@ -140,6 +203,10 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 org.koshinuke.ui.DiffViewer.prototype.exitDocument = function() {
 	org.koshinuke.ui.DiffViewer.superClass_.exitDocument.call(this);
 	goog.dom.removeNode(this.getElement());
+
+	goog.array.forEach(this.selectors, function(a) {
+		a.exitDocument();
+	});
 };
 
 org.koshinuke.ui.DiffViewer.prototype.setVisible = function(state) {
@@ -154,4 +221,8 @@ org.koshinuke.ui.DiffViewer.prototype.disposeInternal = function() {
 	this.loading = null;
 	this.vsm = null;
 	this.loader = null;
+	goog.array.forEach(this.selectors, function(a) {
+		a.dispose();
+	});
+	this.selectors = null;
 };
