@@ -16,13 +16,16 @@ org.koshinuke.model.DiffFacade.prototype.load = function(model, fn) {
 	goog.net.XhrIo.send(this.toRequestUri(model.path + "/commit/" + model.commit.commit), function(e) {
 		var raw = e.target.getResponseJson();
 		var diff = {
+			author : raw['author'],
+			message: raw['message'],
+			timestamp : org.koshinuke.toDateString(raw['timestamp']),
 			commit : raw['commit'],
-			parent : raw['parent'],
+			parents : raw['parents'],
 			diff : goog.array.reduce(raw['diff'], function(r, v) {
 				var m = {
 					operation : v['operation'],
-					b_path : v['b_path'],
-					a_path : v['a_path'],
+					oldpath : v['oldpath'],
+					newpath : v['newpath'],
 					patch : v['patch'],
 					content : v['content']
 				};

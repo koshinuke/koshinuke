@@ -4,7 +4,7 @@
  * @param author
  * @param message
  * @param timestamp
- * @param parent
+ * @param parents
  * @param commit
  */
 {template .commit}
@@ -19,7 +19,7 @@
 	<div class="meta">
 		<span class="timestamp">{$timestamp}</span>
 		<span class="label">parents :</span><span class="parents">
-			{foreach $p in $parent}
+			{foreach $p in $parents}
 				{if not isFirst($p)}<span> + </span>{/if}
 				<span class="parent">{$p|truncate:7,false}</span>
 			{/foreach}

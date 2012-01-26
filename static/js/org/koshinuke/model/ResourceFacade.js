@@ -58,7 +58,7 @@ org.koshinuke.model.ResourceFacade.prototype.handleResponse = function(model, fn
 		timestamp : org.koshinuke.toDateString(raw['timestamp']),
 		author : raw['author'],
 		message : raw['message'],
-		contents : raw['contents']
+		content : raw['content']
 	});
 };
 
@@ -66,7 +66,7 @@ org.koshinuke.model.ResourceFacade.prototype.send = function(model) {
 	var sendmodel = {
 		"objectid" : model.objectid,
 		"message" : model.message,
-		"contents" : model.contents
+		"content" : model.content
 	};
 	var h = this.makeHeader();
 	h['Content-Type'] = "application/json";

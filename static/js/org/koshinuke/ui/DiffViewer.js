@@ -34,6 +34,28 @@ org.koshinuke.ui.DiffViewer.prototype.createDom = function() {
 	}, this.loading);
 	this.decorateInternal(element);
 };
+
+org.koshinuke.ui.DiffViewer.OperationToPath = {
+	'add' : function(oldpath, newpath) {
+		return newpath;
+	},
+	'modify' : function(oldpath, newpath) {
+		if(oldpath != newpath) {
+			return oldpath + ' → ' + newpath;
+		}
+		return newpath;
+	},
+	'delete' : function(oldpath, newpath) {
+		return oldpath;
+	},
+	'rename' : function(oldpath, newpath) {
+		return oldpath + ' → ' + newpath;
+	},
+	'copy' : function(oldpath, newpath) {
+		return oldpath + ' → ' + newpath;
+	}
+};
+
 /** @override */
 org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 	org.koshinuke.ui.DiffViewer.superClass_.enterDocument.call(this);
@@ -43,8 +65,8 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 	var h = this.getHandler();
 	this.loader.load(model, function(diff) {
 		model.commit.commit = diff.commit;
-		model.commit.parent = diff.parent;
-		var commits = goog.soy.renderAsElement(org.koshinuke.template.diffviewer.commit, model.commit);
+		model.commit.parents = diff.parents;
+		var commits = goog.soy.renderAsElement(org.koshinuke.template.diffviewer.commit, diff);
 		parent.replaceChild(commits, self.loading);
 		goog.array.forEach(goog.dom.query('button', commits), function(a) {
 			var b = new goog.ui.Button();
@@ -56,9 +78,10 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 		});
 		parent.appendChild(files);
 		goog.array.forEach(diff.diff, function(a) {
-			var p = a.a_path;
-			if(a.b_path != a.a_path) {
-				p = a.b_path + ' → ' + a.a_path;
+			var pathconv = org.koshinuke.ui.DiffViewer.OperationToPath[a.operation];
+			var p = a.newpath;
+			if(pathconv) {
+				p = pathconv(a.oldpath, a.newpath);				
 			}
 			var f = goog.soy.renderAsElement(org.koshinuke.template.diffviewer.file, {
 				operation : a.operation,
@@ -99,12 +122,10 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 	h.listen(parent, goog.events.EventType.CLICK, function(e) {
 		var el = e.target;
 		if(goog.dom.classes.has(el, 'parent')) {
-			// TODO 親のコミットを辿る。現時点の実装は不完全な状態。
-			// コミットIDを指定した時に、当該コミットのメタデータも取れる様にしないと上手く動作しない。
 			var m = goog.object.clone(this.getModel());
-			var cid = m.commit.parent[0];
+			var cid = m.commit.parents[0];
 			var tid = goog.dom.getTextContent(el);
-			goog.array.forEach(m.commit.parent, function(a) {
+			goog.array.forEach(m.commit.parents, function(a) {
 				if(goog.string.startsWith(a, tid)) {
 					cid = a;
 				}
