@@ -2,6 +2,7 @@ goog.provide('org.koshinuke.model.DiffFacade');
 
 goog.require('goog.array');
 goog.require('goog.net.XhrIo');
+goog.require('goog.string');
 
 goog.require('org.koshinuke');
 goog.require('org.koshinuke.model.AbstractFacade');
@@ -27,7 +28,8 @@ org.koshinuke.model.DiffFacade.prototype.load = function(model, fn) {
 					oldpath : v['oldpath'],
 					newpath : v['newpath'],
 					patch : v['patch'],
-					content : v['content']
+					oldcontent : goog.string.makeSafe(v['oldcontent']),
+					newcontent : goog.string.makeSafe(v['newcontent'])
 				};
 				r.push(m);
 				return r;

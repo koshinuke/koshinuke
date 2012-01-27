@@ -14,7 +14,6 @@ goog.require('goog.ui.TabBar');
 
 goog.require('CodeMirror');
 goog.require('CodeMirror.modes');
-goog.require('diff_match_patch');
 goog.require('difflib');
 goog.require('diffview');
 
@@ -134,38 +133,35 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 					if(fn) {
 						var kids = goog.dom.getChildren(pane);
 						if(kids == null || kids.length < 1) {
-							fn(type);
+							fn(type, pane);
 						}
 					}
 					goog.style.showElement(pane, visible);
 				});
 			}
-			var oldcontent = a.content;
-			var newcontent;
-			var patching = function() {
-				if(!newcontent) {
-					var dmp = new diff_match_patch();
-					var patches = dmp.patch_fromText(a.patch);
-					var result = dmp.patch_apply(patches, oldcontent);
-					newcontent = result[0];
-				}
-				console.log(newcontent);
-			};
-			var fns = {
-				'patch' : function() {
-					// do nothing.
-				},
-				'inline' : function() {
-					patching();
-				},
-				'sbs' : function() {
-					patching();
-				}
+			var makeDiffView = function(vt, pane) {
+				var oldone = difflib.stringAsLines(a.oldcontent);
+				var newone = difflib.stringAsLines(a.newcontent);
+				var sm = new difflib.SequenceMatcher(oldone, newone);
+				pane.appendChild(diffview.buildView({
+					baseTextLines : oldone,
+					newTextLines : newone,
+					baseTextName : "Old Content",
+					newTextName : "New Content",
+					opcodes : sm.get_opcodes(),
+					contextSize : 3, // TODO server の設定に従う？
+					viewType : vt
+				}));
 			};
 			goog.events.listen(tabbar, goog.ui.Component.EventType.SELECT, function(e) {
-				handlePane(e.target.getElement(), true, function(type) {
+				handlePane(e.target.getElement(), true, function(type, pane) {
+					var fns = {
+						'patch' : goog.nullFunction,
+						'inline' : goog.partial(makeDiffView, 1),
+						'sbs' : goog.partial(makeDiffView, 0)
+					};
 					if(fns[type]) {
-						fns[type]();
+						fns[type](pane);
 					}
 				});
 			});
