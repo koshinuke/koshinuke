@@ -112,13 +112,11 @@ table.diff {
 	border:1px solid darkgray;
 }
 table.diff tbody th {
-	padding: .3em .4em .1em .5em;
 	background:#EED;
 	font-weight:normal;
 	border:1px solid #BBC;
 	color: #886;
 	text-align:right;
-	vertical-align:top
 }
 table.diff thead {
 	border-bottom:1px solid #BBC;
@@ -128,10 +126,11 @@ table.diff thead {
 table.diff thead th.texttitle {
 	text-align:left
 }
-table.diff tbody td {
-	padding:0px .4em;
-	padding-top:.4em;
-	vertical-align:top;
+table.diff tbody {
+	th, td {
+		padding: .3em .4em .1em .5em;
+		vertical-align: top;
+	}
 }
 table.diff .empty {
 	background-color:#DDD;
