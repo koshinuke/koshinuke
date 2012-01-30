@@ -5,6 +5,7 @@ goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.dom.ViewportSizeMonitor');
 goog.require('goog.events');
+goog.require('goog.events.EventType');
 goog.require('goog.soy');
 goog.require('goog.style');
 
@@ -18,13 +19,16 @@ goog.require('difflib');
 goog.require('diffview');
 
 goog.require('org.koshinuke');
+goog.require('org.koshinuke.positioning.GravityPosition');
 goog.require('org.koshinuke.template.diffviewer');
+goog.require('org.koshinuke.ui.Popup');
 
 /** @constructor */
 org.koshinuke.ui.DiffViewer = function(loader, opt_domHelper) {
 	goog.ui.Component.call(this, opt_domHelper);
 	this.loader = loader;
 	this.vsm = goog.dom.ViewportSizeMonitor.getInstanceForWindow();
+	this.popups = [];
 	this.selectors = [];
 };
 goog.inherits(org.koshinuke.ui.DiffViewer, goog.ui.Component);
@@ -83,6 +87,7 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 		});
 		parent.appendChild(files);
 		goog.array.forEach(diff.diff, function(a) {
+			var measuredPatch = self.measurePatch_(a.patch);
 			var pathconv = org.koshinuke.ui.DiffViewer.OperationToPath[a.operation];
 			var p = a.newpath;
 			if(pathconv) {
@@ -90,9 +95,11 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 			}
 			var f = goog.soy.renderAsElement(org.koshinuke.template.diffviewer.file, {
 				operation : a.operation,
-				path : p
+				path : p,
+				stat : measuredPatch
 			});
 			files.appendChild(f);
+			self.popupStats_(f, measuredPatch);
 			h.listen(goog.dom.query('.meta',f)[0], goog.events.EventType.CLICK, function(e) {
 				if(goog.dom.classes.has(f, 'collapse')) {
 					goog.dom.classes.addRemove(f, 'collapse', 'expand');
@@ -195,6 +202,47 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 		}
 	}, false, this);
 };
+/** @private */
+org.koshinuke.ui.DiffViewer.prototype.measurePatch_ = function(patch) {
+	var result = {
+		change : 0,
+		del : 0,
+		add : 0
+	};
+	goog.array.forEach(patch.split('\n'), function(s) {
+		var c = s.charAt(0);
+		if(c === '@') {
+			result.change++;
+		}
+		if(c === '+') {
+			result.add++;
+		}
+		if(c === '-') {
+			result.del++;
+		}
+	});
+	var total = result.del + result.add;
+	result.addtimes = Math.floor((result.add / total) * 10);
+	result.deltimes = Math.floor((result.del / total) * 10);
+	result.nontimes = 10 - result.addtimes - result.deltimes;
+	return result;
+};
+/** @private */
+org.koshinuke.ui.DiffViewer.prototype.popupStats_ = function(parentEl, stat) {
+	var el = goog.dom.query(".diffstat", parentEl)[0];
+	var popup = new org.koshinuke.ui.Popup(
+			new org.koshinuke.positioning.GravityPosition(el, 'e', 1), 'left');
+	popup.setText(stat.change + " patches , " + stat.add + " additions , "
+			+ stat.del + " deletions");
+	var h = this.getHandler();
+	h.listen(el, goog.events.EventType.MOUSEOVER, function(e) {
+		popup.setVisible(true);
+	});
+	h.listen(el, goog.events.EventType.MOUSEOUT, function(e) {
+		popup.setVisible(false);
+	});
+	this.popups.push(popup);
+};
 /** @override */
 org.koshinuke.ui.DiffViewer.prototype.exitDocument = function() {
 	org.koshinuke.ui.DiffViewer.superClass_.exitDocument.call(this);
@@ -217,8 +265,9 @@ org.koshinuke.ui.DiffViewer.prototype.disposeInternal = function() {
 	this.loading = null;
 	this.vsm = null;
 	this.loader = null;
-	goog.array.forEach(this.selectors, function(a) {
+	goog.array.forEach(goog.array.flatten(this.popups, this.selectors), function(a) {
 		a.dispose();
 	});
+	this.popups = null;
 	this.selectors = null;
 };

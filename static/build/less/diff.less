@@ -108,6 +108,26 @@
 		}
 	}
 }
+.diffstat {
+	float: right;
+	margin: 0.1em 0 0 0.3em;
+	.stat {
+		float: left;
+		width: 0.38em;
+		height: 1em;
+		margin-right: 0.1em;
+		#radius > .around;
+		&.add {
+			background-color: lighten(@green, 10%);
+		}
+		&.del {
+			background-color: lighten(@red, 10%);
+		}
+		&.non {
+			background-color: @grayLight;
+		}
+	}
+}
 table.diff {
 	border:1px solid darkgray;
 }

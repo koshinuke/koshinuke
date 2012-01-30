@@ -32,13 +32,28 @@
 /**
  * @param operation
  * @param path
+ * @param stat
  */
 {template .file}
 <div class="file collapse">
 	<div class="meta">
 		<img class="status"/>
-		<img class="op {$operation}" title="{$operation}" />
 		<span class="path">{$path}</span>
+		<div class="diffstat">
+			{call .renderStat}
+				{param times: $stat.addtimes /}
+				{param stat: 'add' /}
+			{/call}
+			{call .renderStat}
+				{param times: $stat.deltimes /}
+				{param stat: 'del' /}
+			{/call}
+			{call .renderStat}
+				{param times: $stat.nontimes /}
+				{param stat: 'non' /}
+			{/call}
+		</div>
+		<img class="op {$operation}" title="{$operation}" />
 	</div>
 	<div class="diffs">
 		<div class="diffmodes goog-tab-bar">
@@ -53,4 +68,14 @@
 		</div>
 	</div>
 </div>
+{/template}
+
+/**
+ * @param times
+ * @param stat 
+ */
+{template .renderStat private="true"}
+{for $i in range($times)}
+<span class="stat {$stat}"></span>
+{/for}
 {/template}

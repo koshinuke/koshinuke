@@ -23,6 +23,20 @@ org.koshinuke.template.diffviewer.commit = function(opt_data, opt_sb) {
 
 org.koshinuke.template.diffviewer.file = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('<div class="file collapse"><div class="meta"><img class="status"/><img class="op ', soy.$$escapeHtml(opt_data.operation), '" title="', soy.$$escapeHtml(opt_data.operation), '" /><span class="path">', soy.$$escapeHtml(opt_data.path), '</span></div><div class="diffs"><div class="diffmodes goog-tab-bar"><div class="patch goog-tab">patch</div><div class="inline goog-tab">inline</div><div class="sbs goog-tab">side by side</div></div><div class="content"><div class="patch"></div><div class="inline" style="display: none;"></div><div class="sbs" style="display: none;"></div></div></div></div>');
+  output.append('<div class="file collapse"><div class="meta"><img class="status"/><span class="path">', soy.$$escapeHtml(opt_data.path), '</span><div class="diffstat">');
+  org.koshinuke.template.diffviewer.renderStat({times: opt_data.stat.addtimes, stat: 'add'}, output);
+  org.koshinuke.template.diffviewer.renderStat({times: opt_data.stat.deltimes, stat: 'del'}, output);
+  org.koshinuke.template.diffviewer.renderStat({times: opt_data.stat.nontimes, stat: 'non'}, output);
+  output.append('</div><img class="op ', soy.$$escapeHtml(opt_data.operation), '" title="', soy.$$escapeHtml(opt_data.operation), '" /></div><div class="diffs"><div class="diffmodes goog-tab-bar"><div class="patch goog-tab">patch</div><div class="inline goog-tab">inline</div><div class="sbs goog-tab">side by side</div></div><div class="content"><div class="patch"></div><div class="inline" style="display: none;"></div><div class="sbs" style="display: none;"></div></div></div></div>');
+  return opt_sb ? '' : output.toString();
+};
+
+
+org.koshinuke.template.diffviewer.renderStat = function(opt_data, opt_sb) {
+  var output = opt_sb || new soy.StringBuilder();
+  var iLimit43 = opt_data.times;
+  for (var i43 = 0; i43 < iLimit43; i43++) {
+    output.append('<span class="stat ', soy.$$escapeHtml(opt_data.stat), '"></span>');
+  }
   return opt_sb ? '' : output.toString();
 };
