@@ -8,6 +8,7 @@ goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.soy');
 goog.require('goog.style');
+goog.require('goog.string');
 
 goog.require('goog.ui.Button');
 goog.require('goog.ui.Component');
@@ -232,8 +233,9 @@ org.koshinuke.ui.DiffViewer.prototype.popupStats_ = function(parentEl, stat) {
 	var el = goog.dom.query(".diffstat", parentEl)[0];
 	var popup = new org.koshinuke.ui.Popup(
 			new org.koshinuke.positioning.GravityPosition(el, 'e', 1), 'left');
-	popup.setText(stat.change + " patches , " + stat.add + " additions , "
-			+ stat.del + " deletions");
+    var s = goog.string.subs("%s patches , %s additions , %s deletions",
+	    stat.change, stat.add, stat.del);
+    popup.setText(s);
 	var h = this.getHandler();
 	h.listen(el, goog.events.EventType.MOUSEOVER, function(e) {
 		popup.setVisible(true);
