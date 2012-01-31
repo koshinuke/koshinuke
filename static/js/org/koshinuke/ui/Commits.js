@@ -50,7 +50,7 @@ org.koshinuke.ui.Commits.prototype.enterDocument = function() {
 	h.listen(this, goog.ui.Component.EventType.ACTION, function(e) {
 		var el = org.koshinuke.findParentByClass(e.target.getElement(), 'commit');
 		var m = goog.object.clone(this.getModel());
-		m.label = [m.branch.name, el.model.commit];
+		m.label = ["Commit", m.branch.name, el.model.commit];
 		m.context = org.koshinuke.ui.PaneTab.Factory.Diff;
 		m.commit = el.model;
 		org.koshinuke.PubSub.publish(org.koshinuke.PubSub.COMMIT_SELECT, m);

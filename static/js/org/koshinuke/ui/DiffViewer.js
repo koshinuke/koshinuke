@@ -197,7 +197,7 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 			m.commit = {
 				commit : cid
 			};
-			m.label = [m.branch.name, cid];
+			m.label = ["Commit", m.branch.name, cid];
 			m.context = org.koshinuke.ui.PaneTab.Factory.Diff;
 			org.koshinuke.PubSub.publish(org.koshinuke.PubSub.COMMIT_SELECT, m);
 		}
@@ -223,19 +223,17 @@ org.koshinuke.ui.DiffViewer.prototype.measurePatch_ = function(patch) {
 		}
 	});
 	var total = result.del + result.add;
-	result.addtimes = Math.floor((result.add / total) * 10);
-	result.deltimes = Math.floor((result.del / total) * 10);
+	result.addtimes = 0 < result.add ? Math.floor((result.add / total) * 10) : 0;
+	result.deltimes = 0 < result.del ? Math.floor((result.del / total) * 10) : 0;
 	result.nontimes = 10 - result.addtimes - result.deltimes;
 	return result;
 };
 /** @private */
 org.koshinuke.ui.DiffViewer.prototype.popupStats_ = function(parentEl, stat) {
 	var el = goog.dom.query(".diffstat", parentEl)[0];
-	var popup = new org.koshinuke.ui.Popup(
-			new org.koshinuke.positioning.GravityPosition(el, 'e', 1), 'left');
-    var s = goog.string.subs("%s patches , %s additions , %s deletions",
-	    stat.change, stat.add, stat.del);
-    popup.setText(s);
+	var popup = new org.koshinuke.ui.Popup(new org.koshinuke.positioning.GravityPosition(el, 'e', 1), 'left');
+	var s = goog.string.subs("%s patches , %s additions , %s deletions", stat.change, stat.add, stat.del);
+	popup.setText(s);
 	var h = this.getHandler();
 	h.listen(el, goog.events.EventType.MOUSEOVER, function(e) {
 		popup.setVisible(true);

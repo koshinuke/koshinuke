@@ -118,6 +118,15 @@ org.koshinuke.ui.ResourceEditor.prototype.setUpCMTools_ = function(element) {
 				}
 			});
 		}
+		if(goog.dom.classes.has(el, 'history')) {
+		    var branch = this.getModel().node;
+		    var m = goog.object.clone(this.getModel());
+		    // TODO このリテラルは何とかしたいトコロだが…
+		    m.label = goog.array.flatten("Histories", branch.path.split('/'));
+		    m.context = org.koshinuke.ui.PaneTab.Factory.Commits;
+		    m.branch = branch;
+		    org.koshinuke.PubSub.publish(org.koshinuke.PubSub.BRANCH_SELECT, m);
+		}
 	}, false, this);
 	this.psKey = org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.MODIFY_SUCCESS, function(send, rm) {
 		if(send.path == this.getModel().path && send.node.path == this.getModel().node.path) {
