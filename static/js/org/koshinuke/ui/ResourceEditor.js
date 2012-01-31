@@ -49,13 +49,13 @@ org.koshinuke.ui.ResourceEditor.prototype.enterDocument = function() {
 			// data schemeでサーバからリソースが返ってくる事を期待する。
 			// http://tools.ietf.org/html/rfc2397
 			self.img = goog.dom.createDom("img", {
-				"src" : rm.contents
+				"src" : rm.content
 			});
 			parent.replaceChild(self.img, self.loading);
 		} else {
 			var toolsEl = goog.soy.renderAsElement(org.koshinuke.template.resourceeditor.tmpl, rm);
 			self.getElement().insertBefore(toolsEl, self.loading);
-			self.clip = new org.koshinuke.ui.Clipboard([rm.contents, 'copy contents to clipboard', 'copied !!']);
+			self.clip = new org.koshinuke.ui.Clipboard([rm.content, 'copy contents to clipboard', 'copied !!']);
 			self.clip.decorate(toolsEl);
 			self.cmOption = {
 				mode : rm.contenttype,
