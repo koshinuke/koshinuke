@@ -70,7 +70,7 @@ org.koshinuke.ui.PaneTabBar.prototype.decorateInternal = function(element) {
 			}, this);
 			var reSelect = this.lastSelected && this.lastSelected != rmTab ? this.lastSelected : null;
 			if(-1 < rmIndex) {
-				this.removeChildAt(rmIndex, true);
+				this.removeChildAt(rmIndex, true).dispose();
 			}
 			if(reSelect) {
 				this.setSelectedTab(reSelect);

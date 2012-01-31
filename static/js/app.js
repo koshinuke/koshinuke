@@ -122,6 +122,9 @@ goog.exportSymbol('main', function() {
 		rl.load();
 		goog.events.listen(tabbar, org.koshinuke.ui.Repository.EventType.REPO_CONTEXT_SELECTED, function(e) {
 			var t = e.target;
+			var deepClone = function(ary) {
+			    return goog.array.reduce(ary, function(r,v){r.push(goog.object.clone(v));return r;},[]);
+			};
 			PubSub.publish(PubSub.REPO_SELECT, {
 				context : e.context,
 				label : e.label,
@@ -129,8 +132,8 @@ goog.exportSymbol('main', function() {
 				host : t.host,
 				path : t.path,
 				name : t.name,
-				branches : t.branches,
-				tags : t.tags
+				branches : deepClone(t.branches),
+				tags : deepClone(t.tags)
 			});
 		});
 	});

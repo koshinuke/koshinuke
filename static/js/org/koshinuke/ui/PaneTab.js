@@ -186,11 +186,14 @@ org.koshinuke.ui.PaneTab.prototype.handleUnSelect = function(e) {
 org.koshinuke.ui.PaneTab.prototype.exitDocument = function() {
 	org.koshinuke.ui.PaneTab.superClass_.exitDocument.call(this);
 	if(this.pane) {
-		this.pane.dispose();
+		this.pane.exitDocument();
 	}
 };
 /** @override */
 org.koshinuke.ui.PaneTab.prototype.disposeInternal = function() {
 	org.koshinuke.ui.PaneTab.superClass_.disposeInternal.call(this);
-	this.pane = null;
+	if(this.pane) {
+		this.pane.dispose();
+		this.pane = null;
+	}
 };
