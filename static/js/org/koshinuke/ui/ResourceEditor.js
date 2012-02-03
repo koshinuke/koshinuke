@@ -54,7 +54,10 @@ org.koshinuke.ui.ResourceEditor.prototype.enterDocument = function() {
 			self.getElement().insertBefore(toolsEl, self.loading);
 			self.clip = new org.koshinuke.ui.Clipboard([rm.content, 'copy contents to clipboard', 'copied !!']);
 			self.clip.decorate(toolsEl);
-			self.cmOption = {
+			self.cm = CodeMirror(function(elt) {
+				goog.dom.classes.add(elt, "readonly");
+				parent.replaceChild(elt, self.loading);
+			}, {
 				mode : rm.contenttype,
 				value : rm.content,
 				matchBrackets : true,
@@ -64,11 +67,7 @@ org.koshinuke.ui.ResourceEditor.prototype.enterDocument = function() {
 					self.cm.setLineClass(lineH, null);
 					lineH = self.cm.setLineClass(self.cm.getCursor().line, "activeline");
 				}
-			};
-			self.cm = CodeMirror(function(elt) {
-				goog.dom.classes.add(elt, "readonly");
-				parent.replaceChild(elt, self.loading);
-			}, self.cmOption);
+			});
 			var lineH = self.cm.getLineHandle(0);
 			self.setUpCMTools_(toolsEl);
 		}
@@ -116,13 +115,13 @@ org.koshinuke.ui.ResourceEditor.prototype.setUpCMTools_ = function(element) {
 			});
 		}
 		if(goog.dom.classes.has(el, 'history')) {
-		    var branch = this.getModel().node;
-		    var m = goog.object.clone(this.getModel());
-		    // TODO このリテラルは何とかしたいトコロだが…
-		    m.label = goog.array.flatten("Histories", branch.path.split('/'));
-		    m.context = org.koshinuke.ui.PaneTab.Factory.Commits;
-		    m.branch = branch;
-		    org.koshinuke.PubSub.publish(org.koshinuke.PubSub.BRANCH_SELECT, m);
+			var branch = this.getModel().node;
+			var m = goog.object.clone(this.getModel());
+			// TODO このリテラルは何とかしたいトコロだが…
+			m.label = goog.array.flatten("Histories", branch.path.split('/'));
+			m.context = org.koshinuke.ui.PaneTab.Factory.Commits;
+			m.branch = branch;
+			org.koshinuke.PubSub.publish(org.koshinuke.PubSub.BRANCH_SELECT, m);
 		}
 	}, false, this);
 	this.psKey = org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.MODIFY_SUCCESS, function(send, rm) {
@@ -136,8 +135,7 @@ org.koshinuke.ui.ResourceEditor.prototype.setUpCMTools_ = function(element) {
 	}, this);
 };
 org.koshinuke.ui.ResourceEditor.prototype.toggleEdit_ = function(element, editable) {
-	this.cmOption.readOnly = editable == false;
-	this.cm.setOption("readOnly", this.cmOption.readOnly);
+	this.cm.setOption("readOnly", editable == false);
 	if(editable) {
 		goog.dom.classes.remove(this.cm.getWrapperElement(), "readonly");
 	} else {
@@ -158,6 +156,7 @@ org.koshinuke.ui.ResourceEditor.prototype.exitDocument = function() {
 		this.img = null;
 	}
 	if(this.cm) {
+		this.cm.setOption('onCursorActivity', null);
 		goog.dom.removeNode(this.cm.getWrapperElement());
 		this.cm = null;
 	}

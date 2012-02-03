@@ -102,19 +102,12 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 			h.listen(goog.dom.query('.meta',f)[0], goog.events.EventType.CLICK, function(e) {
 				if(goog.dom.classes.has(f, 'collapse')) {
 					goog.dom.classes.addRemove(f, 'collapse', 'expand');
-					// TODO 理解不能だが、こうすると表示部分の高さが適切に設定される。
-					goog.Timer.callOnce(function() {
-						f.cm.refresh();
-						goog.Timer.callOnce(f.cm.refresh, 0, f.cm);
-					});
+					f.cm.refresh();
 				} else if(goog.dom.classes.has(f, 'expand')) {
 					goog.dom.classes.addRemove(f, 'expand', 'collapse');
 				}
 			}, false, self);
-			f.cm = CodeMirror(function(elt) {
-				var con = goog.dom.query('.content .patch', f)[0];
-				con.appendChild(elt);
-			}, {
+			f.cm = CodeMirror(goog.dom.query('.content .patch', f)[0], {
 				mode : 'text/x-diff',
 				value : a.patch,
 				matchBrackets : false,
