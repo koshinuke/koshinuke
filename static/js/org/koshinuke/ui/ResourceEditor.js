@@ -12,9 +12,6 @@ goog.require('goog.ui.Component');
 
 goog.require('soy');
 
-goog.require('CodeMirror');
-goog.require('CodeMirror.modes');
-
 goog.require('org.koshinuke');
 goog.require('org.koshinuke.template.resourceeditor');
 

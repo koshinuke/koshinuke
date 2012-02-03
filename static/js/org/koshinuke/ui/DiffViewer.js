@@ -14,8 +14,6 @@ goog.require('goog.ui.Button');
 goog.require('goog.ui.Component');
 goog.require('goog.ui.TabBar');
 
-goog.require('CodeMirror');
-goog.require('CodeMirror.modes');
 goog.require('difflib');
 goog.require('diffview');
 
