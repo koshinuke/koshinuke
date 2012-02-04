@@ -54,7 +54,7 @@ task soy(type: JavaExec) {
 	classpath = configurations.soy
 	def a = [
 		"--outputPathFormat",
-		"static/js/org/koshinuke/template/{INPUT_FILE_NAME_NO_EXT}.js",
+		"static/build/js/org/koshinuke/template/{INPUT_FILE_NAME_NO_EXT}.js",
 		"--shouldProvideRequireSoyNamespaces"
 	]
 	args = a + fileTree(dir: "static/build/soy", include: "**/*.soy").files.collect { it.path }
@@ -76,7 +76,7 @@ task makeDeps {
 
 		def jsp = new JsFileParser(em)
 		def closure_path = Paths.get(closure_abs).toAbsolutePath()
-		def jsFiles = fileTree(dir: "static/js", includes: [
+		def jsFiles = fileTree(dir: "static/build/js", includes: [
 			"org/**/*.js",
 			"third_party/*.js"
 		], excludes: ["**/deps.js"]).files.collect {
@@ -118,7 +118,7 @@ task makeDeps {
 		if(0 < em.errorCount) {
 			em.generateReport()
 		} else {
-			file("static/js/org/koshinuke/deps.js").text = sb.toString()
+			file("static/build/js/org/koshinuke/deps.js").text = sb.toString()
 		}
 	}
 }
@@ -126,15 +126,15 @@ task makeDeps {
 task makeExterns {
 	description = "make externs js for closure compiler."
 	doLast {
-		def input = fileTree(dir: "static/js/org/koshinuke/externs", include: "**/*.js")
-		input.files.each { f ->
-			def output = file("static/build/externs/" + f.name)
+		def input = fileTree(dir: "static/build/js/org/koshinuke/externs", include: "**/*.js")
+		input.files.each {
+			def output = file("static/build/js/externs/" + it.name)
 			output.delete()
 			def ctx = Context.enter()
 			try {
 				output.withWriter { out ->
 					def no = new NativeObject()
-					ctx.compileString(f.text, f.name, 0, null).exec(ctx, no)
+					ctx.compileString(it.text, it.name, 0, null).exec(ctx, no)
 					no.getAllIds() each {
 						def obj = no.get(it)
 						if("function" == obj.typeOf) {
@@ -153,18 +153,21 @@ task makeExterns {
 	}
 }
 
+def compiledExterns = "static/build/js/externs-compiled.js"
 task jscompExterns(dependsOn: makeExterns, type:JavaExec) {
 	main = "com.google.javascript.jscomp.CommandLineRunner"
 	classpath = configurations.jscomp
 	maxHeapSize = "4G"
-	args = [
+	def a = [
 		"--compilation_level",
 		"SIMPLE_OPTIMIZATIONS",
 		"--js_output_file",
-		"static/js/externs-compiled.js",
-		"--js",
-		"static/js/org/koshinuke/externs/BranchActivity.js"
+		compiledExterns
 	]
+	fileTree(dir: "static/build/js/org/koshinuke/externs/", include: "**/*.js").files.each {
+		a << "--js" << it.path
+	}
+	args = a
 }
 
 def koshinukeBuilder = { entry_point, outputpath ->
@@ -187,13 +190,16 @@ def koshinukeBuilder = { entry_point, outputpath ->
 		"3"
 	]
 
-	fileTree(dir: "static/build/externs", include: "**/*.js").files.each {
+	fileTree(dir: "static/build/js/externs", include: "**/*.js").files.each {
 		a << "--externs" << it.path
 	}
 
 	def em = new PrintStreamErrorManager(System.out)
 	def jsp = new JsFileParser(em)
-	def jsFiles = fileTree(dir: "static/", include: "**/*.js", excludes: [
+	def jsFiles = fileTree(dir: "static", includes:[
+		"closure-library/**/*.js",
+		"build/js/**/*.js"
+	], excludes: [
 		"**/externals/**",
 		"**/*-compiled.js",
 		"**/deps.js"
@@ -226,10 +232,23 @@ task jscompLogin << {
 	koshinukeBuilder(entry_point, outputpath)
 }
 
-task jscompMain << {
+task jscompMain(dependsOn: jscompExterns) << {
 	def entry_point = "org.koshinuke.main"
-	def outputpath = "static/js/koshinuke-compiled.js"
+	def outputpath = "static/build/js/koshinuke-compiled.js"
 	koshinukeBuilder(entry_point, outputpath)
+
+	def main = file("static/js/main-compiled.js")
+	main.delete()
+
+	def jsfiles = fileTree(dir: "static/build/externals", include: "**/*.js").files + [
+		file(compiledExterns),
+		file(outputpath)
+	]
+
+	jsfiles.each {
+		main.append(it.text)
+		main.append('\n')
+	}
 }
 
 defaultTasks = [
