@@ -37,9 +37,16 @@ buildscript {
 task less << {
 	def lc = new LessCompiler()
 	lc.compress = true
-	lc.compile(file("static/build/less/login.less"), file("static/css/login.css"))
-	lc.compile(file("static/build/less/repos.less"), file("static/css/repos.css"))
-	lc.compile(file("static/build/less/users.less"), file("static/css/users.css"))
+	def pathfile = file("static/build/less/path.less")
+	def original = pathfile.text
+	try {
+		pathfile.text = '@image_base: "../images";\n'
+		lc.compile(file("static/build/less/login.less"), file("static/css/login.css"))
+		lc.compile(file("static/build/less/repos.less"), file("static/css/repos.css"))
+		lc.compile(file("static/build/less/users.less"), file("static/css/users.css"))
+	} finally {
+		pathfile.text = original
+	}
 }
 
 task soy(type: JavaExec) {

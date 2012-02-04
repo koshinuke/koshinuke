@@ -1,5 +1,7 @@
+@import "path.less";
+
 .icon(@url) {
-	content : url(@url);
+	content : url("@{image_base}/@{url}");
 }
 .box(@size) {
 	width: @size;
@@ -15,15 +17,15 @@
 }
 
 .large.taichi {
-	.large("static/images/users/taichi.png");
+	.large("users/taichi.png");
 }
 .small.taichi {
-	.small("static/images/users/taichi.png");
+	.small("users/taichi.png");
 }
 
 .large.lanius {
-	.large("static/images/users/lanius.png");
+	.large("users/lanius.png");
 }
 .small.lanius {
-	.small("static/images/users/lanius.png");
+	.small("users/lanius.png");
 }

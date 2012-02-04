@@ -1,3 +1,4 @@
+@import "path.less";
 
 // Grays
 @black:             #000;
@@ -19,109 +20,117 @@
 
 @font-face {
 	font-family: kiloji_b;
-	src: local('きろ字 - B'), url('static/images/kiloji_b.ttf') format('truetype');
+	src: local('きろ字 - B'), url("@{image_base}/kiloji_b.ttf") format('truetype');
 	font-weight: bold;
 }
 
 .loading_large {
-	content : url("static/images/loading_large.gif");
+	content : url("@{image_base}/loading_large.gif");
 }
 
 .icon(@url) {
 	margin-right: 0.2em;
-	content : url(@url);
+	content : url("@{image_base}/@{url}");
 }
 
 .branches:before {
-	.icon("static/images/arrow_branch.png");
+	.icon("arrow_branch.png");
 }
 .tags:before {
-	.icon("static/images/tag_blue.png");
+	.icon("tag_blue.png");
 }
 .histories:before {
-	.icon("static/images/film.png");
+	.icon("film.png");
 }
 .graph:before {
-	.icon("static/images/chart_organisation.png");
+	.icon("chart_organisation.png");
 }
 .txt:before {
-	.icon("static/images/txt.png");
+	.icon("txt.png");
 }
 .loading:before {
-	.icon("static/images/loading.gif");
+	.icon("loading.gif");
 }
 .branch:before {
-	.icon("static/images/arrow_right.png");
+	.icon("arrow_right.png");
 }
 .tag:before {
-	.icon("static/images/tag_green.png");
+	.icon("tag_green.png");
 }
 .calendar:before {
-	.icon("static/images/calendar_view_day.png");
+	.icon("calendar_view_day.png");
 }
 .comment:before {
-	.icon("static/images/comment.png");
+	.icon("comment.png");
 }
 .user:before {
-	.icon("static/images/user.png");
+	.icon("user.png");
 }
 .folder:before {
-	.icon("static/images/dir.png");
+	.icon("dir.png");
 }
 .python:before {
-	.icon("static/images/python.png");
+	.icon("python.png");
 }
 .html:before {
-	.icon("static/images/html.png");
+	.icon("html.png");
 }
 .css:before {
-	.icon("static/images/css.png");
+	.icon("css.png");
 }
 .js:before {
-	.icon("static/images/script.png");
+	.icon("script.png");
 }
 .pic:before {
-	.icon("static/images/picture.png");
+	.icon("picture.png");
 }
 .java:before {
-	.icon("static/images/nanoduke.png");
+	.icon("nanoduke.png");
 }
 
 // for commits.less
 .merge {
-	.icon("static/images/arrow_merge.png");
+	.icon("arrow_merge.png");
 }
 .normal {
-	.icon("static/images/arrow_up.png");
+	.icon("arrow_up.png");
 }
 
 // for diff.less
 .difftab:before {
-	.icon("static/images/page_diff.png");
+	.icon("page_diff.png");
 }
 .op.add {
-  .icon("static/images/add.png");
+  .icon("add.png");
 }
 .op.delete {
-  .icon("static/images/delete.png");
+  .icon("delete.png");
 }
 .op.modify {
-  .icon("static/images/edit.png");
+  .icon("edit.png");
 }
 .op.rename {
-  .icon("static/images/move.png");
+  .icon("move.png");
 }
 .toggle_minus() {
-	.icon("static/images/bullet_toggle_minus.png");
+	.icon("bullet_toggle_minus.png");
 }
 .toggle_plus() {
-	.icon("static/images/bullet_toggle_plus.png");
+	.icon("bullet_toggle_plus.png");
+}
+.treegrid {
+	.expand {
+		.icon("bullet_arrow_down.png");
+	}
+	.collapse {
+		.icon("bullet_arrow_right.png");
+	}
 }
 
 .copy {
 	display: block;
 	margin: 0.5em;
-	background: url(static/images/copy_button_set.png) no-repeat top left;
+	background: url("@{image_base}/copy_button_set.png") no-repeat top left;
 	width: 14px;
 	height: 14px;
 	background-position: 0 -30px;
@@ -132,4 +141,3 @@
 		background-position: 0 0;
 	}
 }
-

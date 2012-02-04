@@ -40,33 +40,35 @@ button[disabled]{cursor:default;background-image:none;filter:progid:DXImageTrans
 .input-pair.error>label,.input-pair.error .help-block,.input-pair.error .help-inline{color:#b94a48;}
 .input-pair.error input,.input-pair.error textarea{color:#b94a48;border-color:#ee5f5b;}.input-pair.error input:focus,.input-pair.error textarea:focus{border-color:#e9322d;-webkit-box-shadow:0 0 6px #f8b9b7;-moz-box-shadow:0 0 6px #f8b9b7;box-shadow:0 0 6px #f8b9b7;}
 .input-pair.error .input-prepend .add-on,.input-pair.error .input-append .add-on{color:#b94a48;background-color:#fce6e6;border-color:#b94a48;}
-@font-face{font-family:kiloji_b;src:local('きろ字 - B'),url('static/images/kiloji_b.ttf') format('truetype');font-weight:bold;}.loading_large{content:url("static/images/loading_large.gif");}
-.branches:before{margin-right:0.2em;content:url("static/images/arrow_branch.png");}
-.tags:before{margin-right:0.2em;content:url("static/images/tag_blue.png");}
-.histories:before{margin-right:0.2em;content:url("static/images/film.png");}
-.graph:before{margin-right:0.2em;content:url("static/images/chart_organisation.png");}
-.txt:before{margin-right:0.2em;content:url("static/images/txt.png");}
-.loading:before{margin-right:0.2em;content:url("static/images/loading.gif");}
-.branch:before{margin-right:0.2em;content:url("static/images/arrow_right.png");}
-.tag:before{margin-right:0.2em;content:url("static/images/tag_green.png");}
-.calendar:before{margin-right:0.2em;content:url("static/images/calendar_view_day.png");}
-.comment:before{margin-right:0.2em;content:url("static/images/comment.png");}
-.user:before{margin-right:0.2em;content:url("static/images/user.png");}
-.folder:before{margin-right:0.2em;content:url("static/images/dir.png");}
-.python:before{margin-right:0.2em;content:url("static/images/python.png");}
-.html:before{margin-right:0.2em;content:url("static/images/html.png");}
-.css:before{margin-right:0.2em;content:url("static/images/css.png");}
-.js:before{margin-right:0.2em;content:url("static/images/script.png");}
-.pic:before{margin-right:0.2em;content:url("static/images/picture.png");}
-.java:before{margin-right:0.2em;content:url("static/images/nanoduke.png");}
-.merge{margin-right:0.2em;content:url("static/images/arrow_merge.png");}
-.normal{margin-right:0.2em;content:url("static/images/arrow_up.png");}
-.difftab:before{margin-right:0.2em;content:url("static/images/page_diff.png");}
-.op.add{margin-right:0.2em;content:url("static/images/add.png");}
-.op.delete{margin-right:0.2em;content:url("static/images/delete.png");}
-.op.modify{margin-right:0.2em;content:url("static/images/edit.png");}
-.op.rename{margin-right:0.2em;content:url("static/images/move.png");}
-.copy{display:block;margin:0.5em;background:url(static/images/copy_button_set.png) no-repeat top left;width:14px;height:14px;background-position:0 -30px;}.copy.hover{background-position:0 -15px;}
+@font-face{font-family:kiloji_b;src:local('きろ字 - B'),url("../images/kiloji_b.ttf") format('truetype');font-weight:bold;}.loading_large{content:url("../images/loading_large.gif");}
+.branches:before{margin-right:0.2em;content:url("../images/arrow_branch.png");}
+.tags:before{margin-right:0.2em;content:url("../images/tag_blue.png");}
+.histories:before{margin-right:0.2em;content:url("../images/film.png");}
+.graph:before{margin-right:0.2em;content:url("../images/chart_organisation.png");}
+.txt:before{margin-right:0.2em;content:url("../images/txt.png");}
+.loading:before{margin-right:0.2em;content:url("../images/loading.gif");}
+.branch:before{margin-right:0.2em;content:url("../images/arrow_right.png");}
+.tag:before{margin-right:0.2em;content:url("../images/tag_green.png");}
+.calendar:before{margin-right:0.2em;content:url("../images/calendar_view_day.png");}
+.comment:before{margin-right:0.2em;content:url("../images/comment.png");}
+.user:before{margin-right:0.2em;content:url("../images/user.png");}
+.folder:before{margin-right:0.2em;content:url("../images/dir.png");}
+.python:before{margin-right:0.2em;content:url("../images/python.png");}
+.html:before{margin-right:0.2em;content:url("../images/html.png");}
+.css:before{margin-right:0.2em;content:url("../images/css.png");}
+.js:before{margin-right:0.2em;content:url("../images/script.png");}
+.pic:before{margin-right:0.2em;content:url("../images/picture.png");}
+.java:before{margin-right:0.2em;content:url("../images/nanoduke.png");}
+.merge{margin-right:0.2em;content:url("../images/arrow_merge.png");}
+.normal{margin-right:0.2em;content:url("../images/arrow_up.png");}
+.difftab:before{margin-right:0.2em;content:url("../images/page_diff.png");}
+.op.add{margin-right:0.2em;content:url("../images/add.png");}
+.op.delete{margin-right:0.2em;content:url("../images/delete.png");}
+.op.modify{margin-right:0.2em;content:url("../images/edit.png");}
+.op.rename{margin-right:0.2em;content:url("../images/move.png");}
+.treegrid .expand{margin-right:0.2em;content:url("../images/bullet_arrow_down.png");}
+.treegrid .collapse{margin-right:0.2em;content:url("../images/bullet_arrow_right.png");}
+.copy{display:block;margin:0.5em;background:url("../images/copy_button_set.png") no-repeat top left;width:14px;height:14px;background-position:0 -30px;}.copy.hover{background-position:0 -15px;}
 .copy.active{background-position:0 0;}
 body{font-size:13px;line-height:1.231;}
 body,button,input,select,textarea{font-family:"Helvetica Neue",Helvetica,sans-serif;color:black;}
