@@ -58,14 +58,14 @@ org.koshinuke.ui.ResourceEditor.prototype.enterDocument = function() {
 				goog.dom.classes.add(elt, "readonly");
 				parent.replaceChild(elt, self.loading);
 			}, {
-				mode : rm.contenttype,
-				value : rm.content,
-				matchBrackets : true,
-				lineNumbers : true,
-				readOnly : true,
-				onCursorActivity : function() {
+				'mode' : rm.contenttype,
+				'value' : rm.content,
+				'matchBrackets' : true,
+				'lineNumbers' : true,
+				'readOnly' : true,
+				'onCursorActivity' : function() {
 					self.cm.setLineClass(lineH, null);
-					lineH = self.cm.setLineClass(self.cm.getCursor().line, "activeline");
+					lineH = self.cm.setLineClass(self.cm.getCursor()['line'], "activeline");
 				}
 			});
 			var lineH = self.cm.getLineHandle(0);

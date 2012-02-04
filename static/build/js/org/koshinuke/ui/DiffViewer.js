@@ -108,11 +108,11 @@ org.koshinuke.ui.DiffViewer.prototype.enterDocument = function() {
 				}
 			}, false, self);
 			f.cm = CodeMirror(goog.dom.query('.content .patch', f)[0], {
-				mode : 'text/x-diff',
-				value : a.patch,
-				matchBrackets : false,
-				lineNumbers : false,
-				readOnly : true
+				'mode' : 'text/x-diff',
+				'value' : a.patch,
+				'matchBrackets' : false,
+				'lineNumbers' : false,
+				'readOnly' : true
 			});
 			var tabbar = new goog.ui.TabBar();
 			tabbar.decorate(goog.dom.query('.diffmodes', f)[0]);

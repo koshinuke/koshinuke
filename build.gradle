@@ -201,6 +201,7 @@ def koshinukeBuilder = { entry_point, outputpath ->
 		"build/js/**/*.js"
 	], excludes: [
 		"**/externals/**",
+		"**/externs/**",
 		"**/*-compiled.js",
 		"**/deps.js"
 	]).files.collect {
@@ -240,7 +241,7 @@ task jscompMain(dependsOn: jscompExterns) << {
 	def main = file("static/js/main-compiled.js")
 	main.delete()
 
-	def jsfiles = fileTree(dir: "static/build/externals", include: "**/*.js").files + [
+	def jsfiles = fileTree(dir: "static/build/js/externals", include: "**/*.js").files + [
 		file(compiledExterns),
 		file(outputpath)
 	]
