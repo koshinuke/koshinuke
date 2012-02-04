@@ -1,0 +1,235 @@
+// -Xms40m -Xmx4096m -Dfile.encoding=UTF-8
+import java.io.File;
+import java.nio.file.*;
+
+import org.mozilla.javascript.*;
+
+import com.google.javascript.jscomp.*;
+import com.google.javascript.jscomp.deps.*;
+
+import com.googlecode.lesscss4j.*;
+
+configurations {
+	all { resolutionStrategy.cacheChangingModulesFor 14, 'days' }
+	jscomp
+	soy
+}
+
+repositories {
+	mavenCentral()
+	mavenRepo(url: 'https://raw.github.com/codedance/maven-repository/master')
+}
+
+dependencies {
+	jscomp 'com.google.javascript:closure-compiler:r+'
+	soy 'com.google.template:soy:2011-14-10'
+}
+
+buildscript {
+	repositories { mavenCentral() }
+	dependencies {
+		classpath 'org.mozilla:rhino:1.7R3'
+		classpath 'com.google.javascript:closure-compiler:r+'
+		classpath 'com.googlecode.lesscss4j:lesscss4j:1.2+'
+	}
+}
+
+task less << {
+	def lc = new LessCompiler()
+	lc.compress = true
+	lc.compile(file("static/build/less/login.less"), file("static/css/login.css"))
+	lc.compile(file("static/build/less/repos.less"), file("static/css/repos.css"))
+	lc.compile(file("static/build/less/users.less"), file("static/css/users.css"))
+}
+
+task soy(type: JavaExec) {
+	main = "com.google.template.soy.SoyToJsSrcCompiler"
+	classpath = configurations.soy
+	def a = [
+		"--outputPathFormat",
+		"static/js/org/koshinuke/template/{INPUT_FILE_NAME_NO_EXT}.js",
+		"--shouldProvideRequireSoyNamespaces"
+	]
+	args = a + fileTree(dir: "static/build/soy", include: "**/*.soy").files.collect { it.path }
+}
+
+task makeDeps {
+	def MULTIPLE_PROVIDES_ERROR = DiagnosticType.error(
+			"DEPS_DUPE_PROVIDES",
+			"Namespace \"{0}\" is already provided in other file {1}")
+	def NEVER_PROVIDED_ERROR = DiagnosticType.error(
+			"DEPS_NEVER_PROVIDED",
+			"Namespace \"{0}\" is required but never provided.")
+	doLast {
+		def closure_abs = "static/closure-library/closure/goog"
+		def em = new PrintStreamErrorManager(System.out)
+		def dfp = new DepsFileParser(em)
+		dfp.setShortcutMode(true)
+		def depsFiles = dfp.parseFile("$closure_abs/deps.js")
+
+		def jsp = new JsFileParser(em)
+		def closure_path = Paths.get(closure_abs).toAbsolutePath()
+		def jsFiles = fileTree(dir: "static/js", includes: [
+			"org/**/*.js",
+			"third_party/*.js"
+		], excludes: ["**/deps.js"]).files.collect {
+			jsp.parseFile(it.name, closure_path.relativize(it.toPath()).toString().replace('\\', '/'), it.text)
+		}.grep {
+			0 < it.provides.size()
+		}
+
+		def provided = [:]
+		def providedMap = { depsInfos ->
+			depsInfos.each { di ->
+				di.getProvides().each {
+					def prev = provided[it]
+					if(prev == null) {
+						provided[it] = di
+					} else {
+						em.report(CheckLevel.ERROR, JSError.make(di.name, -1, -1, MULTIPLE_PROVIDES_ERROR, it, prev.name))
+					}
+				}
+			}
+		}
+		providedMap(depsFiles)
+		providedMap(jsFiles)
+
+		def q = { return it.collect { '"' + it + '"' } }
+		def sb = new StringBuffer()
+		jsFiles.each { di ->
+			di.getRequires().each {
+				def prov = provided[it]
+				if(prov == null) {
+					em.report(CheckLevel.ERROR, JSError.make(di.getName(), -1, -1, NEVER_PROVIDED_ERROR, it))
+				}
+			}
+			def provides = q(di.provides)
+			def requires = q(di.requires)
+			sb << "goog.addDependency('${di.pathRelativeToClosureBase}',${provides},${requires});\n"
+		}
+
+		if(0 < em.errorCount) {
+			em.generateReport()
+		} else {
+			file("static/js/org/koshinuke/deps.js").text = sb.toString()
+		}
+	}
+}
+
+task makeExterns {
+	description = "make externs js for closure compiler."
+	doLast {
+		def input = fileTree(dir: "static/js/org/koshinuke/externs", include: "**/*.js")
+		input.files.each { f ->
+			def output = file("static/build/externs/" + f.name)
+			output.delete()
+			def ctx = Context.enter()
+			try {
+				output.withWriter { out ->
+					def no = new NativeObject()
+					ctx.compileString(f.text, f.name, 0, null).exec(ctx, no)
+					no.getAllIds() each {
+						def obj = no.get(it)
+						if("function" == obj.typeOf) {
+							ctx.decompileFunction(obj, 0) eachLine {
+								if(it.startsWith("function")) {
+									out.writeLine it + "};"
+								}
+							}
+						}
+					}
+				}
+			} finally {
+				Context.exit()
+			}
+		}
+	}
+}
+
+task jscompExterns(dependsOn: makeExterns, type:JavaExec) {
+	main = "com.google.javascript.jscomp.CommandLineRunner"
+	classpath = configurations.jscomp
+	maxHeapSize = "4G"
+	args = [
+		"--compilation_level",
+		"SIMPLE_OPTIMIZATIONS",
+		"--js_output_file",
+		"static/js/externs-compiled.js",
+		"--js",
+		"static/js/org/koshinuke/externs/BranchActivity.js"
+	]
+}
+
+def koshinukeBuilder = { entry_point, outputpath ->
+	def a = [
+		"--compilation_level",
+		"ADVANCED_OPTIMIZATIONS",
+		"--process_closure_primitives",
+		"true",
+		"--manage_closure_dependencies",
+		"true",
+		"--define",
+		"goog.DEBUG=false",
+		"--js",
+		"static/closure-library/closure/goog/base.js",
+		"--closure_entry_point",
+		entry_point,
+		"--js_output_file",
+		outputpath,
+		"--summary_detail_level",
+		"3"
+	]
+
+	fileTree(dir: "static/build/externs", include: "**/*.js").files.each {
+		a << "--externs" << it.path
+	}
+
+	def em = new PrintStreamErrorManager(System.out)
+	def jsp = new JsFileParser(em)
+	def jsFiles = fileTree(dir: "static/", include: "**/*.js", excludes: [
+		"**/externals/**",
+		"**/*-compiled.js",
+		"**/deps.js"
+	]).files.collect {
+		jsp.parseFile(it.name, it.toPath().toString().replace('\\', '/'), it.text)
+	}
+
+	if(0 < em.errorCount) {
+		em.generateReport()
+	} else {
+		def deps = new SortedDependencies(jsFiles)
+		deps.getSortedDependenciesOf([
+			deps.getInputProviding(entry_point)
+		]).each {
+			a << "--js" << it.pathRelativeToClosureBase
+		}
+		println a
+		javaexec {
+			main = "com.google.javascript.jscomp.CommandLineRunner"
+			classpath = configurations.jscomp
+			maxHeapSize = "4G"
+			args = a
+		}
+	}
+}
+
+task jscompLogin << {
+	def entry_point = "org.koshinuke.login"
+	def outputpath = "static/js/login-compiled.js"
+	koshinukeBuilder(entry_point, outputpath)
+}
+
+task jscompMain << {
+	def entry_point = "org.koshinuke.main"
+	def outputpath = "static/js/koshinuke-compiled.js"
+	koshinukeBuilder(entry_point, outputpath)
+}
+
+defaultTasks = [
+	"soy",
+	"makeDeps",
+	"jscompExterns",
+	"jscompLogin",
+	"jscompMain",
+	"less"
+]

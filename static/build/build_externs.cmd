@@ -1,1 +1,0 @@
-java -jar compiler.jar  --compilation_level SIMPLE_OPTIMIZATIONS --js ../js/org/koshinuke/externs/BranchActivity.js  --js_output_file ../js/externs-compiled.js

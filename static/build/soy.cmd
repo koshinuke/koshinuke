@@ -1,1 +1,0 @@
-java -jar SoyToJsSrcCompiler.jar --inputPrefix soy/ --outputPathFormat ../js/org/koshinuke/template/{INPUT_FILE_NAME_NO_EXT}.js --shouldProvideRequireSoyNamespaces %1
