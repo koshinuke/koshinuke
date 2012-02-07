@@ -1,0 +1,16 @@
+{namespace org.koshinuke.template.blameviewer}
+
+/**
+ * @param commit
+ * @param author
+ * @param timestamp
+ * @param message
+ */
+{template .tmpl}
+<div class="blame metadata">
+	<div class="commit">{$commit|truncate:10,false}</div>
+	<div class="user">{$author}</div>
+	<div class="calendar">{$timestamp}</div>
+	<div class="comment">{$message}</div>
+</div>
+{/template}
