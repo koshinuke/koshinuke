@@ -94,14 +94,12 @@ org.koshinuke.ui.ResourceEditor.prototype.setUpCMTools_ = function(element) {
 		if(goog.dom.classes.has(el, 'edit')) {
 			value = this.cm.getValue();
 			this.toggleEdit_(element, true);
-		}
-		if(goog.dom.classes.has(el, 'drop')) {
+		} else if(goog.dom.classes.has(el, 'drop')) {
 			this.cm.setValue(value);
 			goog.dom.forms.setValue(commitMsg, '');
 			goog.dom.forms.setDisabled(commitBtn, true);
 			this.toggleEdit_(element, false);
-		}
-		if(goog.dom.classes.has(el, 'commit')) {
+		} else if(goog.dom.classes.has(el, 'commit')) {
 			goog.dom.forms.setDisabled(commitBtn, true);
 			goog.dom.forms.setDisabled(commitMsg, true);
 			this.loader.send({
@@ -113,8 +111,7 @@ org.koshinuke.ui.ResourceEditor.prototype.setUpCMTools_ = function(element) {
 					path : this.getModel().node.path
 				}
 			});
-		}
-		if(goog.dom.classes.has(el, 'history')) {
+		} else if(goog.dom.classes.has(el, 'history')) {
 			var branch = this.getModel().node;
 			var m = goog.object.clone(this.getModel());
 			// TODO このリテラルは何とかしたいトコロだが…
@@ -122,6 +119,11 @@ org.koshinuke.ui.ResourceEditor.prototype.setUpCMTools_ = function(element) {
 			m.context = org.koshinuke.ui.PaneTab.Factory.Commits;
 			m.branch = branch;
 			org.koshinuke.PubSub.publish(org.koshinuke.PubSub.BRANCH_SELECT, m);
+		} else if(goog.dom.classes.has(el, 'blame')) {
+			var m = goog.object.clone(this.getModel());
+			m.label = goog.array.flatten("Blame", this.getModel().node.path.split('/'));
+			m.context = org.koshinuke.ui.PaneTab.Factory.Blame;
+			org.koshinuke.PubSub.publish(org.koshinuke.PubSub.BLAME_EXECUTE, m);
 		}
 	}, false, this);
 	this.psKey = org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.MODIFY_SUCCESS, function(send, rm) {

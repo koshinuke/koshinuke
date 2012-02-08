@@ -18,20 +18,17 @@ org.koshinuke.model.BlameFacade.prototype.load = function(model, fn) {
 	goog.net.XhrIo.send(this.toRequestUri(model.path + "/blame/" + model.node.path), function(e) {
 		var raw = e.target.getResponseJson();
 		var bs = [];
-		var stb = new soy.StringBuilder();
 		goog.array.forEach(raw, function(a) {
-			stb.append(a["content"]);
-			stb.append('\n');
 			bs.push({
-				commit: raw['commit'],
-				timestamp : org.koshinuke.toDateString(raw['timestamp']),
-				author : raw['author'],
-				message : raw['message']
+				commit: a['commit'],
+				timestamp : org.koshinuke.toDateString(a['timestamp']),
+				author : a['author'],
+				message : a['message'],
+				content : a["content"]
 			});
 		});
 		fn({
 			contenttype : org.koshinuke.model.ResourceFacade.extToMIME(model.node.path),
-			content : stb.toString(),
 			blames : bs
 		});
 	}, null, org.koshinuke.model.AbstractFacade.Headers);

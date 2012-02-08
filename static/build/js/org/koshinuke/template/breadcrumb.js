@@ -9,11 +9,11 @@ goog.require('soy.StringBuilder');
 
 org.koshinuke.template.breadcrumb.tmpl = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  var eList26 = opt_data.list;
-  var eListLen26 = eList26.length;
-  for (var eIndex26 = 0; eIndex26 < eListLen26; eIndex26++) {
-    var eData26 = eList26[eIndex26];
-    output.append('<li>', soy.$$escapeHtml(eData26), '</li>', (! (eIndex26 == eListLen26 - 1)) ? '<li class="sep"></li>' : '');
+  var eList38 = opt_data.list;
+  var eListLen38 = eList38.length;
+  for (var eIndex38 = 0; eIndex38 < eListLen38; eIndex38++) {
+    var eData38 = eList38[eIndex38];
+    output.append('<li>', soy.$$escapeHtml(eData38), '</li>', (! (eIndex38 == eListLen38 - 1)) ? '<li class="sep"></li>' : '');
   }
   return opt_sb ? '' : output.toString();
 };

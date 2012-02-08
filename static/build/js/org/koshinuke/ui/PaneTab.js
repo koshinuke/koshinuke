@@ -7,17 +7,19 @@ goog.require('goog.events');
 
 goog.require('goog.ui.Tab');
 
-goog.require('org.koshinuke.model.TreeGridFacade');
-goog.require('org.koshinuke.model.ResourceFacade');
-goog.require('org.koshinuke.model.HistoriesFacade');
+goog.require('org.koshinuke.model.BlameFacade');
 goog.require('org.koshinuke.model.CommitsFacade');
 goog.require('org.koshinuke.model.DiffFacade');
+goog.require('org.koshinuke.model.HistoriesFacade');
+goog.require('org.koshinuke.model.ResourceFacade');
+goog.require('org.koshinuke.model.TreeGridFacade');
 
-goog.require('org.koshinuke.ui.Histories');
+goog.require('org.koshinuke.ui.BlameViewer');
 goog.require('org.koshinuke.ui.Commits');
 goog.require('org.koshinuke.ui.DiffViewer');
-goog.require('org.koshinuke.ui.TreeGrid');
+goog.require('org.koshinuke.ui.Histories');
 goog.require('org.koshinuke.ui.ResourceEditor');
+goog.require('org.koshinuke.ui.TreeGrid');
 
 goog.require('org.koshinuke.ui.PaneTabRenderer');
 
@@ -51,6 +53,9 @@ org.koshinuke.ui.PaneTab.Factory = {
 		var m = model.commit;
 		var cid = m.commit;
 		return new org.koshinuke.ui.DiffTab(el, cid.substring(0, 7));
+	},
+	Blame : function(el, model) {
+		return new org.koshinuke.ui.BlameTab(el, model.node.name);
 	}
 };
 
@@ -147,8 +152,25 @@ org.koshinuke.ui.DiffTab.prototype.loadPane = function(uri) {
 /** @override */
 org.koshinuke.ui.DiffTab.prototype.enterDocument = function() {
 	org.koshinuke.ui.DiffTab.superClass_.enterDocument.call(this);
-	var m = this.getModel().commit;
 	goog.dom.classes.add(this.getElement(), 'difftab');
+};
+/** @constructor */
+org.koshinuke.ui.BlameTab = function(parent, content, opt_renderer, opt_domHelper) {
+	org.koshinuke.ui.PaneTab.call(this, parent, content, opt_renderer, opt_domHelper);
+};
+goog.inherits(org.koshinuke.ui.BlameTab, org.koshinuke.ui.PaneTab);
+/** @override */
+org.koshinuke.ui.BlameTab.prototype.loadPane = function(uri) {
+	var loader = new org.koshinuke.model.BlameFacade(uri);
+	this.pane = new org.koshinuke.ui.BlameViewer(loader);
+	this.pane.setModel(this.getModel());
+};
+/** @override */
+org.koshinuke.ui.BlameTab.prototype.enterDocument = function() {
+	org.koshinuke.ui.DiffTab.superClass_.enterDocument.call(this);
+	var m = this.getModel().commit;
+	// TODO icon...
+	goog.dom.classes.add(this.getElement(), 'blametab');
 };
 /** @protected */
 org.koshinuke.ui.PaneTab.prototype.internalLoadPane_ = function(loader, model, models) {

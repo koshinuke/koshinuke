@@ -7,10 +7,20 @@
  * @param message
  */
 {template .tmpl}
-<div class="blame metadata">
-	<div class="commit">{$commit|truncate:10,false}</div>
-	<div class="user">{$author}</div>
-	<div class="calendar">{$timestamp}</div>
-	<div class="comment">{$message}</div>
-</div>
+	<span class="commit">{$commit|truncate:10,false}</span>
+	<span class="small {$author}">{$author}</span>
+	<span class="calendar">{$timestamp}</span>
+	<span class="comment">{$message}</span>
+{/template}
+
+/**
+ * @param style
+ * @param token
+ */
+{template .token}
+{if $style}
+	<span class="cm-{$style}">{$token}</span>
+{else}
+	{$token}
+{/if}
 {/template}

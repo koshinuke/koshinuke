@@ -10,11 +10,11 @@ goog.require('soy.StringBuilder');
 org.koshinuke.template.diffviewer.commit = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
   output.append('<div class="commit"><div class="author"><img class="thumb large ', soy.$$escapeHtml(opt_data.author), '"/><span class="name">', soy.$$escapeHtml(opt_data.author), '</span></div><div class="message"><span>', soy.$$escapeHtml(opt_data.message), '</span></div><div class="meta"><span class="timestamp">', soy.$$escapeHtml(opt_data.timestamp), '</span><span class="label">parents :</span><span class="parents">');
-  var pList65 = opt_data.parents;
-  var pListLen65 = pList65.length;
-  for (var pIndex65 = 0; pIndex65 < pListLen65; pIndex65++) {
-    var pData65 = pList65[pIndex65];
-    output.append((! (pIndex65 == 0)) ? '<span> + </span>' : '', '<span class="parent">', soy.$$truncate(soy.$$escapeHtml(pData65), 7, false), '</span>');
+  var pList77 = opt_data.parents;
+  var pListLen77 = pList77.length;
+  for (var pIndex77 = 0; pIndex77 < pListLen77; pIndex77++) {
+    var pData77 = pList77[pIndex77];
+    output.append((! (pIndex77 == 0)) ? '<span> + </span>' : '', '<span class="parent">', soy.$$truncate(soy.$$escapeHtml(pData77), 7, false), '</span>');
   }
   output.append('</span><span class="label">commit :</span><span class="commitid">', soy.$$escapeHtml(opt_data.commit), '</span><button>Browse Code</button></div></div>');
   return opt_sb ? '' : output.toString();
@@ -34,8 +34,8 @@ org.koshinuke.template.diffviewer.file = function(opt_data, opt_sb) {
 
 org.koshinuke.template.diffviewer.renderStat = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  var iLimit96 = opt_data.times;
-  for (var i96 = 0; i96 < iLimit96; i96++) {
+  var iLimit108 = opt_data.times;
+  for (var i108 = 0; i108 < iLimit108; i108++) {
     output.append('<span class="stat ', soy.$$escapeHtml(opt_data.stat), '"></span>');
   }
   return opt_sb ? '' : output.toString();

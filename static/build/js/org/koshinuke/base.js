@@ -26,6 +26,7 @@ org.koshinuke.PubSub.TAB_UNSELECT = "t.u";
 org.koshinuke.PubSub.BRANCH_SELECT = "b.s";
 org.koshinuke.PubSub.COMMIT_SELECT = "c.s";
 org.koshinuke.PubSub.MODIFY_SUCCESS = "m.s";
+org.koshinuke.PubSub.BLAME_EXECUTE = "b.e";
 
 org.koshinuke.getExtension = function(path, nullvalue) {
 	if(path) {

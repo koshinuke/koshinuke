@@ -86,10 +86,9 @@ goog.exportSymbol('main', function() {
 	goog.array.forEach(goog.dom.query('.outer .goog-tab-bar'), function(root) {
 		var tabbar = new org.koshinuke.ui.PaneTabBar(goog.dom.getNextElementSibling(root), uri);
 		tabbar.decorate(root);
-		PubSub.subscribe(PubSub.REPO_SELECT, tabbar.addTab, tabbar);
-		PubSub.subscribe(PubSub.RESOURCE_SELECT, tabbar.addTab, tabbar);
-		PubSub.subscribe(PubSub.BRANCH_SELECT, tabbar.addTab, tabbar);
-		PubSub.subscribe(PubSub.COMMIT_SELECT, tabbar.addTab, tabbar);
+		goog.array.forEach([PubSub.REPO_SELECT, PubSub.RESOURCE_SELECT, PubSub.BRANCH_SELECT, PubSub.COMMIT_SELECT, PubSub.BLAME_EXECUTE], function(a) {
+			PubSub.subscribe(a, tabbar.addTab, tabbar);
+		});
 		goog.events.listen(tabbar, goog.ui.Component.EventType.SELECT, function(e) {
 			PubSub.publish(PubSub.TAB_SELECT, e.target.getModel());
 		});
@@ -123,7 +122,10 @@ goog.exportSymbol('main', function() {
 		goog.events.listen(tabbar, org.koshinuke.ui.Repository.EventType.REPO_CONTEXT_SELECTED, function(e) {
 			var t = e.target;
 			var deepClone = function(ary) {
-			    return goog.array.reduce(ary, function(r,v){r.push(goog.object.clone(v));return r;},[]);
+				return goog.array.reduce(ary, function(r, v) {
+					r.push(goog.object.clone(v));
+					return r;
+				}, []);
 			};
 			PubSub.publish(PubSub.REPO_SELECT, {
 				context : e.context,

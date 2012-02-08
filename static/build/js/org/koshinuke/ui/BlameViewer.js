@@ -6,12 +6,11 @@ goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.soy');
-goog.require('goog.style');
 goog.require('goog.string');
+goog.require('goog.string.StringBuffer');
+goog.require('goog.style');
 
-goog.require('goog.ui.Button');
 goog.require('goog.ui.Component');
-goog.require('goog.ui.TabBar');
 
 goog.require('org.koshinuke');
 goog.require('org.koshinuke.template.blameviewer');
@@ -41,48 +40,76 @@ org.koshinuke.ui.BlameViewer.prototype.enterDocument = function() {
 	var self = this;
 	var h = this.getHandler();
 	this.loader.load(model, function(blames) {
-		self.cm = CodeMirror(function(elt) {
-			var grid = self.makeBlameGrid_(blames, elt);
-			parent.replaceChild(grid, self.loading);
-		}, {
-			'mode' : blames.contenttype,
-			'value' : blames.content
-		});
+		var grid = self.makeBlameGrid_(blames);
+		parent.replaceChild(grid, self.loading);
 	});
 };
 
 org.koshinuke.ui.BlameViewer.prototype.makeBlameGrid_ = function(blames, elt) {
-	var lines = goog.dom.query('.CodeMirror-lines div div pre', elt);
 	var topOfCommit = null;
-	// td for rowspan
 	var rows = [];
+	var current = null;
+	var mode = CodeMirror.getMode({
+		indentUnit : 2
+	}, blames.contenttype);
+	var state = CodeMirror.startState(mode);
 	goog.array.forEach(blames.blames, function(a) {
 		var r = {
-			commit : goog.soy.renderAsElement(org.koshinuke.template.blameviewer.impl, a)
+			rowspan : 1
 		};
+		if(current && current.commit == a.commit) {
+			current.rowspan++;
+		} else {
+			current = r;
+			r.commit = a.commit;
+			r.commitStr = org.koshinuke.template.blameviewer.tmpl(a);
+		}
+		var line = new goog.string.StringBuffer();
+		var stream = new CodeMirror.StringStream(a.content);
+		line.append("<pre>");
+		while(!stream.eol()) {
+			org.koshinuke.template.blameviewer.token({
+				style : mode.token(stream, state),
+				token : stream.current()
+			}, line);
+			stream.start = stream.pos;
+		}
+		line.append("</pre>");
+		r.line = line.toString();
 		rows.push(r);
 	});
-	var table = goog.dom.createDom('table', {
-		"class" : "blame"
+	var result = goog.dom.createDom('table', {
+		"class" : "cm-s-default blame-grid"
 	});
 	var lineCounter = 0;
 	goog.array.forEach(rows, function(a) {
-		var commit = goog.dom.createDom('td', {
-			'rowspan' : a.rowspan
-		}, a.commit);
+		var commitEl = null;
+		if(a.commitStr) {
+			commitEl = goog.dom.createDom('td', 1 < a.rowspan ? {
+				'class' : 'metadata',
+				'rowspan' : a.rowspan
+			} : null);
+			commitEl.innerHTML = a.commitStr;
+		}
 		var num = goog.dom.createDom('th', {
-			'class' : 'number'
+			'class' : 'line-number'
 		}, goog.dom.createTextNode(++lineCounter));
-		var line = goog.dom.createDom('td', {
-			'rowspan' : a.rowspan
-		}, a.line);
+		var line = goog.dom.createDom('td');
+		line.innerHTML = a.line;
 
-		var tr = goog.dom.createDom('tr', {
-			"class" : "row"
-		}, commit, num, line);
-		goog.dom.appendChild(table, tr);
+		var tr = goog.dom.createDom('tr', a.commitStr ? {
+			"class" : "section-begin"
+		} : null, commitEl, num, line);
+		goog.dom.appendChild(result, tr);
 	});
-	return null;
+	return result;
+};
+
+org.koshinuke.ui.BlameViewer.prototype.setVisible = function(state) {
+	var el = this.getElement();
+	if(el) {
+		goog.style.showElement(el, state);
+	}
 };
 /** @override */
 org.koshinuke.ui.BlameViewer.prototype.exitDocument = function() {
