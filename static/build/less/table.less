@@ -39,18 +39,22 @@ table {
 			}
 		}
 	}
-	%.blame-grid {
+	&.blame-grid {
 		width: 100%;
+		border: 1px solid #CCC;
+		#radius > .around;
+		
+		
 		.metadata {
-			width: 20%;
-			
+			width: 30em;
+			vertical-align: top;
 		}
 		.line-number {
 			width: 1em;
-			borer-left: 1px solid #CCC;
+			border: 1px solid #CCC;
+			text-align: right;
 		}
 		.content {
-			width: 75%;
 		}
 		.section-begin {
 			border-top: 1px solid #CCC;
