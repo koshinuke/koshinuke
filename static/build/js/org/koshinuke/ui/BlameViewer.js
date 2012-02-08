@@ -94,7 +94,9 @@ org.koshinuke.ui.BlameViewer.prototype.makeBlameGrid_ = function(blames, elt) {
 		var num = goog.dom.createDom('th', {
 			'class' : 'line-number'
 		}, goog.dom.createTextNode(++lineCounter));
-		var line = goog.dom.createDom('td');
+		var line = goog.dom.createDom('td', {
+			'class' : 'content'
+		});
 		line.innerHTML = a.line;
 
 		var tr = goog.dom.createDom('tr', a.commitStr ? {
