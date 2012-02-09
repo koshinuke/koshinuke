@@ -85,10 +85,13 @@ org.koshinuke.ui.BlameViewer.prototype.makeBlameGrid_ = function(blames, elt) {
 	goog.array.forEach(rows, function(a) {
 		var commitEl = null;
 		if(a.commitStr) {
-			commitEl = goog.dom.createDom('td', 1 < a.rowspan ? {
+			var commitopt = {
 				'class' : 'metadata',
-				'rowspan' : a.rowspan
-			} : null);
+			};
+			if(1 < a.rowspan) {
+				commitopt['rowspan'] = a.rowspan;
+			}
+			commitEl = goog.dom.createDom('td', commitopt);
 			commitEl.innerHTML = a.commitStr;
 		}
 		var num = goog.dom.createDom('th', {
