@@ -16,7 +16,7 @@ org.koshinuke.template.treegrid.table = function(opt_data, opt_sb) {
 
 org.koshinuke.template.treegrid.row = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('<tr class="row"', (opt_data.visible == false) ? ' style="display: none;"' : '', '><td', (0 < opt_data.indent) ? ' style="padding-left: ' + opt_data.indent + 'px;"' : '', '><span', (0 < opt_data.hasChild) ? ' class="' + soy.$$escapeHtml(opt_data.state) + '"' : '', '></span><span class="', soy.$$escapeHtml(opt_data.icon), ' path">', soy.$$escapeHtml(opt_data.name), '</span></td><td><span class="user">', soy.$$escapeHtml(opt_data.author), '</span></td><td><span class="calendar">', soy.$$escapeHtml(opt_data.timestamp), '<span></td><td><span class="comment">', soy.$$escapeHtml(opt_data.message), '</span></td></tr>');
+  output.append('<tr class="row"', (opt_data.visible == false) ? ' style="display: none;"' : '', '><td', (0 < opt_data.indent) ? ' style="padding-left: ' + opt_data.indent + 'px;"' : '', '><span', (0 < opt_data.hasChild) ? ' class="' + soy.$$escapeHtml(opt_data.state) + '"' : '', '></span><span class="', soy.$$escapeHtml(opt_data.icon), ' path">', soy.$$escapeHtml(opt_data.name), '</span></td><td><img class="small ', soy.$$escapeHtml(opt_data.author), '"/><span class="author">', soy.$$escapeHtml(opt_data.author), '</span></td><td><span class="calendar">', soy.$$escapeHtml(opt_data.timestamp), '<span></td><td><span class="comment">', soy.$$escapeHtml(opt_data.message), '</span></td></tr>');
   return opt_sb ? '' : output.toString();
 };
 

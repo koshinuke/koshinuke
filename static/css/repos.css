@@ -49,8 +49,6 @@ button[disabled]{cursor:default;background-image:none;filter:progid:DXImageTrans
 .loading:before{margin-right:0.2em;content:url("../images/loading.gif");}
 .branch:before{margin-right:0.2em;content:url("../images/arrow_right.png");}
 .tag:before{margin-right:0.2em;content:url("../images/tag_green.png");}
-.calendar:before{margin-right:0.2em;content:url("../images/calendar_view_day.png");}
-.comment:before{margin-right:0.2em;content:url("../images/comment.png");}
 .user:before{margin-right:0.2em;content:url("../images/user.png");}
 .folder:before{margin-right:0.2em;content:url("../images/dir.png");}
 .python:before{margin-right:0.2em;content:url("../images/python.png");}
@@ -134,7 +132,8 @@ table.gradient tbody tr td{background-color:#f9f9f9;background-repeat:repeat-x;b
 table.gradient tbody tr:hover td{background-color:#ffffff;background-repeat:repeat-x;background-image:-khtml-gradient(linear, left top, left bottom, from(#f5f5f5), to(#ffffff));background-image:-moz-linear-gradient(top, #f5f5f5, #ffffff);background-image:-ms-linear-gradient(top, #f5f5f5, #ffffff);background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #f5f5f5), color-stop(100%, #ffffff));background-image:-webkit-linear-gradient(top, #f5f5f5, #ffffff);background-image:-o-linear-gradient(top, #f5f5f5, #ffffff);background-image:linear-gradient(top, #f5f5f5, #ffffff);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5f5f5', endColorstr='#ffffff', GradientType=0);}
 table.treegrid tr.row:hover{background-color:whitesmoke;}
 table.treegrid td .path:hover,table.treegrid td .comment:hover,table.treegrid td .user:hover{color:#0a8ecc;cursor:pointer;}
-table.blame-grid{width:100%;border:1px solid #CCC;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}table.blame-grid .metadata{width:30em;vertical-align:top;}
+table.blame-grid .metadata{width:30em;vertical-align:top;}table.blame-grid .metadata .commit{display:none;}
+table.blame-grid .metadata .calendar{font-size:x-small;}
 table.blame-grid .line-number{width:1em;border:1px solid #CCC;text-align:right;}
 table.blame-grid .section-begin{border-top:1px solid #CCC;}
 .CodeMirror{border:1px solid #DDD;-webkit-border-radius:0 0 5px 5px;-moz-border-radius:0 0 5px 5px;border-radius:0 0 5px 5px;font-size:16px;}

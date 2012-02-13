@@ -31,7 +31,7 @@
 {template .row}
 <tr class="row"{if $visible == false} style="display: none;"{/if}>
 	<td{if 0 < $indent} style="padding-left: {$indent|noAutoescape}px;"{/if}><span{if 0 < $hasChild} class="{$state}"{/if}></span><span class="{$icon} path">{$name}</span></td>
-	<td><span class="user">{$author}</span></td>
+	<td><img class="small {$author}"/><span class="author">{$author}</span></td>
 	<td><span class="calendar">{$timestamp}<span></td>
 	<td><span class="comment">{$message}</span></td>
 </tr>

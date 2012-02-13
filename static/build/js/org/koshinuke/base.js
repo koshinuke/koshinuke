@@ -91,7 +91,7 @@ org.koshinuke.toDateString = function(unixTime) {
 	return new goog.i18n.DateTimeFormat('yyyy-MM-dd HH:mm:ss').format(org.koshinuke.toDate(unixTime));
 };
 
-org.koshinuke.slideElements = function(outEl, inEl, footer) {
+org.koshinuke.slideElements = function(outEl, inEl) {
 	var iSize = goog.style.getSize(inEl);
 	var imBox = goog.style.getMarginBox(inEl);
 	var bottom = iSize.height + imBox.top + imBox.bottom;
@@ -110,16 +110,10 @@ org.koshinuke.slideElements = function(outEl, inEl, footer) {
 	goog.events.listen(oA, goog.fx.Transition.EventType.BEGIN, toAbs)
 	goog.events.listen(oA, goog.fx.Transition.EventType.END, function(e) {
 		e.target.element.style.cssText = 'display: none;';
-		var comeBack = new goog.fx.dom.Slide(footer, [0, vSize.height], [0, bottom], 500);
-		goog.events.listen(comeBack, goog.fx.Transition.EventType.END, toBlk);
-		comeBack.play();
 	});
 	var iA = new goog.fx.dom.Slide(inEl, [oSize.width, 0], [0, 0], 500, goog.fx.easing.easeOut);
 	goog.events.listen(iA, goog.fx.Transition.EventType.BEGIN, toAbs);
 	goog.events.listen(iA, goog.fx.Transition.EventType.END, toBlk);
-	var getOut = new goog.fx.dom.Slide(footer, [0, 0], [0, vSize.height], 500, goog.fx.easing.easeOut);
-	goog.events.listen(getOut, goog.fx.Transition.EventType.BEGIN, toAbs);
-	getOut.play();
 	oA.play();
 	iA.play();
 };

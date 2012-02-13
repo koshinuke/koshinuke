@@ -42,7 +42,6 @@ goog.exportSymbol('main', function() {
 		var outer = goog.dom.query('.outer')[0];
 		var admin = goog.dom.query('.admin')[0];
 		var newrepo = goog.dom.query('.newrepo')[0];
-		var f = goog.dom.query('footer')[0];
 		goog.events.listen(tabbar, goog.ui.Component.EventType.SELECT, function(e) {
 			var el = e.target.getElement();
 			if(goog.dom.classes.has(el, 'admin-tab')) {
@@ -52,10 +51,10 @@ goog.exportSymbol('main', function() {
 				} else {
 					out = newrepo;
 				}
-				org.koshinuke.slideElements(out, admin, f);
+				org.koshinuke.slideElements(out, admin);
 			} else {
 				if(goog.style.isElementShown(admin)) {
-					org.koshinuke.slideElements(admin, outer, f);
+					org.koshinuke.slideElements(admin, outer);
 				}
 			}
 		});
@@ -96,7 +95,7 @@ goog.exportSymbol('main', function() {
 			PubSub.publish(PubSub.TAB_UNSELECT, e.target.getModel());
 		});
 	});
-	var slideToInit = goog.partial(org.koshinuke.slideElements, goog.dom.query('.outer')[0], goog.dom.query('.newrepo')[0], goog.dom.query('footer')[0])
+	var slideToInit = goog.partial(org.koshinuke.slideElements, goog.dom.query('.outer')[0], goog.dom.query('.newrepo')[0])
 	goog.array.forEach(goog.dom.query('.repo-list'), function(root) {
 		var tabbar = new goog.ui.TabBar(goog.ui.TabBar.Location.START);
 		tabbar.decorate(root);
@@ -168,7 +167,7 @@ goog.exportSymbol('main', function() {
 		tabbar.setSelectedTabIndex(0);
 
 		var newrepoform = goog.dom.query('.newrepo form.main')[0];
-		var slideToRepo = goog.partial(org.koshinuke.slideElements, goog.dom.query('.newrepo')[0], goog.dom.query('.outer')[0], goog.dom.query('footer')[0]);
+		var slideToRepo = goog.partial(org.koshinuke.slideElements, goog.dom.query('.newrepo')[0], goog.dom.query('.outer')[0]);
 		var cancels = goog.dom.query('.newrepo .cancel');
 		goog.array.forEach(cancels, function(el) {
 			action(el, slideToRepo);
