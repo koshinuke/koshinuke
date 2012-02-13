@@ -86,7 +86,7 @@ org.koshinuke.ui.BlameViewer.prototype.makeBlameGrid_ = function(blames, elt) {
 		var commitEl = null;
 		if(a.commitStr) {
 			var commitopt = {
-				'class' : 'metadata',
+				'class' : 'metadata'
 			};
 			if(1 < a.rowspan) {
 				commitopt['rowspan'] = a.rowspan;
