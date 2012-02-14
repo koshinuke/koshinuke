@@ -1,16 +1,18 @@
 {namespace org.koshinuke.template.blameviewer}
 
 /**
+ * @param commit
  * @param author
  * @param timestamp
  * @param message
  */
 {template .tmpl}
-	<div class="calendar">{$timestamp}</div>
-	<div class="message">
+	<div class="commit">{$commit}</div>
+	<span class="commitdata">
+		<span class="calendar">{$timestamp}</span>
 		<span class="author"><img class="small {$author}"/>{$author}</span>
-		<span class="comment">{$message}</span>
-	</div>
+	</span>
+	<div class="message">{$message}</div>
 {/template}
 
 /**

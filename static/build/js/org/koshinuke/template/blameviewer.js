@@ -9,7 +9,7 @@ goog.require('soy.StringBuilder');
 
 org.koshinuke.template.blameviewer.tmpl = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('\t<div class="calendar">', soy.$$escapeHtml(opt_data.timestamp), '</div><div class="message"><span class="author"><img class="small ', soy.$$escapeHtml(opt_data.author), '"/>', soy.$$escapeHtml(opt_data.author), '</span><span class="comment">', soy.$$escapeHtml(opt_data.message), '</span></div>');
+  output.append('\t<div class="commit">', soy.$$escapeHtml(opt_data.commit), '</div><span class="commitdata"><span class="calendar">', soy.$$escapeHtml(opt_data.timestamp), '</span><span class="author"><img class="small ', soy.$$escapeHtml(opt_data.author), '"/>', soy.$$escapeHtml(opt_data.author), '</span></span><div class="message">', soy.$$escapeHtml(opt_data.message), '</div>');
   return opt_sb ? '' : output.toString();
 };
 
