@@ -38,10 +38,47 @@ org.koshinuke.ui.BlameViewer.prototype.enterDocument = function() {
 	var parent = this.getElement();
 	var model = this.getModel();
 	var self = this;
-	var h = this.getHandler();
 	this.loader.load(model, function(blames) {
 		var grid = self.makeBlameGrid_(blames);
 		parent.replaceChild(grid, self.loading);
+	});
+	var walkTR = function(tr, fn) {
+		goog.array.forEach(goog.dom.query('tr[class~="' + tr.commit + '"]', tr.parentNode), fn);
+	};
+	var h = this.getHandler();
+	var active = 'active';
+	h.listen(parent, goog.events.EventType.MOUSEOVER, function(e) {
+		var tr = org.koshinuke.findParent(e.target, 'TR');
+		if(tr.tagName === 'TR' && goog.dom.classes.has(tr, active) === false) {
+			walkTR(tr, function(el) {
+				goog.dom.classes.add(el, active);
+			});
+		}
+	});
+	h.listen(parent, goog.events.EventType.MOUSEOUT, function(e) {
+		var tr = org.koshinuke.findParent(e.target, 'TR');
+		if(tr.tagName === 'TR' && goog.dom.classes.has(tr, active)) {
+			walkTR(tr, function(el) {
+				goog.dom.classes.remove(el, active);
+			});
+		}
+	});
+	var collapse = false;
+	h.listen(parent, goog.events.EventType.CLICK, function(e) {
+		var tr = org.koshinuke.findParent(e.target, 'TR');
+		if(tr.tagName === 'TR') {
+			if(collapse) {
+				goog.array.forEach(goog.dom.getChildren(tr.parentNode), function(el) {
+					goog.style.showElement(el, true);
+				});
+				collapse = false;
+			} else {
+				goog.array.forEach(goog.dom.getChildren(tr.parentNode), function(el) {
+					goog.style.showElement(el, tr.commit == el.commit);
+				});
+				collapse = true;
+			}
+		}
 	});
 };
 
@@ -55,13 +92,13 @@ org.koshinuke.ui.BlameViewer.prototype.makeBlameGrid_ = function(blames, elt) {
 	var state = CodeMirror.startState(mode);
 	goog.array.forEach(blames.blames, function(a) {
 		var r = {
-			rowspan : 1
+			rowspan : 1,
+			commit : a.commit
 		};
 		if(current && current.commit == a.commit) {
 			current.rowspan++;
 		} else {
 			current = r;
-			r.commit = a.commit;
 			r.commitStr = org.koshinuke.template.blameviewer.tmpl(a);
 		}
 		var line = new goog.string.StringBuffer();
@@ -102,9 +139,14 @@ org.koshinuke.ui.BlameViewer.prototype.makeBlameGrid_ = function(blames, elt) {
 		});
 		line.innerHTML = a.line;
 
-		var tr = goog.dom.createDom('tr', a.commitStr ? {
-			"class" : "section-begin"
-		} : null, commitEl, num, line);
+		var trOpt = {
+			commit : a.commit,
+			'class' : a.commit
+		};
+		if(a.commitStr) {
+			trOpt["class"] = "section-begin " + trOpt["class"];
+		}
+		var tr = goog.dom.createDom('tr', trOpt, commitEl, num, line);
 		goog.dom.appendChild(result, tr);
 	});
 	return result;
