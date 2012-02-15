@@ -9,7 +9,7 @@ goog.require('soy.StringBuilder');
 
 org.koshinuke.template.treegrid.table = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('<table class="treegrid"><thead><tr><th class="name">name</th><th class="author">author</th><th class="timestamp">timestamp</th><th class="message">message</th></tr></thead></table>');
+  output.append('<table class="treegrid"><thead><tr><th class="name">name</th><th class="author">author</th><th class="pasttime">past time</th><th class="message">message</th></tr></thead></table>');
   return opt_sb ? '' : output.toString();
 };
 

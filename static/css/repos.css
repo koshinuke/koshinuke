@@ -137,6 +137,7 @@ table.blame-grid .metadata .author .small{margin:0 .2em;}
 table.blame-grid .metadata .message{margin:.2em .5em .2em 0;}
 table.blame-grid .line-number{width:1em;border:1px solid #CCC;text-align:right;}
 table.blame-grid .section-begin{border-top:1px solid #CCC;}
+table.blame-grid tr.active{background-color:whitesmoke;}
 .CodeMirror{border:1px solid #DDD;-webkit-border-radius:0 0 5px 5px;-moz-border-radius:0 0 5px 5px;border-radius:0 0 5px 5px;font-size:16px;}
 .CodeMirror-gutter{-webkit-border-bottom-left-radius:5px;-moz-border-radius-bottomleft:5px;border-bottom-left-radius:5px;}
 .CodeMirror.readonly{background-color:#e6e6e6;}

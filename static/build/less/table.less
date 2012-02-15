@@ -46,8 +46,14 @@ table {
 			.commit {
 				display: none;
 			}
-			.author .small {
-				margin: 0 .2em;
+			.author {
+				margin-right: .5em;
+				.small {
+					margin: 0 .2em;
+				}
+			}
+			.calendar {
+				margin-left: .5em;
 			}
 			.message {
 				margin: .2em .5em .2em 0;
@@ -58,10 +64,11 @@ table {
 			border: 1px solid #CCC;
 			text-align: right;
 		}
-		.content {
-		}
 		.section-begin {
 			border-top: 1px solid #CCC;
+		}
+		tr.active {
+			background-color: whitesmoke;
 		}
 	}
 }
