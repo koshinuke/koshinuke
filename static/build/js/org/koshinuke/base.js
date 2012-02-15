@@ -88,7 +88,7 @@ org.koshinuke.toDate = function(unixTime) {
 };
 
 org.koshinuke.toDateString = function(unixTime) {
-	return new goog.i18n.DateTimeFormat('yyyy-MM-dd HH:mm:ss').format(org.koshinuke.toDate(unixTime));
+	return toRelativeTime(org.koshinuke.toDate(unixTime));
 };
 
 org.koshinuke.slideElements = function(outEl, inEl) {

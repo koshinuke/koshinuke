@@ -1,3 +1,3 @@
 function toRelativeTime(time) {
-    // TODO not implemented.
+	return moment(time).fromNow();
 }
