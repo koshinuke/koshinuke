@@ -32,12 +32,16 @@
 	}
 	
 	span.log {
-		float: left;
-		padding: 0.25em 0.5em;
 		text-shadow: 1px 1px 0 white;
-		border-left: 1px solid #DDD;
 	}
-	
+
+	img {
+		margin: .2em .5em 0 .5em;
+	}
+	img, .author, .calendar {
+		margin-right: .5em;
+	}
+
 	.tool-buttons, .commit-form {
 		.clearfix;
 	}
@@ -52,7 +56,7 @@
 	}
 	
 	button {
-		float: left;
+		float: right;
 		border: 1px solid #DDD;
 		#radius > .around();
 		padding: 0.25em 0.5em;
@@ -62,13 +66,19 @@
 		font-weight: bold;
 		
 		#gradient > .vertical-three-colors(white, white, 25%, darken(#ffffff, 10%));
-		.box-shadow(inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05));
+		@shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+		.box-shadow(@shadow);
 		
 		&:hover {
 			color: white;
 			text-shadow: -1px -1px 0 @grayLight;
 			#gradient > .vertical-three-colors(@blue, @blue, 25%, @blueDark);
 			#gradient > .vertical(@blue, @blueDark);
+		}
+		&[disabled]:hover {
+			color: inherit;
+			text-shadow: inherit;
+			#gradient > .vertical-three-colors(white, white, 25%, darken(#ffffff, 10%));
 		}
 		&.active,
 		&:active {
