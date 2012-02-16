@@ -95,6 +95,8 @@ org.koshinuke.ui.TreeGrid.prototype.listenEvents_ = function() {
 	var h = this.getHandler();
 	h.listen(this, org.koshinuke.ui.TreeGrid.EventType.BEFORE_COLLAPSE, this.handleBeforeCollapse_);
 	h.listen(this, org.koshinuke.ui.TreeGrid.EventType.BEFORE_EXPAND, this.handleBeforeExpand_);
+	h.listen(this, org.koshinuke.ui.TreeGrid.EventType.BEFORE_COLLAPSE, this.handleStriping_);
+	h.listen(this, org.koshinuke.ui.TreeGrid.EventType.BEFORE_EXPAND, this.handleStriping_);
 	h.listen(this, org.koshinuke.ui.TreeGrid.EventType.PATH_CLICK, this.handlePathClick);
 	h.listen(this, org.koshinuke.ui.TreeGrid.EventType.MESSAGE_CLICK, this.handleMessageClick);
 	h.listen(this, org.koshinuke.ui.TreeGrid.EventType.AUTHOR_CLICK, this.handleAuthorClick);
@@ -117,6 +119,20 @@ org.koshinuke.ui.TreeGrid.prototype.handleAuthorClick = function(e) {
 	// TODO 特定ユーザの情報をポップアップする？
 	console.log(e, e.target);
 };
+
+/** @private */
+org.koshinuke.ui.TreeGrid.prototype.handleStriping_ = function(e) {
+    var table = this.getElement();
+    var counter = 0;
+    var striped = 'striped';
+    goog.array.forEach(goog.dom.query("tr.row",table), function(el) {
+	goog.dom.classes.remove(el, striped);
+	if(goog.style.isElementShown(el) && (counter++ % 2 === 1)) {
+	    goog.dom.classes.add(el, striped);
+	}
+    });
+};
+
 /** @private */
 org.koshinuke.ui.TreeGrid.prototype.handleBeforeCollapse_ = function(e) {
 	var model = e.rowEl.model;
@@ -215,6 +231,7 @@ org.koshinuke.ui.TreeGrid.prototype.handleBeforeExpand_ = function(e) {
 /** @override */
 org.koshinuke.ui.TreeGrid.prototype.enterDocument = function() {
 	org.koshinuke.ui.TreeGrid.superClass_.enterDocument.call(this);
+	this.handleStriping_();
 	this.psKey = org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.MODIFY_SUCCESS, function(send, rm) {
 		if(this.getModel().path == send.path) {
 			var s = send.node.path

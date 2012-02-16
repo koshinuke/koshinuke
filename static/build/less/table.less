@@ -29,8 +29,14 @@ table {
 	
 	&.treegrid {
 		tr.row {
+			&.striped {
+				background-color: #f7fcfe;
+			}
 			&:hover {
 				background-color: whitesmoke;
+			}
+			&:nth-child(odd) {
+				background-color: #f7fcfe;
 			}
 		}
 		td {
