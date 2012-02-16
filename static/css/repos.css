@@ -134,7 +134,7 @@ table.treegrid tr.row:hover{background-color:whitesmoke;}
 table.treegrid td .path:hover,table.treegrid td .comment:hover,table.treegrid td .user:hover{color:#0a8ecc;cursor:pointer;}
 table.blame-grid .metadata{width:20%;vertical-align:top;}table.blame-grid .metadata .author{margin-right:.5em;}table.blame-grid .metadata .author .small{margin:0 .2em;}
 table.blame-grid .metadata .calendar{margin-left:.5em;}
-table.blame-grid .message{background-color:#E6F2FA;border:1px solid #ccc;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}
+table.blame-grid .message{background-color:#E6F2FA;border:1px solid #ccc;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;padding:.3em;margin:.3em;}
 table.blame-grid .line-number{width:1em;border:1px solid #CCC;text-align:right;}
 table.blame-grid .section-begin{border-top:1px solid #CCC;}
 table.blame-grid tr.active{background-color:whitesmoke;}

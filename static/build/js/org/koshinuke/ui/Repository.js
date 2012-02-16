@@ -26,7 +26,6 @@ org.koshinuke.ui.Repository.EventType = {
 };
 
 org.koshinuke.ui.Repository.prototype.tabbar = false;
-org.koshinuke.ui.Repository.prototype.listenerKey = null;
 org.koshinuke.ui.Repository.prototype.host = "";
 org.koshinuke.ui.Repository.prototype.path = "";
 org.koshinuke.ui.Repository.prototype.name = "";
@@ -83,7 +82,8 @@ org.koshinuke.ui.Repository.prototype.enterDocument = function() {
 	org.koshinuke.ui.Repository.superClass_.enterDocument.call(this);
 	var element = goog.dom.query('.repo-context', this.getElement())[0];
 	this.tabbar.decorate(element);
-	this.listenerKey = goog.events.listen(this.tabbar, goog.ui.Component.EventType.SELECT, function(e) {
+	var h = this.getHandler();
+	h.listen(this.tabbar, goog.ui.Component.EventType.SELECT, function(e) {
 		var el = e.target.getElement();
 		var cls = goog.dom.classes.get(el);
 		var ctx;
@@ -104,14 +104,12 @@ org.koshinuke.ui.Repository.prototype.enterDocument = function() {
 /** @override */
 org.koshinuke.ui.Repository.prototype.exitDocument = function() {
 	org.koshinuke.ui.Repository.superClass_.exitDocument.call(this);
-	goog.events.unlistenByKey(this.listenerKey);
 };
 /** @override */
 org.koshinuke.ui.Repository.prototype.disposeInternal = function() {
 	org.koshinuke.ui.Repository.superClass_.disposeInternal.call(this);
 	this.tabbar.dispose();
 	this.tabbar = null;
-	this.listenerKey = null;
 };
 org.koshinuke.ui.Repository.prototype.getSelectedTab = function() {
 	return this.tabbar.getSelectedTab();
