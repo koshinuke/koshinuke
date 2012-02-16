@@ -83,7 +83,7 @@ goog.exportSymbol('main', function() {
 	});
 
 	goog.array.forEach(goog.dom.query('.outer .goog-tab-bar'), function(root) {
-		var tabbar = new org.koshinuke.ui.PaneTabBar(goog.dom.getNextElementSibling(root), uri);
+		var tabbar = new org.koshinuke.ui.PaneTabBar(goog.dom.query('.outer .tabpane')[0], uri);
 		tabbar.decorate(root);
 		goog.array.forEach([PubSub.REPO_SELECT, PubSub.RESOURCE_SELECT, PubSub.BRANCH_SELECT, PubSub.COMMIT_SELECT, PubSub.BLAME_EXECUTE], function(a) {
 			PubSub.subscribe(a, tabbar.addTab, tabbar);
