@@ -50,20 +50,30 @@ org.koshinuke.ui.TreeGrid.prototype.decorateInternal = function(element) {
 		if(el.tagName == 'SPAN') {
 			var ary = goog.dom.classes.get(el);
 			var et = org.koshinuke.ui.TreeGrid.EventType;
-			var ns = org.koshinuke.ui.TreeGrid.Node.State;
-			if(goog.array.contains(ary, ns.EXPAND)) {
-				this.fire_(e.target, et.BEFORE_COLLAPSE, et.COLLAPSE, ary[0], ns.COLLAPSE)
-			} else if(goog.array.contains(ary, ns.COLLAPSE)) {
-				this.fire_(e.target, et.BEFORE_EXPAND, et.EXPAND, ary[0], ns.EXPAND)
-			} else if(goog.array.contains(ary, "path")) {
-				this.fireClick_(e, et.PATH_CLICK);
-			} else if(goog.array.contains(ary, "comment")) {
-				this.fireClick_(e, et.MESSAGE_CLICK);
-			} else if(goog.array.contains(ary, "user")) {
-				this.fireClick_(e, et.AUTHOR_CLICK);
+			if(this.expandOrCollapse_(el, ary)) {
+				if(goog.array.contains(ary, "path")) {
+					this.fireClick_(e, et.PATH_CLICK);
+				} else if(goog.array.contains(ary, "comment")) {
+					this.fireClick_(e, et.MESSAGE_CLICK);
+				} else if(goog.array.contains(ary, "author")) {
+					this.fireClick_(e, et.AUTHOR_CLICK);
+				}
 			}
 		}
 	}, false, this);
+};
+/** @private */
+org.koshinuke.ui.TreeGrid.prototype.expandOrCollapse_ = function(target, classes) {
+	var et = org.koshinuke.ui.TreeGrid.EventType;
+	var ns = org.koshinuke.ui.TreeGrid.Node.State;
+	if(goog.array.contains(classes, ns.EXPAND)) {
+		this.fire_(target, et.BEFORE_COLLAPSE, et.COLLAPSE, ns.EXPAND, ns.COLLAPSE);
+		return false;
+	} else if(goog.array.contains(ary, ns.COLLAPSE)) {
+		this.fire_(target, et.BEFORE_EXPAND, et.EXPAND, ns.COLLAPSE, ns.EXPAND);
+		return false;
+	}
+	return true;
 };
 /** @private */
 org.koshinuke.ui.TreeGrid.prototype.fireClick_ = function(e, type) {
@@ -109,6 +119,9 @@ org.koshinuke.ui.TreeGrid.prototype.handlePathClick = function(e) {
 		m.context = org.koshinuke.ui.PaneTab.Factory.Resource;
 		m.node = rm;
 		org.koshinuke.PubSub.publish(org.koshinuke.PubSub.RESOURCE_SELECT, m);
+	} else if(rm.type === 'tree') {
+		var prev = goog.dom.getPreviousElementSibling(e.target);
+		expandOrCollapse_(prev, goog.dom.classes.get(prev));
 	}
 };
 org.koshinuke.ui.TreeGrid.prototype.handleMessageClick = function(e) {
@@ -119,20 +132,18 @@ org.koshinuke.ui.TreeGrid.prototype.handleAuthorClick = function(e) {
 	// TODO 特定ユーザの情報をポップアップする？
 	console.log(e, e.target);
 };
-
 /** @private */
 org.koshinuke.ui.TreeGrid.prototype.handleStriping_ = function(e) {
-    var table = this.getElement();
-    var counter = 0;
-    var striped = 'striped';
-    goog.array.forEach(goog.dom.query("tr.row",table), function(el) {
-	goog.dom.classes.remove(el, striped);
-	if(goog.style.isElementShown(el) && (counter++ % 2 === 1)) {
-	    goog.dom.classes.add(el, striped);
-	}
-    });
+	var table = this.getElement();
+	var counter = 0;
+	var striped = 'striped';
+	goog.array.forEach(goog.dom.query("tr.row", table), function(el) {
+		goog.dom.classes.remove(el, striped);
+		if(goog.style.isElementShown(el) && (counter++ % 2 === 1)) {
+			goog.dom.classes.add(el, striped);
+		}
+	});
 };
-
 /** @private */
 org.koshinuke.ui.TreeGrid.prototype.handleBeforeCollapse_ = function(e) {
 	var model = e.rowEl.model;
