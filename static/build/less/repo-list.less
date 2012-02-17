@@ -16,7 +16,6 @@
 	}
 }
 .repo-context {
-	display: none;
 	.clearfix;
 	padding: 0.1em 0.1em 0.3em 0.1em;
 	border-bottom: 1px solid #CCC;
@@ -42,27 +41,15 @@
 				cursor: default;
 			}
 		}
-		.repo-context {
-			display: block;
+		&:last-child .repo-name {
+			border-style: none none solid none;
+			#radius > .bottom(0);
 		}
 	}
 	&:first-child .repo-name {
 		#radius > .top;
 	}
-	&:last-child {
-		.repo-name {
-			border-style: none;
-			#radius > .bottom;
-		}
-		&.repository-selected {
-			.repo-name {
-				border-style: none none solid none;
-				#radius > .bottom(0);
-			}
-			.repo-context {
-				border: none;
-			}
-		}
+	&:last-child .repo-context {
+		border: none;
 	}
 }
-
