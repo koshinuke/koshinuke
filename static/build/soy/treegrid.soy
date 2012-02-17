@@ -8,7 +8,7 @@
 	<thead>
 		<tr>
 			<th class="name">name</th>
-			<th class="author">author</th>
+			<th class="user">author</th>
 			<th class="pasttime">past time</th>
 			<th class="message">message</th>
 		</tr>
@@ -30,10 +30,10 @@
  */
 {template .row}
 <tr class="row"{if $visible == false} style="display: none;"{/if}>
-	<td{if 0 < $indent} style="padding-left: {$indent|noAutoescape}px;"{/if}><span{if 0 < $hasChild} class="{$state}"{/if}></span><span class="{$icon} path">{$name}</span></td>
-	<td><img class="small {$author}"/><span class="author">{$author}</span></td>
-	<td><span class="calendar">{$timestamp}<span></td>
-	<td><span class="comment">{$message}</span></td>
+	<td class="name" {if 0 < $indent} style="padding-left: {$indent|noAutoescape}px;"{/if}><span{if 0 < $hasChild} class="{$state}"{/if}></span><span class="{$icon} path">{$name}</span></td>
+	<td class="user"><img class="small {$author}"/><span class="author">{$author}</span></td>
+	<td class="pasttime"><span class="calendar">{$timestamp}<span></td>
+	<td class="message"><span class="comment">{$message}</span></td>
 </tr>
 {/template}
 

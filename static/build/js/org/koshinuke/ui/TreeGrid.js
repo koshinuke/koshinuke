@@ -47,6 +47,9 @@ org.koshinuke.ui.TreeGrid.prototype.decorateInternal = function(element) {
 	// TODO KeyEventとかTABキーのアレとかは、後で考える。Container辺りを継承した方が良いのかな？
 	goog.events.listen(element, goog.events.EventType.CLICK, function(e) {
 		var el = e.target;
+		if(el.tagName === 'TD') {
+		    el = el.firstChild;
+		}
 		if(el.tagName == 'SPAN') {
 			var ary = goog.dom.classes.get(el);
 			var et = org.koshinuke.ui.TreeGrid.EventType;
@@ -69,7 +72,7 @@ org.koshinuke.ui.TreeGrid.prototype.expandOrCollapse_ = function(target, classes
 	if(goog.array.contains(classes, ns.EXPAND)) {
 		this.fire_(target, et.BEFORE_COLLAPSE, et.COLLAPSE, ns.EXPAND, ns.COLLAPSE);
 		return false;
-	} else if(goog.array.contains(ary, ns.COLLAPSE)) {
+	} else if(goog.array.contains(classes, ns.COLLAPSE)) {
 		this.fire_(target, et.BEFORE_EXPAND, et.EXPAND, ns.COLLAPSE, ns.EXPAND);
 		return false;
 	}
@@ -121,7 +124,7 @@ org.koshinuke.ui.TreeGrid.prototype.handlePathClick = function(e) {
 		org.koshinuke.PubSub.publish(org.koshinuke.PubSub.RESOURCE_SELECT, m);
 	} else if(rm.type === 'tree') {
 		var prev = goog.dom.getPreviousElementSibling(e.target);
-		expandOrCollapse_(prev, goog.dom.classes.get(prev));
+		this.expandOrCollapse_(prev, goog.dom.classes.get(prev));
 	}
 };
 org.koshinuke.ui.TreeGrid.prototype.handleMessageClick = function(e) {
