@@ -30,6 +30,7 @@ org.koshinuke.ui.PaneTabBar.prototype.addTab = function(model) {
 		tab = this.newPane(model);
 		this.addChild(tab, true);
 		this.tabmap[hash] = tab;
+		org.koshinuke.PubSub.publish(org.koshinuke.PubSub.TAB_ADDED, tab);
 	}
 	this.setSelectedTab(tab);
 };

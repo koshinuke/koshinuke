@@ -59,6 +59,9 @@ org.koshinuke.ui.Clipboard.prototype.enterDocument = function() {
 	});
 	clip.glue(img, img.parentNode);
 	this.clip = clip;
+	org.koshinuke.PubSub.subscribe(org.koshinuke.PubSub.TAB_ADDED, function() {
+	    clip.reposition(img);
+	});
 };
 /** @override */
 org.koshinuke.ui.Clipboard.prototype.exitDocument = function() {

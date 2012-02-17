@@ -17,6 +17,7 @@ org.koshinuke.activationHandler = function(item, isSelect) {
 };
 
 org.koshinuke.PubSub = new goog.pubsub.PubSub();
+org.koshinuke.PubSub.TAB_ADDED = "t.a";
 org.koshinuke.PubSub.REPO_LIST_RECEIVED = "rep.l.r";
 org.koshinuke.PubSub.REPO_INIT_RESULT = "rep.i.r";
 org.koshinuke.PubSub.REPO_SELECT = "rep.s";
