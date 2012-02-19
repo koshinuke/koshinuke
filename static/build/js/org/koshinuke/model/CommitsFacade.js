@@ -15,7 +15,7 @@ goog.inherits(org.koshinuke.model.CommitsFacade, org.koshinuke.model.AbstractFac
 org.koshinuke.model.CommitsFacade.prototype.load = function(model, fn) {
 	var requestUri = this.toRequestUri(model.path + "/commits/" + model.branch.path);
 	if(model.offset) {
-		model.setParameterValue('offset', model.offset);
+		requestUri.setParameterValue('offset', model.offset);
 	}
 	goog.net.XhrIo.send(requestUri, function(e) {
 		var raw = e.target.getResponseJson();
