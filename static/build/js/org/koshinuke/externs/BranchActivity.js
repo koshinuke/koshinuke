@@ -8,9 +8,9 @@ function renderBranchActivity(target, json, configs) {
 		barsOffset : 1,
 		type : 'stacked',
 		showAggregates : false,
-		showLabels : false,
+		showLabels : true,
 		Label : {
-			size : 0
+			color: 'black'
 		},
 		Tips : {
 			offsetX : 0,

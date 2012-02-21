@@ -41,6 +41,7 @@ org.koshinuke.ui.Histories.prototype.enterDocument = function() {
 		});
 		parent.replaceChild(list, self.loading);
 		goog.array.forEach(histories, function(h) {
+			h.shortmessage = org.koshinuke.cutoffMessage(90, h.message);
 			var con = goog.soy.renderAsElement(org.koshinuke.template.branchactivity.tmpl, h);
 			var ael = goog.dom.createDom("div", {
 				'id' : goog.ui.IdGenerator.getInstance().getNextUniqueId(),

@@ -4,15 +4,16 @@
  * @param name
  * @param author
  * @param timestamp
+ * @param shortmessage
  * @param message
  */
 {template .tmpl}
 <div class="branch-container">
 	<div class="metadata">
 		<div class="branch">{$name}</div>
-		<div class="user">{$author}</div>
-		<div class="calendar">{$timestamp}</div>
-		<div class="comment">{$message}</div>
+		<div class="author">{$author}</div>
+		<div class="pasttime">{$timestamp}</div>
+		<div class="comment"{if $message != $shortmessage} title="{$message}"{/if}>{$shortmessage}</div>
 	</div>
 </div>
 {/template}

@@ -1,4 +1,4 @@
-goog.addDependency('../../../build/js/org/koshinuke/base.js',["org.koshinuke"],["goog.array", "goog.crypt", "goog.crypt.Md5", "goog.dom.classes", "goog.i18n.DateTimeFormat", "goog.pubsub.PubSub"]);
+goog.addDependency('../../../build/js/org/koshinuke/base.js',["org.koshinuke"],["goog.array", "goog.crypt", "goog.crypt.Md5", "goog.dom.classes", "goog.i18n.DateTimeFormat", "goog.pubsub.PubSub", "goog.string"]);
 goog.addDependency('../../../build/js/org/koshinuke/model/AbstractFacade.js',["org.koshinuke.model.AbstractFacade"],["goog.dom", "goog.dom.forms", "goog.net.XhrIo", "goog.object", "goog.Uri"]);
 goog.addDependency('../../../build/js/org/koshinuke/model/BlameFacade.js',["org.koshinuke.model.BlameFacade"],["goog.array", "goog.net.XhrIo", "goog.string", "soy.StringBuilder", "org.koshinuke", "org.koshinuke.model.AbstractFacade"]);
 goog.addDependency('../../../build/js/org/koshinuke/model/CommitsFacade.js',["org.koshinuke.model.CommitsFacade"],["goog.array", "goog.net.XhrIo", "org.koshinuke", "org.koshinuke.model.AbstractFacade"]);

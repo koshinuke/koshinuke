@@ -49,7 +49,6 @@ button[disabled]{cursor:default;background-image:none;filter:progid:DXImageTrans
 .loading:before{margin-right:0.2em;content:url("../images/loading.gif");}
 .branch:before{margin-right:0.2em;content:url("../images/arrow_right.png");}
 .tag:before{margin-right:0.2em;content:url("../images/tag_green.png");}
-.user:before{margin-right:0.2em;content:url("../images/user.png");}
 .folder:before{margin-right:0.2em;content:url("../images/dir.png");}
 .python:before{margin-right:0.2em;content:url("../images/python.png");}
 .html:before{margin-right:0.2em;content:url("../images/html.png");}
