@@ -4,21 +4,18 @@
  * @param author
  * @param message
  * @param timestamp
- * @param parents
- * @param commit
  */
 {template .tmpl}
 <div class="commit">
 	<div class="author">
 		<img class="thumb large {$author}"/>
-		<span class="name">{$author}</span>
 	</div>
-	<div class="message">
-		<span>{$message}</span>
-	</div>
-	<div class="meta">
-		<span class="timestamp">{$timestamp}</span>
-		<button class="commitid"><img class="{if $parents.length < 2}normal{else}merge{/if}"/>{$commit|truncate:10}</button>
+	<div class="metadata">
+		<div class="message">{$message}</div>
+		<div class="commitdata">
+			<span class="name">{$author}</span>authored
+			<span class="timestamp">{$timestamp}</span>
+		</div>
 	</div>
 </div>
 {/template}

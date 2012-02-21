@@ -118,6 +118,7 @@ footer{clear:both;margin-top:1em;padding-top:1em;border-top:1px solid #bfbfbf;fo
 .repo-urls .desc-container{float:left;padding:0.35em;}.repo-urls .desc-container span{font-weight:bold;}
 .breadcrumbs{float:left;}.breadcrumbs li{font-size:large;float:left;padding:0 0.2em;}.breadcrumbs li:hover{color:#0a8ecc;cursor:pointer;}
 .breadcrumbs li.sep:after{color:#808080;content:" / ";}
+.breadcrumbs li:last-child{font-weight:bold;}
 .above.goog-tab-bar{border-bottom:1px solid #ddd;zoom:1;margin-bottom:0.5em;user-select:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;}.above.goog-tab-bar:before,.above.goog-tab-bar:after{display:table;content:"";zoom:1;*display:inline;}
 .above.goog-tab-bar:after{clear:both;}
 .above.goog-tab-bar .goog-tab{float:left;padding:0 0.5em 0 0.5em;color:#808080;position:relative;margin-bottom:-1px;line-height:2.5em;-webkit-border-radius:5px 5px 0 0;-moz-border-radius:5px 5px 0 0;border-radius:5px 5px 0 0;cursor:pointer;}.above.goog-tab-bar .goog-tab:hover{background-color:#e6e6e6;border-bottom:1px solid #e6e6e6;}
@@ -171,6 +172,7 @@ table.blame-grid tr.active{background-color:whitesmoke;}
 .branch-container .activity{height:3em;}
 div.commit{zoom:1;border:1px solid #CCC;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;margin-bottom:1em;}div.commit:before,div.commit:after{display:table;content:"";zoom:1;*display:inline;}
 div.commit:after{clear:both;}
+div.commit:hover{color:#0a8ecc;cursor:pointer;}
 div.commit:hover{background-color:whitesmoke;}
 div.commit .author{float:left;margin:0.5em 0.5em 0 0.5em;}div.commit .author img{-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}
 div.commit .author .name{display:block;}

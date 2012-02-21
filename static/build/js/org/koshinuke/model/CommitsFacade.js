@@ -30,10 +30,6 @@ org.koshinuke.model.CommitsFacade.prototype.load = function(model, fn) {
 			r.push(m);
 			return r;
 		}, []);
-
-		goog.array.sort(commits, function(l, r) {
-			return goog.array.defaultCompare(r.timestamp, l.timestamp);
-		});
 		fn(commits);
 	}, null, org.koshinuke.model.AbstractFacade.Headers);
 };
