@@ -117,6 +117,7 @@ org.koshinuke.ui.TreeGrid.Node.prototype.createDom = function() {
 org.koshinuke.ui.TreeGrid.Node.prototype.internalCreateDom_ = function(tmpl) {
 	this.emitIndent();
 	var wrapper = this.getDomHelper().createElement('TBODY');
+	this.shortmessage = org.koshinuke.cutoffMessage(60, this.message);
 	wrapper.innerHTML = tmpl(this);
 	this.decorateInternal(wrapper.firstChild);
 };

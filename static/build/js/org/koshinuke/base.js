@@ -6,6 +6,7 @@ goog.require('goog.crypt.Md5');
 goog.require('goog.dom.classes');
 goog.require('goog.i18n.DateTimeFormat');
 goog.require('goog.pubsub.PubSub');
+goog.require('goog.string');
 
 org.koshinuke.activationHandler = function(item, isSelect) {
 	var c = "active";
@@ -118,7 +119,6 @@ org.koshinuke.slideElements = function(outEl, inEl) {
 	oA.play();
 	iA.play();
 };
-
 // for debug.
 org.koshinuke.listenAll = function(src, types) {
 	if(goog.DEBUG) {
@@ -126,4 +126,18 @@ org.koshinuke.listenAll = function(src, types) {
 			goog.events.listen(src, type, goog.bind(console.log, console, type));
 		});
 	}
+};
+
+org.koshinuke.cutoffMessage = function(maxbytes, msg) {
+	var bytes = 0;
+	var length = msg.length;
+	var i = 0;
+	for(; i < length; i++) {
+		var c = goog.string.escapeChar(msg.charAt(i));
+		bytes += c.length < 4 ? 1 : 2;
+		if(maxbytes < bytes) {
+			break;
+		}
+	}
+	return msg.substring(0, i);
 };

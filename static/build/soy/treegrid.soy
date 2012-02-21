@@ -25,6 +25,7 @@
  * @param name
  * @param icon
  * @param timestamp
+ * @param shortmessage
  * @param message
  * @param author
  */
@@ -33,7 +34,7 @@
 	<td class="name" {if 0 < $indent} style="padding-left: {$indent|noAutoescape}px;"{/if}><span{if 0 < $hasChild} class="{$state}"{/if}></span><span class="{$icon} path">{$name}</span></td>
 	<td class="user"><img class="small {$author}"/><span class="author">{$author}</span></td>
 	<td class="pasttime"><span class="calendar">{$timestamp}<span></td>
-	<td class="message"><span class="comment">{$message}</span></td>
+	<td class="message"><span class="comment"{if $message != $shortmessage} title="{$message}"{/if}>{$shortmessage}</span></td>
 </tr>
 {/template}
 
