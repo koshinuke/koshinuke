@@ -1,8 +1,39 @@
 .diff {
- .commit {
-		&:hover {
-			background-color: inherit;
+	.commit {
+		.clearfix;
+		border: 1px solid #CCC;
+		#radius > .around;
+		margin-bottom: 1em;
+
+		.author {
+			// TODO auther と timestampの間に出来る空間をmessageの文字列で綺麗に埋めたいが…
+			float: left;
+			margin: 0.5em 0.5em 0 0.5em;
+			img {
+				#radius > .around;
+			}
+			.name {
+				display: block;
+			}
 		}
+
+		.message {
+			padding: 0.5em 0.5em 0.2em 0;
+		}
+		.meta {
+			float: right;
+			padding: 0.2em 0.5em 0 0.5em;
+			margin-bottom: 0.5em;
+			.timestamp, .commitid {
+				text-align: center;
+				vertical-align: bottom;
+				margin-left: 0.5em;
+			}
+			button {
+				margin-left: 0.75em;
+			}
+		}
+
 		.label, .parents {
 				margin-left: 0.5em;
 		}
