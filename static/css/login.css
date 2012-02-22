@@ -41,6 +41,7 @@ button[disabled]{cursor:default;background-image:none;filter:progid:DXImageTrans
 .input-pair.error input,.input-pair.error textarea{color:#b94a48;border-color:#ee5f5b;}.input-pair.error input:focus,.input-pair.error textarea:focus{border-color:#e9322d;-webkit-box-shadow:0 0 6px #f8b9b7;-moz-box-shadow:0 0 6px #f8b9b7;box-shadow:0 0 6px #f8b9b7;}
 .input-pair.error .input-prepend .add-on,.input-pair.error .input-append .add-on{color:#b94a48;background-color:#fce6e6;border-color:#b94a48;}
 @font-face{font-family:kiloji_b;src:local('きろ字 - B'),url("../images/kiloji_b.ttf") format('truetype');font-weight:bold;}.loading_large{content:url("../images/loading_large.gif");}
+.striped{background-color:#f7fcfe;}
 .branches:before{margin-right:0.2em;content:url("../images/arrow_branch.png");}
 .tags:before{margin-right:0.2em;content:url("../images/tag_blue.png");}
 .histories:before{margin-right:0.2em;content:url("../images/film.png");}

@@ -42,31 +42,14 @@ org.koshinuke.ui.Commits.prototype.enterDocument = function() {
 	h.listen(goog.dom.getWindow(), goog.events.EventType.SCROLL, this.autoPaging_, false, this);
 	h.listen(goog.dom.getWindow(), goog.events.EventType.RESIZE, this.autoPaging_, false, this);
 
-	this.pos = new org.koshinuke.positioning.GravityPosition(document.body, 's', 1);
-	this.popup = new org.koshinuke.ui.Popup(this.pos, 'above');
-	this.popup.setText('View diff');
-	h.listen(parent, goog.events.EventType.MOUSEOVER, this.handleMouseOver_, false, this);
-	h.listen(parent, goog.events.EventType.MOUSEOUT, this.handleMouseOut_, false, this);
-	h.listen(this, goog.ui.Component.EventType.ACTION, function(e) {
-		var el = org.koshinuke.findParentByClass(e.target.getElement(), 'commit');
+	h.listen(parent, goog.events.EventType.CLICK, function(e) {
+		var el = org.koshinuke.findParentByClass(e.target, 'commit');
 		var m = goog.object.clone(this.getModel());
 		m.label = ["Commit", m.branch.name, el.model.commit];
 		m.context = org.koshinuke.ui.PaneTab.Factory.Diff;
 		m.commit = el.model;
 		org.koshinuke.PubSub.publish(org.koshinuke.PubSub.COMMIT_SELECT, m);
 	}, false, self);
-};
-/** @private */
-org.koshinuke.ui.Commits.prototype.handleMouseOver_ = function(e) {
-	var target = e.target;
-	if(target.tagName == 'BUTTON') {
-		this.pos.setBaseEl(target);
-		this.popup.setVisible(true);
-	}
-};
-/** @private */
-org.koshinuke.ui.Commits.prototype.handleMouseOut_ = function(e) {
-	this.popup.setVisible(false);
 };
 /** @private */
 org.koshinuke.ui.Commits.prototype.autoPaging_ = function() {
@@ -95,13 +78,13 @@ org.koshinuke.ui.Commits.prototype.setUpRow_ = function(parent, commits) {
 	goog.array.forEach(commits, function(a) {
 		var c = goog.soy.renderAsElement(org.koshinuke.template.commits.tmpl, a);
 		c.model = a;
+		if(this.striped) {
+			goog.dom.classes.add(c, 'striped');
+			this.striped = false;
+		} else {
+			this.striped = true;
+		}
 		parent.appendChild(c);
-
-		goog.array.forEach(goog.dom.query('button', c), function(e) {
-			var b = new goog.ui.Button();
-			b.decorate(e);
-			b.setParent(this);
-		}, this);
 	}, this);
 };
 /** @private */
@@ -122,9 +105,6 @@ org.koshinuke.ui.Commits.prototype.fetchMorePage_ = function(current) {
 org.koshinuke.ui.Commits.prototype.exitDocument = function() {
 	org.koshinuke.ui.Commits.superClass_.exitDocument.call(this);
 	goog.dom.removeChildren(this.getElement());
-	this.pos = null;
-	this.popup.dispose();
-	this.popup = null;
 };
 
 org.koshinuke.ui.Commits.prototype.setVisible = function(state) {

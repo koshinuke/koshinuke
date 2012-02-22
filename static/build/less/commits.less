@@ -1,46 +1,39 @@
 div.commit {
 	.clearfix;
-	.clickable;
-	border: 1px solid #CCC;
-	#radius > .around;
-	margin-bottom: 1em;
+	border: 1px #CCC;
+	border-style: solid solid none solid;
+	
+	&:first-child {
+		#radius > .top;
+	}
+	&:last-child {
+		#radius > .bottom;
+		border-style: solid;
+	}
 	
 	&:hover {
 		background-color: whitesmoke;
 	}
 	
-	.author {
-		// TODO auther と timestampの間に出来る空間をmessageの文字列で綺麗に埋めたいが…
+	img.author {
 		float: left;
 		margin: 0.5em 0.5em 0 0.5em;
-		img {
-			#radius > .around;
-		}
-		.name {
-			display: block;
-		}
+		#radius > .around;
 	}
-	
 	.message {
+		.clickable;
 		padding: 0.5em 0.5em 0.2em 0;
+		overflow: hidden;
+		height: 1em;
 	}
-	.meta {
-		float: right;
+	.metadata {
 		padding: 0.2em 0.5em 0 0.5em;
 		margin-bottom: 0.5em;
-		.timestamp, .commitid {
-			text-align: center;
-			vertical-align: bottom;
+		.name {
+			margin-right: 0.5em;
+		}
+		.timestamp {
 			margin-left: 0.5em;
-		}
-		button {
-			margin-left: 0.75em;
-		}
-		button.commitid {
-			padding-left: 0.2em;
-			img {
-				float: left;
-			}
 		}
 	}
 }
