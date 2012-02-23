@@ -82,14 +82,16 @@ footer{clear:both;margin-top:1em;padding-top:1em;border-top:1px solid #bfbfbf;fo
 .tip{color:#111;background-color:white;border:1px solid #ccc;-webkit-box-shadow:#555555 2px 2px 8px;-moz-box-shadow:#555555 2px 2px 8px;box-shadow:#555555 2px 2px 8px;filter:alpha(opacity=90);-khtml-opacity:0.9;-moz-opacity:0.9;opacity:0.9;font-size:smaller;padding:0.3em;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}
 .new-repo{margin-bottom:0.5em;}
 .repo-list{border:1px solid #CCC;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}.repo-list .repo-name{background-color:whitesmoke;font-size:medium;text-align:center;border-bottom:1px solid #CCC;}.repo-list .repo-name:hover{color:#0A8ECC;cursor:pointer;}
-.repo-context{zoom:1;padding:0.1em 0.1em 0.3em 0.1em;border-bottom:1px solid #CCC;}.repo-context:before,.repo-context:after{display:table;content:"";zoom:1;*display:inline;}
+.repo-context{display:none;zoom:1;padding:0.1em 0.1em 0.3em 0.1em;border-bottom:1px solid #CCC;}.repo-context:before,.repo-context:after{display:table;content:"";zoom:1;*display:inline;}
 .repo-context:after{clear:both;}
 .repo-context div{font-size:medium;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}.repo-context div:hover{background-color:whitesmoke;cursor:pointer;}
 .repo-context div.goog-tab-selected{background-color:#e6e6e6;cursor:default;}
 .repository.repository-selected .repo-name{font-weight:bold;}.repository.repository-selected .repo-name:hover{color:black;cursor:default;}
-.repository.repository-selected:last-child .repo-name{border-style:none none solid none;-webkit-border-radius:0 0 0 0;-moz-border-radius:0 0 0 0;border-radius:0 0 0 0;}
+.repository.repository-selected .repo-context{display:block;}
 .repository:first-child .repo-name{-webkit-border-radius:5px 5px 0 0;-moz-border-radius:5px 5px 0 0;border-radius:5px 5px 0 0;}
-.repository:last-child .repo-context{border:none;}
+.repository:last-child .repo-name{border-style:none;-webkit-border-radius:0 0 5px 5px;-moz-border-radius:0 0 5px 5px;border-radius:0 0 5px 5px;}
+.repository:last-child.repository-selected .repo-name{border-style:none none solid none;-webkit-border-radius:0 0 0 0;-moz-border-radius:0 0 0 0;border-radius:0 0 0 0;}
+.repository:last-child.repository-selected .repo-context{border:none;}
 .new-repo,.admin{width:100%;}
 .newrepo,.admin{width:100%;min-width:800px;margin-top:3.5em;}.newrepo .goog-tab-bar,.admin .goog-tab-bar,.newrepo .tabpane,.admin .tabpane{margin-left:2em;}
 .newrepo .goog-tab,.admin .goog-tab{font-size:150%;font-weight:bold;}
@@ -98,7 +100,6 @@ footer{clear:both;margin-top:1em;padding-top:1em;border-top:1px solid #bfbfbf;fo
 .init-repo label,.clone-repo label,.profile label,.login label{font-weight:bold;width:10%;min-width:8em;}
 .init-repo input[type='text'],.clone-repo input[type='text'],.profile input[type='text'],.login input[type='text'],.init-repo input[type='file'],.clone-repo input[type='file'],.profile input[type='file'],.login input[type='file'],.init-repo input[type='password'],.clone-repo input[type='password'],.profile input[type='password'],.login input[type='password'],.init-repo textarea,.clone-repo textarea,.profile textarea,.login textarea{width:60%;}
 .init-repo .help-inline,.clone-repo .help-inline,.profile .help-inline,.login .help-inline{margin-left:0.5em;width:28%;}
-.init-repo label:after,.clone-repo label:after,.profile label:after,.login label:after{margin-left:1em;content:':';}
 .init-repo .form-actions,.clone-repo .form-actions,.profile .form-actions,.login .form-actions{zoom:1;width:80%;}.init-repo .form-actions:before,.clone-repo .form-actions:before,.profile .form-actions:before,.login .form-actions:before,.init-repo .form-actions:after,.clone-repo .form-actions:after,.profile .form-actions:after,.login .form-actions:after{display:table;content:"";zoom:1;*display:inline;}
 .init-repo .form-actions:after,.clone-repo .form-actions:after,.profile .form-actions:after,.login .form-actions:after{clear:both;}
 .init-repo button,.clone-repo button,.profile button,.login button{float:right;margin-left:0.5em;}
@@ -170,16 +171,22 @@ table.blame-grid tr.active{background-color:whitesmoke;}
 .branch-container .metadata .author,.branch-container .metadata .pasttime{min-width:8em;}
 .branch-container .metadata .message{min-width:30em;}
 .branch-container .activity{height:3em;}
-div.commit{zoom:1;border:1px #CCC;border-style:solid solid none solid;}div.commit:before,div.commit:after{display:table;content:"";zoom:1;*display:inline;}
-div.commit:after{clear:both;}
-div.commit:first-child{-webkit-border-radius:5px 5px 0 0;-moz-border-radius:5px 5px 0 0;border-radius:5px 5px 0 0;}
-div.commit:last-child{-webkit-border-radius:0 0 5px 5px;-moz-border-radius:0 0 5px 5px;border-radius:0 0 5px 5px;border-style:solid;}
-div.commit:hover{background-color:whitesmoke;}
-div.commit img.author{float:left;margin:0.5em 0.5em 0 0.5em;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}
-div.commit .message{padding:0.5em 0.5em 0.2em 0;overflow:hidden;height:1em;}div.commit .message:hover{color:#0a8ecc;cursor:pointer;}
-div.commit .metadata{padding:0.2em 0.5em 0 0.5em;margin-bottom:0.5em;}div.commit .metadata .name{margin-right:0.5em;}
-div.commit .metadata .timestamp{margin-left:0.5em;}
-.diff .commit:hover{background-color:inherit;}
+.commit_histories .commit{zoom:1;border:1px #CCC;border-style:solid solid none solid;}.commit_histories .commit:before,.commit_histories .commit:after{display:table;content:"";zoom:1;*display:inline;}
+.commit_histories .commit:after{clear:both;}
+.commit_histories .commit:first-child{-webkit-border-radius:5px 5px 0 0;-moz-border-radius:5px 5px 0 0;border-radius:5px 5px 0 0;}
+.commit_histories .commit:last-child{-webkit-border-radius:0 0 5px 5px;-moz-border-radius:0 0 5px 5px;border-radius:0 0 5px 5px;border-style:solid;}
+.commit_histories .commit:hover{background-color:whitesmoke;}
+.commit_histories .commit img.author{float:left;margin:0.5em 0.5em 0 0.5em;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}
+.commit_histories .commit .message{padding:0.5em 0.5em 0.2em 0;overflow:hidden;height:1em;}.commit_histories .commit .message:hover{color:#0a8ecc;cursor:pointer;}
+.commit_histories .commit .metadata{padding:0.2em 0.5em 0 0.5em;margin-bottom:0.5em;}.commit_histories .commit .metadata .name{margin-right:0.5em;}
+.commit_histories .commit .metadata .timestamp{margin-left:0.5em;}
+.diff .commit{zoom:1;border:1px solid #CCC;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;margin-bottom:1em;}.diff .commit:before,.diff .commit:after{display:table;content:"";zoom:1;*display:inline;}
+.diff .commit:after{clear:both;}
+.diff .commit .author{float:left;margin:0.5em 0.5em 0 0.5em;}.diff .commit .author img{-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}
+.diff .commit .author .name{display:block;}
+.diff .commit .message{padding:0.5em 0.5em 0.2em 0;}
+.diff .commit .meta{float:right;padding:0.2em 0.5em 0 0.5em;margin-bottom:0.5em;}.diff .commit .meta .timestamp,.diff .commit .meta .commitid{text-align:center;vertical-align:bottom;margin-left:0.5em;}
+.diff .commit .meta button{margin-left:0.75em;}
 .diff .commit .label,.diff .commit .parents{margin-left:0.5em;}
 .diff .commit .label,.diff .commit .parents>span{text-align:center;vertical-align:bottom;}
 .diff .commit .parent{border-bottom:1px dotted #CCC;}.diff .commit .parent:hover{color:#0a8ecc;cursor:pointer;}
