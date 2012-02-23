@@ -25,7 +25,9 @@ org.koshinuke.ui.Commits.prototype.createDom = function() {
 	this.loading = goog.dom.createDom("div", {
 		'class' : 'loading_large'
 	});
-	var element = goog.dom.createDom("div", null, this.loading);
+	var element = goog.dom.createDom("div", {
+	    'class' : 'commit_histories'
+	}, this.loading);
 	this.decorateInternal(element);
 };
 /** @override */
