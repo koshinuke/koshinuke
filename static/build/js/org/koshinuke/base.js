@@ -99,7 +99,7 @@ org.koshinuke.slideElements = function(outEl, inEl) {
 	var bottom = iSize.height + imBox.top + imBox.bottom;
 	var vSize = goog.style.getSize(goog.style.getClientViewportElement());
 	var oSize = goog.style.getSize(outEl);
-	var oA = new goog.fx.dom.Slide(outEl, [0, 0], [oSize.width * -1, 0], 500, goog.fx.easing.easeOut);
+	var oA = new goog.fx.dom.Slide(outEl, [0, 0], [0, vSize.height], 500, goog.fx.easing.easeOut);
 	var toAbs = function(e) {
 		goog.style.setStyle(e.target.element, {
 			'display' : 'block',
@@ -113,7 +113,7 @@ org.koshinuke.slideElements = function(outEl, inEl) {
 	goog.events.listen(oA, goog.fx.Transition.EventType.END, function(e) {
 		e.target.element.style.cssText = 'display: none;';
 	});
-	var iA = new goog.fx.dom.Slide(inEl, [oSize.width, 0], [0, 0], 500, goog.fx.easing.easeOut);
+	var iA = new goog.fx.dom.Slide(inEl, [0, vSize.height * -1], [0, 0], 500, goog.fx.easing.easeOut);
 	goog.events.listen(iA, goog.fx.Transition.EventType.BEGIN, toAbs);
 	goog.events.listen(iA, goog.fx.Transition.EventType.END, toBlk);
 	oA.play();
