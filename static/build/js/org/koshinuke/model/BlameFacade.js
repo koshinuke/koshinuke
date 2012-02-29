@@ -31,5 +31,5 @@ org.koshinuke.model.BlameFacade.prototype.load = function(model, fn) {
 			contenttype : org.koshinuke.model.ResourceFacade.extToMIME(model.node.path),
 			blames : bs
 		});
-	}, null, org.koshinuke.model.AbstractFacade.Headers);
+	}, "GET", null, org.koshinuke.model.AbstractFacade.Headers);
 };

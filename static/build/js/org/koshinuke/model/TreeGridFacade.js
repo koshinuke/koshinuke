@@ -49,7 +49,7 @@ org.koshinuke.model.TreeGridFacade.prototype.load = function(model, fn) {
 			a.tearDownForSort();
 		});
 		fn(kids);
-	}, null, org.koshinuke.model.AbstractFacade.Headers);
+	}, "GET", null, org.koshinuke.model.AbstractFacade.Headers);
 };
 
 org.koshinuke.model.TreeGridFacade.pathElementCompare = function(l, r, i) {

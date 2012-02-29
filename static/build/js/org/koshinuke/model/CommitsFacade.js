@@ -31,5 +31,5 @@ org.koshinuke.model.CommitsFacade.prototype.load = function(model, fn) {
 			return r;
 		}, []);
 		fn(commits);
-	}, null, org.koshinuke.model.AbstractFacade.Headers);
+	}, "GET", null, org.koshinuke.model.AbstractFacade.Headers);
 };

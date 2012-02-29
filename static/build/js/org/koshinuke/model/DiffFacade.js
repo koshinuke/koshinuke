@@ -36,5 +36,5 @@ org.koshinuke.model.DiffFacade.prototype.load = function(model, fn) {
 			}, [])
 		};
 		fn(diff);
-	}, null, org.koshinuke.model.AbstractFacade.Headers);
+	}, "GET", null, org.koshinuke.model.AbstractFacade.Headers);
 };

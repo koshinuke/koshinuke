@@ -36,5 +36,5 @@ org.koshinuke.model.HistoriesFacade.prototype.load = function(model, fn) {
 			return r;
 		}, []);
 		fn(histories);
-	}, null, org.koshinuke.model.AbstractFacade.Headers);
+	}, "GET", null, org.koshinuke.model.AbstractFacade.Headers);
 };
