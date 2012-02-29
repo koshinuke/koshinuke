@@ -19,7 +19,7 @@ org.koshinuke.model.AbstractFacade.Headers = {
 };
 
 org.koshinuke.model.AbstractFacade.prototype.toRequestUri = function(path) {
-	return this.uri.resolve(new goog.Uri("/dynamic/" + path));
+	return this.uri.resolve(new goog.Uri("/api/1.0/" + path));
 };
 
 org.koshinuke.model.AbstractFacade.prototype.get = function(path, pubSubKey) {
