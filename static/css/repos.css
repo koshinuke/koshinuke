@@ -104,7 +104,7 @@ footer{clear:both;margin-top:1em;padding-top:1em;border-top:1px solid #bfbfbf;fo
 .init-repo .form-actions:after,.clone-repo .form-actions:after,.profile .form-actions:after,.login .form-actions:after{clear:both;}
 .init-repo button,.clone-repo button,.profile button,.login button{float:right;margin-left:0.5em;}
 .init-repo .cancel,.clone-repo .cancel,.profile .cancel,.login .cancel{color:#A11034;}
-.init-repo .decide,.clone-repo .decide,.profile .decide,.login .decide{color:green;}
+.init-repo .decide,.clone-repo .decide,.profile .decide,.login .decide{color:green;}.init-repo .decide.disabled,.clone-repo .decide.disabled,.profile .decide.disabled,.login .decide.disabled,.init-repo .decide[disabled],.clone-repo .decide[disabled],.profile .decide[disabled],.login .decide[disabled]{color:#2f5d50;}
 .img-container{line-height:1.5em;font-size:120%;color:#bfbfbf;}.img-container .img-radio-pair{display:inline;}
 .img-container .img-radio-pair{float:left;margin-right:0.5em;padding:0.5em;}.img-container .img-radio-pair.active{-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;border:1px solid #CCC;}
 .img-container img.small{margin-right:0.1em;width:16px;height:16px;}

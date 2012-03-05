@@ -60,7 +60,7 @@ task soy(type: JavaExec) {
 	args = a + fileTree(dir: "static/build/soy", include: "**/*.soy").files.collect { it.path }
 }
 
-task makeDeps {
+task makeDeps(dependsOn: soy) {
 	def MULTIPLE_PROVIDES_ERROR = DiagnosticType.error(
 			"DEPS_DUPE_PROVIDES",
 			"Namespace \"{0}\" is already provided in other file {1}")
@@ -72,10 +72,10 @@ task makeDeps {
 		def em = new PrintStreamErrorManager(System.out)
 		def dfp = new DepsFileParser(em)
 		dfp.setShortcutMode(true)
-		def depsFiles = dfp.parseFile("$closure_abs/deps.js")
+		def depsFiles = dfp.parseFile(file("$closure_abs/deps.js").getAbsolutePath())
 
 		def jsp = new JsFileParser(em)
-		def closure_path = Paths.get(closure_abs).toAbsolutePath()
+		def closure_path = Paths.get(file(closure_abs).getAbsolutePath())
 		def jsFiles = fileTree(dir: "static/build/js", includes: [
 			"org/**/*.js",
 			"third_party/*.js"
@@ -227,13 +227,13 @@ def koshinukeBuilder = { entry_point, outputpath ->
 	}
 }
 
-task jscompLogin << {
+task jscompLogin(dependsOn: makeDeps) << {
 	def entry_point = "org.koshinuke.login"
 	def outputpath = "static/js/login-compiled.js"
 	koshinukeBuilder(entry_point, outputpath)
 }
 
-task jscompMain(dependsOn: jscompExterns) << {
+task jscompMain(dependsOn: [makeDeps, jscompExterns]) << {
 	def entry_point = "org.koshinuke.main"
 	def outputpath = "static/build/js/koshinuke-compiled.js"
 	koshinukeBuilder(entry_point, outputpath)
@@ -253,8 +253,6 @@ task jscompMain(dependsOn: jscompExterns) << {
 }
 
 defaultTasks = [
-	"soy",
-	"makeDeps",
 	"jscompExterns",
 	"jscompLogin",
 	"jscompMain",
