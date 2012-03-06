@@ -9,6 +9,8 @@ import com.google.javascript.jscomp.deps.*;
 
 import com.googlecode.lesscss4j.*;
 
+import groovy.xml.StreamingMarkupBuilder;
+
 configurations {
 	all { resolutionStrategy.cacheChangingModulesFor 14, 'days' }
 	jscomp
@@ -31,6 +33,7 @@ buildscript {
 		classpath 'org.mozilla:rhino:1.7R3'
 		classpath 'com.google.javascript:closure-compiler:r+'
 		classpath 'com.googlecode.lesscss4j:lesscss4j:1.2+'
+		classpath 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 	}
 }
 
@@ -249,6 +252,35 @@ task jscompMain(dependsOn: [makeDeps, jscompExterns]) << {
 	jsfiles.each {
 		main.append(it.text)
 		main.append('\n')
+	}
+}
+
+task makehtml {
+	doLast {
+		fileTree(dir: '.', include: '*.html').files.each { f ->
+			def parse = { w ->
+				def parser = new org.ccil.cowan.tagsoup.Parser()
+				parser.setFeature('http://xml.org/sax/features/namespaces', false)
+				return new XmlSlurper(parser).parse(w)
+			}
+			def tags = { n ->
+				return n.childNodes().findAll {
+					it.name() == 'script' || it.name() == 'link'
+				}
+			}
+			def fragment = file("static/build/html/${f.name}.fragment").withReader "UTF-8", { w ->
+				return tags(parse(w).head)
+			}
+
+			f.withReader "UTF-8", { w ->
+				def html = parse(w)
+				tags(html.head).each { it.replaceNode({}, html) }
+				fragment.each { html.head.appendNode it }
+
+				// TODO 出力用ディレクトリに出力する。
+				file("release-$f.name").text = new StreamingMarkupBuilder().bind { mkp.yield html }
+			}
+		}
 	}
 }
 
