@@ -1,5 +1,5 @@
 // -Xms40m -Xmx4096m -Dfile.encoding=UTF-8
-import java.io.File;
+import java.io.*;
 import java.nio.file.*;
 
 import org.mozilla.javascript.*;
@@ -9,7 +9,7 @@ import com.google.javascript.jscomp.deps.*;
 
 import com.googlecode.lesscss4j.*;
 
-import groovy.xml.StreamingMarkupBuilder;
+import groovy.xml.*;
 
 configurations {
 	all { resolutionStrategy.cacheChangingModulesFor 14, 'days' }
@@ -256,20 +256,22 @@ task jscompMain(dependsOn: [makeDeps, jscompExterns]) << {
 }
 
 task makehtml {
+	destDir = file("${project.buildDir}/html")
 	doLast {
+		destDir.mkdirs()
 		fileTree(dir: '.', include: '*.html').files.each { f ->
 			def parse = { w ->
 				def parser = new org.ccil.cowan.tagsoup.Parser()
-				parser.setFeature('http://xml.org/sax/features/namespaces', false)
+				parser.setFeature(parser.namespacesFeature, false)
 				return new XmlSlurper(parser).parse(w)
 			}
-			def tags = { n ->
-				return n.childNodes().findAll {
+			def tags = {
+				it.childNodes().findAll {
 					it.name() == 'script' || it.name() == 'link'
 				}
 			}
-			def fragment = file("static/build/html/${f.name}.fragment").withReader "UTF-8", { w ->
-				return tags(parse(w).head)
+			def fragment = file("static/build/html/${f.name}.fragment").withReader "UTF-8", {
+				tags(parse(it).head)
 			}
 
 			f.withReader "UTF-8", { w ->
@@ -277,14 +279,19 @@ task makehtml {
 				tags(html.head).each { it.replaceNode({}, html) }
 				fragment.each { html.head.appendNode it }
 
-				// TODO 出力用ディレクトリに出力する。
-				file("release-$f.name").text = new StreamingMarkupBuilder().bind { mkp.yield html }
+				file("$destDir/$f.name").withWriter {
+					it << new StreamingMarkupBuilder().bind {
+						mkp.yieldUnescaped '<!doctype html>'
+						mkp.yield html
+					}
+				}
 			}
 		}
 	}
 }
 
 defaultTasks = [
+	"makehtml",
 	"jscompExterns",
 	"jscompLogin",
 	"jscompMain",
