@@ -166,12 +166,23 @@ goog.exportSymbol('main', function() {
 		});
 		tabbar.setSelectedTabIndex(0);
 
-		var newrepoform = goog.dom.query('.newrepo form.main')[0];
+		var newrepoform = goog.dom.query('.init-repo form.main')[0];
 		var slideToRepo = goog.partial(org.koshinuke.slideElements, goog.dom.query('.newrepo')[0], goog.dom.query('.outer')[0]);
 		var cancels = goog.dom.query('.newrepo .cancel');
 		goog.array.forEach(cancels, function(el) {
 			action(el, slideToRepo);
 		});
+		var reporesult_to_list_received = function(form, json) {
+			if(0 < json.length) {
+				form.reset();
+				slideToRepo();
+				PubSub.publish(PubSub.REPO_LIST_RECEIVED, json);
+			}
+			goog.array.forEach(cancels, function(el) {
+				goog.style.showElement(el, 0 < json.length);
+			});
+		};
+		
 		var initBtn = action(goog.dom.query('.newrepo .init')[0], function(e) {
 			var c = e.target;
 			if(c.isEnabled()) {
@@ -180,17 +191,8 @@ goog.exportSymbol('main', function() {
 				facade.init(newrepoform);
 			}
 		});
-		PubSub.subscribe(PubSub.REPO_INIT_RESULT, function(json) {
-			if(0 < json.length) {
-				initBtn.setEnabled(true);
-				newrepoform.reset();
-				slideToRepo();
-				PubSub.publish(PubSub.REPO_LIST_RECEIVED, json);
-			}
-			goog.array.forEach(cancels, function(el) {
-				goog.style.showElement(el, 0 < json.length);
-			});
-		});
+		PubSub.subscribe(PubSub.REPO_INIT_RESULT, goog.partial(reporesult_to_list_received, newrepoform));
+
 		var rn = goog.dom.getElement('repo-name');
 		var rnVerify = function() {
 			var v = goog.dom.forms.getValue(rn);
@@ -236,15 +238,15 @@ goog.exportSymbol('main', function() {
 				});
 			});
 		});
-		var cloneBtn = action(goog.dom.query('.newrepo .clone')[0], function(e) {
+		var clonerepoform = goog.dom.query('.clone-repo form.main')[0];
+		PubSub.subscribe(PubSub.REPO_CLONE_RESULT, goog.partial(reporesult_to_list_received, clonerepoform));
+
+		var cloneBtn = action(goog.dom.query('.clone-repo .clone.decide')[0], function(e) {
 			var c = e.target;
 			if(c.isEnabled()) {
 				c.setEnabled(false);
-				var ur = goog.dom.forms.getValue(goog.dom.getElement('repo-uri'));
-				var un = goog.dom.forms.getValue(goog.dom.getElement('repo-username'));
-				var ps = goog.dom.forms.getValue(goog.dom.getElement('repo-pass'));
-				// TODO submit...
-				console.log(ur, un, ps);
+				var facade = new org.koshinuke.model.RepositoryFacade(uri);
+				facade.clone(clonerepoform);
 			}
 		});
 		goog.events.listen(goog.dom.getElement('repo-uri'), goog.events.EventType.INPUT, function(e) {
@@ -259,6 +261,7 @@ goog.exportSymbol('main', function() {
 						goog.dom.classes.remove(p, 'error');
 						goog.dom.setTextContent(msg, '');
 						cloneBtn.setEnabled(true);
+						return;
 					} else {
 						goog.dom.classes.add(p, 'error');
 						goog.dom.setTextContent(msg, 'uri must contains path');
