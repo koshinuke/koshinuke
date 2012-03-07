@@ -26,7 +26,7 @@ org.koshinuke.ui.Commits.prototype.createDom = function() {
 		'class' : 'loading_large'
 	});
 	var element = goog.dom.createDom("div", {
-	    'class' : 'commit_histories'
+		'class' : 'commit_histories'
 	}, this.loading);
 	this.decorateInternal(element);
 };
@@ -62,11 +62,10 @@ org.koshinuke.ui.Commits.prototype.autoPaging_ = function() {
 		if(goog.style.isElementShown(element) && last && last.model) {
 			var current = last.model;
 			if(0 < current.parents.length) {
-				var prev = goog.dom.getPreviousElementSibling(last);
-				var py = goog.style.getPosition(prev).y;
-				var ey = goog.style.getPosition(element).y;
-				var sy = goog.dom.getDocumentScroll().y;
-				if((py - ey - sy) < 400) {
+				var all = goog.dom.getDocumentHeight();
+				var vh = goog.dom.getViewportSize().height;
+				var cur = (all - vh) * 0.7;
+				if(cur < goog.dom.getDocumentScroll().y) {
 					this.fetchMorePage_(current);
 					return;
 				}
