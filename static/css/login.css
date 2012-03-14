@@ -80,4 +80,4 @@ footer{clear:both;margin-top:1em;padding-top:1em;border-top:1px solid #bfbfbf;fo
 .main{float:left;margin-top:3em;}
 .login.form{margin:1em 1em 1em 2em;padding:1em;border:1px solid #CCC;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}
 .login .remember{font-size:120%;}
-.login input[type='checkbox']{margin-right:0.5em;}
+.login input[type='checkbox']{margin-right:0 0.5em;}
