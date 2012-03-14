@@ -13,7 +13,6 @@ goog.exportSymbol('login', function() {
 		e.preventDefault();
 		var un = goog.dom.forms.getValueByName(form, 'u');
 		var up = goog.dom.forms.getValueByName(form, 'p');
-		var rm = goog.dom.forms.getValueByName(form, 'r');
 		if(un && up) {
 			form.submit();
 		} else {
