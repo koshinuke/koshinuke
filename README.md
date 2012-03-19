@@ -15,8 +15,8 @@ project site is here.
 This repository contains user interfaces only.  
 Please check server implementations.  
 
-* [Python](https://github.com/koshinuke/koshinuke.py)  
-* [Java](https://github.com/koshinuke/koshinuke.java)  
+* [Python](https://github.com/koshinuke/koshinuke.py)
+* [Java](https://github.com/koshinuke/koshinuke.java)
 
 icons from 
 
